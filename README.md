@@ -33,7 +33,7 @@ import {constraintForUri} from "@lblod/submission-form-helpers"
 clone this repo
 npm link/install inside your project
 make your changes
-run `npm build`
+run `npm build` (babel will transpile to the dist folder)
 test inside your project
 run `npm publish` (requires npm permissions)
 
