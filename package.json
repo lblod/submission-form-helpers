@@ -1,0 +1,26 @@
+{
+  "name": "@lblod/submission-form-helpers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/back-end/constraints.js",
+  "browser": "./dist/front-end/constraints.js",
+  "scripts": {
+    "test": "babel-node constraints.js",
+    "prepublish": "npm run build",
+    "build": "babel . --out-dir ./dist/front-end --ignore \"./node_modules\",\"./rdflib-shim.js\",\"./dist\"; babel . --out-dir ./dist/back-end --ignore \"./node_modules\",\"./rdflib-shim.js\",\"./dist\""
+  },
+  "author": "redpencil.io",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/preset-env": "^7.9.0",
+    "browser-rdflib": "1.1.0",
+    "rdflib": "1.1.0",
+    "moment": "^2.24.0",
+    "uuid": "^7.0.3"
+  }
+}
