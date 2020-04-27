@@ -1,6 +1,6 @@
 {
   "name": "@lblod/submission-form-helpers",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "./dist/back-end/constraints.js",
   "browser": "./dist/front-end/constraints.js",

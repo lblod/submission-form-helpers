@@ -17,11 +17,11 @@ function constraintValidDateTime(value) {
   if (value.datatype.value !== "http://www.w3.org/2001/XMLSchema#dateTime") {
     return false;
   }
+
   return validDateTimeString(value.value);
 }
 
 function validDateTimeString(value) {
-  debugger;
   if ((0, _moment.default)(value, "YYYY-MM-DDTHH:mm:ss.SSSSZ", true).isValid()) {
     return true;
   } else {
