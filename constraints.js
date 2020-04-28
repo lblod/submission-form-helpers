@@ -20,7 +20,6 @@ import required from './constraints/required';
 import codelist from './constraints/codelist';
 import singleCodelistValue from './constraints/single-codelist-value';
 import exactValue from './constraints/exact-value';
-import besluittype from './constraints/besluittype';
 import validUri from './constraints/valid-uri';
 import validDate from './constraints/valid-date';
 import validDateTime from './constraints/valid-date-time';
@@ -40,8 +39,6 @@ export default function constraintForUri(uri) {
       return codelist;
     case "http://lblod.data.gift/vocabularies/forms/ExactValueConstraint":
       return exactValue;
-    case "http://lblod.data.gift/vocabularies/forms/BesluittypeConstraint":
-      return besluittype;
     case "http://lblod.data.gift/vocabularies/forms/UriConstraint":
       return validUri;
     case "http://lblod.data.gift/vocabularies/forms/ValidDate":
