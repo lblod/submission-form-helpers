@@ -139,8 +139,6 @@ var _singleCodelistValue = _interopRequireDefault(require("./constraints/single-
 
 var _exactValue = _interopRequireDefault(require("./constraints/exact-value"));
 
-var _besluittype = _interopRequireDefault(require("./constraints/besluittype"));
-
 var _validUri = _interopRequireDefault(require("./constraints/valid-uri"));
 
 var _validDate = _interopRequireDefault(require("./constraints/valid-date"));
@@ -172,9 +170,6 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/ExactValueConstraint":
       return _exactValue.default;
-
-    case "http://lblod.data.gift/vocabularies/forms/BesluittypeConstraint":
-      return _besluittype.default;
 
     case "http://lblod.data.gift/vocabularies/forms/UriConstraint":
       return _validUri.default;
