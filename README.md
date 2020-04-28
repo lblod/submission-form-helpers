@@ -1,5 +1,5 @@
 # @lblod/submission-form-helpers
-npm package containing 
+NPM package containing helpers to inspect and validate submission forms
 
 ## Installation
 `npm install @lblod/submission-form-helpers`
@@ -26,16 +26,18 @@ import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE } from "@lblod/submission-form-he
 
 import { check, checkTriples } from "@lblod/submission-form-helpers"
 
-import {constraintForUri} from "@lblod/submission-form-helpers"
+import { constraintForUri } from "@lblod/submission-form-helpers"
 ```
 
 ## Development
-clone this repo
-npm link/install inside your project
-make your changes
-run `npm build` (babel will transpile to the dist folder)
-test inside your project
-run `npm publish` (requires npm permissions)
+1. clone this repo
+2. npm link/install inside your project
+3. make your changes
+4. run `npm build` (babel will transpile to the `dist/` folder)
+5. test inside your project
+6. bump the version number in `package.json`
+7. create a git tag
+8. run `npm publish` (requires npm permissions)
 
 
 
