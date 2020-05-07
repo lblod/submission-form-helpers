@@ -24,7 +24,7 @@ function conceptSchemeValidation(values, options) {
     });
     return matchingValues.length == 1;
   } else {
-    console.log('matching type for concept scheme selector is not form:Bag, please change that');
+    // console.log('matching type for concept scheme selector is not form:Bag, please change that');
     return false;
   }
 }

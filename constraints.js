@@ -92,7 +92,7 @@ function checkTriples(constraintUri, triplesData, options){
     validationResult = values.every( (value) => validator( value, validationOptions ) );
   }
 
-  console.log(`Validation ${validationType} [${groupingType}] with values ${values.join(',')} is ${validationResult}`);
+  // console.log(`Validation ${validationType} [${groupingType}] with values ${values.join(',')} is ${validationResult}`);
   return { validationType: validationType.value, hasValidation: true, valid: validationResult, resultMessage };
 
 }

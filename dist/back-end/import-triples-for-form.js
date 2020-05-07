@@ -68,8 +68,8 @@ function fieldsForForm(form, options) {
     metaGraph
   } = options; // get field groups
 
-  let fieldGroups = store.match(form, (0, _namespaces.FORM)("hasFieldGroup"), undefined, formGraph);
-  console.log(`Getting fields for ${fieldGroups.length} field groups`);
+  let fieldGroups = store.match(form, (0, _namespaces.FORM)("hasFieldGroup"), undefined, formGraph); // console.log(`Getting fields for ${fieldGroups.length} field groups`);
+
   fieldGroups = [].concat(...fieldGroups);
   fieldGroups = fieldGroups.map(({
     object
@@ -110,9 +110,9 @@ function fieldsForForm(form, options) {
     });
     newFieldGroups = [].concat(...newFieldGroups);
     fieldGroups = newFieldGroups;
-  }
+  } // console.log(`Found ${allFields.length} fields`);
 
-  console.log(`Found ${allFields.length} fields`);
+
   return allFields;
 }
 

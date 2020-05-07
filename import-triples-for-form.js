@@ -22,7 +22,7 @@ function fieldsForForm(form, options) {
 
   // get field groups
   let fieldGroups = store.match(form, FORM("hasFieldGroup"), undefined, formGraph);
-  console.log(`Getting fields for ${fieldGroups.length} field groups`);
+  // console.log(`Getting fields for ${fieldGroups.length} field groups`);
   fieldGroups = [].concat(...fieldGroups);
   fieldGroups = fieldGroups.map(({object}) => object);
 
@@ -64,7 +64,7 @@ function fieldsForForm(form, options) {
     fieldGroups = newFieldGroups;
   }
 
-  console.log(`Found ${allFields.length} fields`);
+  // console.log(`Found ${allFields.length} fields`);
 
   return allFields;
 }
