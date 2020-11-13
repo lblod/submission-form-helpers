@@ -19,6 +19,7 @@ import {
 import required from './constraints/required';
 import codelist from './constraints/codelist';
 import singleCodelistValue from './constraints/single-codelist-value';
+import containsCodelistValue from './constraints/contains-codelist-value';
 import exactValue from './constraints/exact-value';
 import validUri from './constraints/valid-uri';
 import validDate from './constraints/valid-date';
@@ -35,6 +36,8 @@ export default function constraintForUri(uri) {
       return required;
     case "http://lblod.data.gift/vocabularies/forms/SingleCodelistValue":
       return singleCodelistValue;
+    case "http://lblod.data.gift/vocabularies/forms/ContainsCodelistValue":
+      return containsCodelistValue;
     case "http://lblod.data.gift/vocabularies/forms/Codelist":
       return codelist;
     case "http://lblod.data.gift/vocabularies/forms/ExactValueConstraint":

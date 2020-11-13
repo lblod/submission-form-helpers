@@ -137,6 +137,8 @@ var _codelist = _interopRequireDefault(require("./constraints/codelist"));
 
 var _singleCodelistValue = _interopRequireDefault(require("./constraints/single-codelist-value"));
 
+var _containsCodelistValue = _interopRequireDefault(require("./constraints/contains-codelist-value"));
+
 var _exactValue = _interopRequireDefault(require("./constraints/exact-value"));
 
 var _validUri = _interopRequireDefault(require("./constraints/valid-uri"));
@@ -164,6 +166,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/SingleCodelistValue":
       return _singleCodelistValue.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/ContainsCodelistValue":
+      return _containsCodelistValue.default;
 
     case "http://lblod.data.gift/vocabularies/forms/Codelist":
       return _codelist.default;
