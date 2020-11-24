@@ -19,12 +19,16 @@ import {
 import required from './constraints/required';
 import codelist from './constraints/codelist';
 import singleCodelistValue from './constraints/single-codelist-value';
+import containsCodelistValue from './constraints/contains-codelist-value';
 import exactValue from './constraints/exact-value';
 import validUri from './constraints/valid-uri';
 import validDate from './constraints/valid-date';
 import validDateTime from './constraints/valid-date-time';
+import validInteger from './constraints/valid-integer';
 import conceptScheme from './constraints/concept-scheme';
 import validYear from './constraints/valid-year';
+import validEmail from './constraints/valid-email';
+import validIBAN from './constraints/valid-iban';
 import validateExtraTaxRateOrAmount from './constraints/vlabel-extra-taxrate-or-amount';
 import validBoolean from './constraints/valid-boolean';
 import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate';
@@ -35,6 +39,8 @@ export default function constraintForUri(uri) {
       return required;
     case "http://lblod.data.gift/vocabularies/forms/SingleCodelistValue":
       return singleCodelistValue;
+    case "http://lblod.data.gift/vocabularies/forms/ContainsCodelistValue":
+      return containsCodelistValue;
     case "http://lblod.data.gift/vocabularies/forms/Codelist":
       return codelist;
     case "http://lblod.data.gift/vocabularies/forms/ExactValueConstraint":
@@ -45,10 +51,16 @@ export default function constraintForUri(uri) {
       return validDate;
     case "http://lblod.data.gift/vocabularies/forms/ValidDateTime":
       return validDateTime;
+    case "http://lblod.data.gift/vocabularies/forms/ValidInteger":
+      return validInteger;
     case "http://lblod.data.gift/vocabularies/forms/ConceptSchemeConstraint":
       return conceptScheme;
     case "http://lblod.data.gift/vocabularies/forms/ValidYear":
       return validYear;
+    case "http://lblod.data.gift/vocabularies/forms/ValidEmail":
+      return validEmail;
+    case "http://lblod.data.gift/vocabularies/forms/ValidIBAN":
+      return validIBAN;
     case "http://lblod.data.gift/vocabularies/forms/VlabelExtraTaxRateOrAmountConstraint":
       return validateExtraTaxRateOrAmount;
     case "http://lblod.data.gift/vocabularies/forms/ValidBoolean":
