@@ -19,8 +19,9 @@
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
     "browser-rdflib": "1.1.0",
-    "rdflib": "1.1.0",
+    "iban": "0.0.14",
     "moment": "^2.24.0",
+    "rdflib": "1.1.0",
     "uuid": "^7.0.3"
   }
 }

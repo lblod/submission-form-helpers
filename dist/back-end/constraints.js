@@ -147,9 +147,15 @@ var _validDate = _interopRequireDefault(require("./constraints/valid-date"));
 
 var _validDateTime = _interopRequireDefault(require("./constraints/valid-date-time"));
 
+var _validInteger = _interopRequireDefault(require("./constraints/valid-integer"));
+
 var _conceptScheme = _interopRequireDefault(require("./constraints/concept-scheme"));
 
 var _validYear = _interopRequireDefault(require("./constraints/valid-year"));
+
+var _validEmail = _interopRequireDefault(require("./constraints/valid-email"));
+
+var _validIban = _interopRequireDefault(require("./constraints/valid-iban"));
 
 var _vlabelExtraTaxrateOrAmount = _interopRequireDefault(require("./constraints/vlabel-extra-taxrate-or-amount"));
 
@@ -185,11 +191,20 @@ function constraintForUri(uri) {
     case "http://lblod.data.gift/vocabularies/forms/ValidDateTime":
       return _validDateTime.default;
 
+    case "http://lblod.data.gift/vocabularies/forms/ValidInteger":
+      return _validInteger.default;
+
     case "http://lblod.data.gift/vocabularies/forms/ConceptSchemeConstraint":
       return _conceptScheme.default;
 
     case "http://lblod.data.gift/vocabularies/forms/ValidYear":
       return _validYear.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/ValidEmail":
+      return _validEmail.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/ValidIBAN":
+      return _validIban.default;
 
     case "http://lblod.data.gift/vocabularies/forms/VlabelExtraTaxRateOrAmountConstraint":
       return _vlabelExtraTaxrateOrAmount.default;
