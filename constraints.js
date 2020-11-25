@@ -96,6 +96,11 @@ function checkTriples(constraintUri, triplesData, options){
 
   let validationResult;
 
+/*
+ * - Bag: validator is expected to be able to do some custom validation a collection off values
+ * - MatchSome: validator can only process one value BUT only some (1 or more) off those values that get passed to the validator have to adhere
+ * - MatchEvery: validator can only process one value BUT all values that get passed to the validator have to adhere
+*/
   if( groupingType == FORM("Bag").value ) {
     validationResult = validator( values, validationOptions );
   } else if( groupingType == FORM("MatchSome").value ) {
