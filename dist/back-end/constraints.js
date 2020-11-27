@@ -149,6 +149,8 @@ var _validDateTime = _interopRequireDefault(require("./constraints/valid-date-ti
 
 var _validInteger = _interopRequireDefault(require("./constraints/valid-integer"));
 
+var _positiveNumber = _interopRequireDefault(require("./constraints/positive-number"));
+
 var _conceptScheme = _interopRequireDefault(require("./constraints/concept-scheme"));
 
 var _validYear = _interopRequireDefault(require("./constraints/valid-year"));
@@ -193,6 +195,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/ValidInteger":
       return _validInteger.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/PositiveNumber":
+      return _positiveNumber.default;
 
     case "http://lblod.data.gift/vocabularies/forms/ConceptSchemeConstraint":
       return _conceptScheme.default;
@@ -266,6 +271,11 @@ function checkTriples(constraintUri, triplesData, options) {
     formGraph
   };
   let validationResult;
+  /*
+   * - Bag: validator is expected to be able to do some custom validation a collection off values
+   * - MatchSome: validator can only process one value BUT only some (1 or more) off those values that get passed to the validator have to adhere
+   * - MatchEvery: validator can only process one value BUT all values that get passed to the validator have to adhere
+  */
 
   if (groupingType == (0, _namespaces.FORM)("Bag").value) {
     validationResult = validator(values, validationOptions);

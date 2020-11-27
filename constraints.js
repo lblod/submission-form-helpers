@@ -25,6 +25,7 @@ import validUri from './constraints/valid-uri';
 import validDate from './constraints/valid-date';
 import validDateTime from './constraints/valid-date-time';
 import validInteger from './constraints/valid-integer';
+import positiveNumber from './constraints/positive-number';
 import conceptScheme from './constraints/concept-scheme';
 import validYear from './constraints/valid-year';
 import validEmail from './constraints/valid-email';
@@ -53,6 +54,8 @@ export default function constraintForUri(uri) {
       return validDateTime;
     case "http://lblod.data.gift/vocabularies/forms/ValidInteger":
       return validInteger;
+    case "http://lblod.data.gift/vocabularies/forms/PositiveNumber":
+      return positiveNumber;
     case "http://lblod.data.gift/vocabularies/forms/ConceptSchemeConstraint":
       return conceptScheme;
     case "http://lblod.data.gift/vocabularies/forms/ValidYear":
