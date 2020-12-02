@@ -5,5 +5,6 @@ export default function constraintValidInteger(value) {
   if (value.datatype.value !== 'http://www.w3.org/2001/XMLSchema#integer') {
     return false;
   }
-  return Number.isInteger(value.value) && Number.isSafeInteger(value.value);
+  const number = Number(value.value);
+  return Number.isInteger(number) && Number.isSafeInteger(number);
 }
