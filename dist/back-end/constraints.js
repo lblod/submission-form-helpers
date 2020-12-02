@@ -165,6 +165,8 @@ var _validBoolean = _interopRequireDefault(require("./constraints/valid-boolean"
 
 var _vlabelSingleInstanceTaxRateOrExtraTaxRate = _interopRequireDefault(require("./constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate"));
 
+var _maxLength = _interopRequireDefault(require("./constraints/max-length"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function constraintForUri(uri) {
@@ -219,6 +221,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/VlabelSingleInstanceTaxRateOrExtraTaxRate":
       return _vlabelSingleInstanceTaxRateOrExtraTaxRate.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/MaxLength":
+      return _maxLength.default;
 
     default:
       return false;

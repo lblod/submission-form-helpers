@@ -33,6 +33,7 @@ import validIBAN from './constraints/valid-iban';
 import validateExtraTaxRateOrAmount from './constraints/vlabel-extra-taxrate-or-amount';
 import validBoolean from './constraints/valid-boolean';
 import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate';
+import maxLength from './constraints/max-length';
 
 export default function constraintForUri(uri) {
   switch (String(uri)) {
@@ -70,6 +71,8 @@ export default function constraintForUri(uri) {
       return validBoolean;
     case "http://lblod.data.gift/vocabularies/forms/VlabelSingleInstanceTaxRateOrExtraTaxRate":
       return singleInstanceTaxRateOrExtraTaxRate;
+    case "http://lblod.data.gift/vocabularies/forms/MaxLength":
+      return maxLength;
     default:
       return false; //TODO: TBD
   }
