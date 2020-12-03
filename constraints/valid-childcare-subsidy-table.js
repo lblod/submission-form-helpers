@@ -12,8 +12,13 @@ const numberChildrenForFullDayPredicate = namedNode('http://mu.semte.ch/vocabula
 const numberChildrenForHalfDayPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/numberChildrenForHalfDay');
 const numberChildrenPerInfrastructurePredicate = namedNode('http://mu.semte.ch/vocabularies/ext/numberChildrenPerInfrastructure');
 
+/*
+ * This custom validator has been build to validate a complex component that handles 4 fields which
+ * require validation. From the way the form is built now, this is the easier way to validate it.
+*/
+
 export default function constraintValidChildcareSubsidyTable(table, options) {
-  const { store, sourceGraph } = options;
+  const { store, sourceGraph, constraintUri } = options;
   const childcareSubsidyEntries = store.match(
     table,
     childcareSubsidyEntryPredicate,
@@ -25,19 +30,20 @@ export default function constraintValidChildcareSubsidyTable(table, options) {
 
   let isValidTable = true;
   childcareSubsidyEntries.map(e => e.object).forEach(entry => {
-    // 1. Required values
-      const hasRequiredTriples = hasTriples(
-          entry,
-          [ actorNamePredicate,
-            numberChildrenForFullDayPredicate,
-            numberChildrenForHalfDayPredicate,
-            numberChildrenPerInfrastructurePredicate ],
-          store,
-          sourceGraph
+    // Each entry should have those 4 fields
+    const hasRequiredTriples = hasTriples(
+        entry,
+        [ actorNamePredicate,
+          numberChildrenForFullDayPredicate,
+          numberChildrenForHalfDayPredicate,
+          numberChildrenPerInfrastructurePredicate ],
+        store,
+        sourceGraph
     );
     if (!hasRequiredTriples) {
       isValidTable = false;
     } else {
+      // Each entry should have a valid string as "naam actor"
       const validStrings = hasNotEmptyStrings(
         entry,
         [ actorNamePredicate ],
@@ -47,6 +53,7 @@ export default function constraintValidChildcareSubsidyTable(table, options) {
       if (!validStrings)
         isValidTable = false;
 
+      // Each entry should have a valid and positive ints as numbers
       const validPositiveInts = hasPositiveInts(
         entry,
         [ numberChildrenForFullDayPredicate,
@@ -58,6 +65,7 @@ export default function constraintValidChildcareSubsidyTable(table, options) {
       if (!validPositiveInts)
         isValidTable = false;
 
+      // Each entry should have fields with an acceptable length, defined in the form configuration
       const validLength = hasAcceptableLengths(
             entry,
             [ actorNamePredicate,
@@ -65,7 +73,8 @@ export default function constraintValidChildcareSubsidyTable(table, options) {
               numberChildrenForHalfDayPredicate,
               numberChildrenPerInfrastructurePredicate ],
             store,
-            sourceGraph
+            sourceGraph,
+            constraintUri
       );
       if (!validLength)
         isValidTable = false;
@@ -117,17 +126,7 @@ function hasPositiveInts(entry, predicates, store, sourceGraph) {
   return result;
 }
 
-function hasAcceptableLengths(entry, predicates, store, sourceGraph) {
-  const constraintUri = namedNode("http://lblod.data.gift/vocabularies/forms/MaxLength");
-  // Add max value to the store to be handled by constraintMaxLength properly
-  const triples = [ { subject: constraintUri,
-                      predicate: FORM('max'),
-                      object: 20,
-                      graph: sourceGraph
-                    }
-                  ];
-  store.addAll(triples);
-
+function hasAcceptableLengths(entry, predicates, store, sourceGraph, constraintUri) {
   let result = true;
   predicates.forEach(predicate => {
     const value = store.match(
