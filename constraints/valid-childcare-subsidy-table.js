@@ -2,7 +2,6 @@ import { FORM, SKOS } from '../namespaces';
 import rdflib from "./../rdflib-shim.js";
 import constraintPositiveNumber from './positive-number';
 import constraintValidInteger from './valid-integer';
-import constraintMaxLength from './max-length';
 
 const { namedNode } = rdflib;
 
@@ -64,20 +63,6 @@ export default function constraintValidChildcareSubsidyTable(table, options) {
       );
       if (!validPositiveInts)
         isValidTable = false;
-
-      // Each entry should have fields with an acceptable length, defined in the form configuration
-      const validLength = hasAcceptableLengths(
-            entry,
-            [ actorNamePredicate,
-              numberChildrenForFullDayPredicate,
-              numberChildrenForHalfDayPredicate,
-              numberChildrenPerInfrastructurePredicate ],
-            store,
-            sourceGraph,
-            constraintUri
-      );
-      if (!validLength)
-        isValidTable = false;
     }
   });
 
@@ -122,20 +107,6 @@ function hasPositiveInts(entry, predicates, store, sourceGraph) {
       sourceGraph
     )[0].object; // we expect only one per predicate
     result = result && constraintValidInteger(value) && constraintPositiveNumber(value);
-  });
-  return result;
-}
-
-function hasAcceptableLengths(entry, predicates, store, sourceGraph, constraintUri) {
-  let result = true;
-  predicates.forEach(predicate => {
-    const value = store.match(
-      entry,
-      predicate,
-      undefined,
-      sourceGraph
-    )[0].object; // we expect only one per predicate
-    result = result && constraintMaxLength(value, {store, constraintUri});
   });
   return result;
 }
