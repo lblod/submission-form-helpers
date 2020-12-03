@@ -2,6 +2,7 @@ import { FORM, SKOS } from '../namespaces';
 import rdflib from "./../rdflib-shim.js";
 import constraintPositiveNumber from './positive-number';
 import constraintValidInteger from './valid-integer';
+import constraintMaxLength from './max-length';
 
 const { namedNode } = rdflib;
 
@@ -12,68 +13,130 @@ const numberChildrenForHalfDayPredicate = namedNode('http://mu.semte.ch/vocabula
 const numberChildrenPerInfrastructurePredicate = namedNode('http://mu.semte.ch/vocabularies/ext/numberChildrenPerInfrastructure');
 
 export default function constraintValidChildcareSubsidyTable(table, options) {
-console.log('Bienvenue dans la validation')
   const { store, sourceGraph } = options;
   const childcareSubsidyEntries = store.match(
     table,
     childcareSubsidyEntryPredicate,
     undefined
   );
-console.log('On va regarder si on a des entries')
+
   if (childcareSubsidyEntries.length == 0)
     return false;
-console.log('yey on a des entries')
+
+  let isValidTable = true;
   childcareSubsidyEntries.map(e => e.object).forEach(entry => {
     // 1. Required values
-    const hasRequiredFields = hasTriple(entry, actorNamePredicate, store, sourceGraph) &&
-                              hasTriple(entry, numberChildrenForFullDayPredicate, store, sourceGraph) &&
-                              hasTriple(entry, numberChildrenForHalfDayPredicate, store, sourceGraph) &&
-                              hasTriple(entry, numberChildrenPerInfrastructurePredicate, store, sourceGraph);
-    if (!hasRequiredFields)
-      return false;
-console.log('all fields are filled')
-    // 2. Non empty string
-    const actorNameNotEmptyString = store.match(
-      entry,
-      actorNamePredicate,
-      undefined,
-      sourceGraph
-    )[0].object.value.trim();
-    
-    if (actorNameNotEmptyString == '')
-      return false;
-console.log('actor name is not empty')
-    // 3. Positive int
-    const hasPositiveInts = hasPositiveInt(entry, numberChildrenForFullDayPredicate, store, sourceGraph) &&
-                            hasPositiveInt(entry, numberChildrenForHalfDayPredicate, store, sourceGraph) &&
-                            hasPositiveInt(entry, numberChildrenPerInfrastructurePredicate, store, sourceGraph);
-    if (!hasPositiveInts)
-      return false;
-console.log('we have posiive ints')
-    return true;
+      const hasRequiredTriples = hasTriples(
+          entry,
+          [ actorNamePredicate,
+            numberChildrenForFullDayPredicate,
+            numberChildrenForHalfDayPredicate,
+            numberChildrenPerInfrastructurePredicate ],
+          store,
+          sourceGraph
+    );
+    if (!hasRequiredTriples) {
+      isValidTable = false;
+    } else {
+      const validStrings = hasNotEmptyStrings(
+        entry,
+        [ actorNamePredicate ],
+        store,
+        sourceGraph
+      )
+      if (!validStrings)
+        isValidTable = false;
+
+      const validPositiveInts = hasPositiveInts(
+        entry,
+        [ numberChildrenForFullDayPredicate,
+            numberChildrenForHalfDayPredicate,
+            numberChildrenPerInfrastructurePredicate ],
+        store,
+        sourceGraph
+      );
+      if (!validPositiveInts)
+        isValidTable = false;
+
+      const validLength = hasAcceptableLengths(
+            entry,
+            [ actorNamePredicate,
+              numberChildrenForFullDayPredicate,
+              numberChildrenForHalfDayPredicate,
+              numberChildrenPerInfrastructurePredicate ],
+            store,
+            sourceGraph
+      );
+      if (!validLength)
+        isValidTable = false;
+    }
   });
 
-  // TODO
-  // 1. Adapter pour check CHAQUE entry
-  // 2. Aussi vérifier la longueur des fields
-  // 3. Adapter le component pour refléter ça, histoire que le user sache ce qu'il en est
+  return isValidTable;
 }
 
-function hasTriple(entry, predicate, store, sourceGraph) {
-  return store.match(
-    entry,
-    predicate,
-    undefined,
-    sourceGraph
-  ).length > 0;
+function hasTriples(entry, predicates, store, sourceGraph) {
+  let result = true;
+  predicates.forEach(predicate => {
+    const value = store.match(
+      entry,
+      predicate,
+      undefined,
+      sourceGraph
+    ); // we expect only one per predicate
+    result = result && (value.length > 0);
+  });
+  return result;
 }
 
-function hasPositiveInt(entry, predicate, store, sourceGraph) {
-  const value = store.match(
-    entry,
-    predicate,
-    undefined,
-    sourceGraph
-  )[0].object; // we expect only one per predicate
-  return constraintValidInteger(value) && constraintPositiveNumber(value);
+function hasNotEmptyStrings(entry, predicates, store, sourceGraph) {
+  let result = true;
+  predicates.forEach(predicate => {
+    const string = store.match(
+      entry,
+      predicate,
+      undefined,
+      sourceGraph
+    )[0].object.value.trim(); // we expect only one per predicate
+    result = result && (string != '');
+  });
+  return result;
+}
+
+function hasPositiveInts(entry, predicates, store, sourceGraph) {
+  let result = true;
+  predicates.forEach(predicate => {
+    const value = store.match(
+      entry,
+      predicate,
+      undefined,
+      sourceGraph
+    )[0].object; // we expect only one per predicate
+    result = result && constraintValidInteger(value) && constraintPositiveNumber(value);
+  });
+  return result;
+}
+
+function hasAcceptableLengths(entry, predicates, store, sourceGraph) {
+  const constraintUri = namedNode("http://lblod.data.gift/vocabularies/forms/MaxLength");
+  // Add max value to the store to be handled by constraintMaxLength properly
+  const triples = [ { subject: constraintUri,
+                      predicate: FORM('max'),
+                      object: 20,
+                      graph: sourceGraph
+                    }
+                  ];
+  store.addAll(triples);
+
+  let result = true;
+  predicates.forEach(predicate => {
+    const value = store.match(
+      entry,
+      predicate,
+      undefined,
+      sourceGraph
+    )[0].object; // we expect only one per predicate
+    result = result && constraintMaxLength(value, {store, constraintUri});
+  });
+  return result;
 }
