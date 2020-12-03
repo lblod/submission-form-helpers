@@ -32,6 +32,7 @@ import validEmail from './constraints/valid-email';
 import validIBAN from './constraints/valid-iban';
 import validateExtraTaxRateOrAmount from './constraints/vlabel-extra-taxrate-or-amount';
 import validBoolean from './constraints/valid-boolean';
+import validChildcareSubsidyTable from './constraints/valid-childcare-subsidy-table';
 import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate';
 
 export default function constraintForUri(uri) {
@@ -68,6 +69,8 @@ export default function constraintForUri(uri) {
       return validateExtraTaxRateOrAmount;
     case "http://lblod.data.gift/vocabularies/forms/ValidBoolean":
       return validBoolean;
+    case "http://lblod.data.gift/vocabularies/forms/ValidChildcareSubsidyTable":
+      return validChildcareSubsidyTable;
     case "http://lblod.data.gift/vocabularies/forms/VlabelSingleInstanceTaxRateOrExtraTaxRate":
       return singleInstanceTaxRateOrExtraTaxRate;
     default:
