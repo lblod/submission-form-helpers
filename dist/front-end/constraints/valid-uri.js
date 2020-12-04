@@ -11,5 +11,5 @@ exports.default = constraintValidUri;
 function constraintValidUri(value
 /*, options*/
 ) {
-  return value.value.match(/^(http|ftp)s?:\/\/[\w.-]+\.\w+(\/.*)?/);
+  return value.value.match(/^(http|ftp)s?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$/);
 }
