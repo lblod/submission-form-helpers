@@ -163,6 +163,8 @@ var _vlabelExtraTaxrateOrAmount = _interopRequireDefault(require("./constraints/
 
 var _validBoolean = _interopRequireDefault(require("./constraints/valid-boolean"));
 
+var _validChildcareSubsidyTable = _interopRequireDefault(require("./constraints/valid-childcare-subsidy-table"));
+
 var _vlabelSingleInstanceTaxRateOrExtraTaxRate = _interopRequireDefault(require("./constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate"));
 
 var _maxLength = _interopRequireDefault(require("./constraints/max-length"));
@@ -218,6 +220,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/ValidBoolean":
       return _validBoolean.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/ValidChildcareSubsidyTable":
+      return _validChildcareSubsidyTable.default;
 
     case "http://lblod.data.gift/vocabularies/forms/VlabelSingleInstanceTaxRateOrExtraTaxRate":
       return _vlabelSingleInstanceTaxRateOrExtraTaxRate.default;

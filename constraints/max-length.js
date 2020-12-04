@@ -1,7 +1,7 @@
 import { FORM } from '../namespaces';
 
 /**
- * Checks if the given value is not to longer then the given max length.
+ * Checks if the given value is not longer than the given max length.
  */
 export default function constraintMaxLength(value, options) {
   const { constraintUri, store } = options;
