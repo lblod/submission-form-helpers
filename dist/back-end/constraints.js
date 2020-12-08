@@ -159,6 +159,8 @@ var _validEmail = _interopRequireDefault(require("./constraints/valid-email"));
 
 var _validIban = _interopRequireDefault(require("./constraints/valid-iban"));
 
+var _validPhoneNumber = _interopRequireDefault(require("./constraints/valid-phone-number"));
+
 var _vlabelExtraTaxrateOrAmount = _interopRequireDefault(require("./constraints/vlabel-extra-taxrate-or-amount"));
 
 var _validBoolean = _interopRequireDefault(require("./constraints/valid-boolean"));
@@ -214,6 +216,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/ValidIBAN":
       return _validIban.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/ValidPhoneNumber":
+      return _validPhoneNumber.default;
 
     case "http://lblod.data.gift/vocabularies/forms/VlabelExtraTaxRateOrAmountConstraint":
       return _vlabelExtraTaxrateOrAmount.default;

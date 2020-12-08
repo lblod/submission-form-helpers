@@ -30,6 +30,7 @@ import conceptScheme from './constraints/concept-scheme';
 import validYear from './constraints/valid-year';
 import validEmail from './constraints/valid-email';
 import validIBAN from './constraints/valid-iban';
+import validPhoneNumber from './constraints/valid-phone-number';
 import validateExtraTaxRateOrAmount from './constraints/vlabel-extra-taxrate-or-amount';
 import validBoolean from './constraints/valid-boolean';
 import validChildcareSubsidyTable from './constraints/valid-childcare-subsidy-table';
@@ -66,6 +67,8 @@ export default function constraintForUri(uri) {
       return validEmail;
     case "http://lblod.data.gift/vocabularies/forms/ValidIBAN":
       return validIBAN;
+    case "http://lblod.data.gift/vocabularies/forms/ValidPhoneNumber":
+      return validPhoneNumber;
     case "http://lblod.data.gift/vocabularies/forms/VlabelExtraTaxRateOrAmountConstraint":
       return validateExtraTaxRateOrAmount;
     case "http://lblod.data.gift/vocabularies/forms/ValidBoolean":
