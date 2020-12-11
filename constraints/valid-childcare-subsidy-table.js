@@ -21,7 +21,8 @@ export default function constraintValidChildcareSubsidyTable(table, options) {
   const childcareSubsidyEntries = store.match(
     table,
     childcareSubsidyEntryPredicate,
-    undefined
+    undefined,
+    sourceGraph
   );
 
   if (childcareSubsidyEntries.length == 0)
