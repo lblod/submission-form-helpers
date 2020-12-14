@@ -15,5 +15,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function constraintValidUri(value
 /*, options*/
 ) {
-  return _validator.default.isURL(value.value);
+  return _validator.default.isURL(value.value, {
+    require_protocol: true,
+    require_valid_protocol: true
+  });
 }
