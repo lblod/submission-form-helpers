@@ -5,11 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = constraintValidUri;
 
+var _validator = _interopRequireDefault(require("validator"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /**
  * Checks if it is a valid uri
  */
 function constraintValidUri(value
 /*, options*/
 ) {
-  return value.value.match(/^(http|ftp)s?:\/\/[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$/);
+  return _validator.default.isURL(value.value);
 }
