@@ -23,6 +23,7 @@
     "libphonenumber-js": "^1.9.6",
     "moment": "^2.24.0",
     "rdflib": "1.1.0",
-    "uuid": "^7.0.3"
+    "uuid": "^7.0.3",
+    "validator": "^13.5.2"
   }
 }
