@@ -36,6 +36,7 @@ import validBoolean from './constraints/valid-boolean';
 import validChildcareSubsidyTable from './constraints/valid-childcare-subsidy-table';
 import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate';
 import maxLength from './constraints/max-length';
+import validEngagementTable from './constraints/valid-engagement-table';
 
 export default function constraintForUri(uri) {
   switch (String(uri)) {
@@ -79,6 +80,8 @@ export default function constraintForUri(uri) {
       return singleInstanceTaxRateOrExtraTaxRate;
     case "http://lblod.data.gift/vocabularies/forms/MaxLength":
       return maxLength;
+    case "http://lblod.data.gift/vocabularies/forms/ValidEngagementTable":
+      return validEngagementTable;
     default:
       return false; //TODO: TBD
   }

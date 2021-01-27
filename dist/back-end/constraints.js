@@ -171,6 +171,8 @@ var _vlabelSingleInstanceTaxRateOrExtraTaxRate = _interopRequireDefault(require(
 
 var _maxLength = _interopRequireDefault(require("./constraints/max-length"));
 
+var _validEngagementTable = _interopRequireDefault(require("./constraints/valid-engagement-table"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function constraintForUri(uri) {
@@ -234,6 +236,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/MaxLength":
       return _maxLength.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/ValidEngagementTable":
+      return _validEngagementTable.default;
 
     default:
       return false;
