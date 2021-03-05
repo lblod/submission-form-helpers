@@ -21,7 +21,8 @@ function validDateTimeString(value) {
   if (moment(value, "YYYY-MM-DDTHH:mm:ss.SSSSZ", true).isValid()){
     return true;
   }
-  //Here moment does thejob checking it is an valid date, the next check is solely a syntactic check
+  // Here moment does the job checking it is an valid date (doest it exist), 
+  // the next check is solely a syntactic check (to match against the lexical values allowed in xsd)
   else if(moment(value, moment.ISO_8601, true).isValid() && value.match(xsdDateTimeRegex, 'g')){
     return true;
   }
