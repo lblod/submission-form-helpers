@@ -278,7 +278,6 @@ function validationResultsForField(fieldUri, options) {
     validationResults.push(validationResult);
   }
 
-  console.log('validationResultsForField -> validationResults', validationResults);
   return validationResults;
 }
 

@@ -173,7 +173,7 @@ var _maxLength = _interopRequireDefault(require("./constraints/max-length"));
 
 var _validEngagementTable = _interopRequireDefault(require("./constraints/valid-engagement-table"));
 
-var _validBikeSubsidyEstimatedKm = _interopRequireDefault(require("./constraints/valid-bike-subsidy-estimated-km"));
+var _hasOneNumberGreaterThanInFields = _interopRequireDefault(require("./constraints/has-one-number-greater-than-in-fields"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -242,8 +242,8 @@ function constraintForUri(uri) {
     case "http://lblod.data.gift/vocabularies/forms/ValidEngagementTable":
       return _validEngagementTable.default;
 
-    case "http://lblod.data.gift/vocabularies/forms/ValidBikeSubsidyEstimatedKm":
-      return _validBikeSubsidyEstimatedKm.default;
+    case "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields":
+      return _hasOneNumberGreaterThanInFields.default;
 
     default:
       return false;

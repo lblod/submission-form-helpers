@@ -37,7 +37,7 @@ import validChildcareSubsidyTable from './constraints/valid-childcare-subsidy-ta
 import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate';
 import maxLength from './constraints/max-length';
 import validEngagementTable from './constraints/valid-engagement-table';
-import validBikeSubsidyEstimatedKm from './constraints/valid-bike-subsidy-estimated-km';
+import hasOneNumberGreaterThanInFields from './constraints/has-one-number-greater-than-in-fields';
 
 export default function constraintForUri(uri) {
   switch (String(uri)) {
@@ -83,8 +83,8 @@ export default function constraintForUri(uri) {
       return maxLength;
     case "http://lblod.data.gift/vocabularies/forms/ValidEngagementTable":
       return validEngagementTable;
-    case "http://lblod.data.gift/vocabularies/forms/ValidBikeSubsidyEstimatedKm":
-      return validBikeSubsidyEstimatedKm;
+    case "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields":
+      return hasOneNumberGreaterThanInFields;
     default:
       return false; //TODO: TBD
   }
