@@ -1,10 +1,9 @@
 import { FORM, SHACL } from '../namespaces';
 import rdflib from './../rdflib-shim.js';
 
-export default function hasOnePositiveNumberInFields(field, options) {
+export default function HasOneNumberGreaterThanInFields(field, options) {
   const {store, sourceGraph, formGraph, constraintUri} = options;
 
-  const constraint = store.any(constraintUri, FORM('validations'), undefined, formGraph);
   const paths = store.match(constraintUri, SHACL('path'), undefined, formGraph);
   const values = paths.map(path => getValue(path.object, options));
 
