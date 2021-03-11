@@ -21,7 +21,7 @@ export default function HasOneNumberGreaterThanInFields(field, options) {
 
 function getValue(predicate, options) {
   const entry = options.store.any(
-      undefined,
+      options.sourceNode,
       predicate,
       undefined,
       options.sourceGraph,
