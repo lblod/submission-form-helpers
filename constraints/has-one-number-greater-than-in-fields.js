@@ -2,16 +2,13 @@ import { FORM, SHACL } from '../namespaces';
 import rdflib from './../rdflib-shim.js';
 
 export default function HasOneNumberGreaterThanInFields(field, options) {
-  const {store, sourceGraph, formGraph, constraintUri} = options;
-
-  const paths = store.match(constraintUri, SHACL('path'), undefined, formGraph);
+  const paths = options.store.match(options.constraintUri, SHACL('path'), undefined, options.formGraph);
   const values = paths.map(path => getValue(path.object, options));
-
-  const threshold = store.any(constraintUri, FORM('threshold'), undefined, formGraph);
+  const threshold = options.store.any(options.constraintUri, FORM('threshold'), undefined, options.formGraph);
 
   let isValidGroup = false;
   values.forEach(value => {
-    const isValidValue = isPositiveValue(value);
+    const isValidValue = isGreaterThan(value, threshold);
     if (isValidValue)
       isValidGroup = true;
   });
@@ -29,6 +26,6 @@ function getValue(predicate, options) {
   return entry && entry.value;
 }
 
-function isPositiveValue(value) {
-  return parseInt(value) > 0;
+function isGreaterThan(value, threshold) {
+  return parseInt(value) > parseInt(threshold);
 }
