@@ -2,7 +2,7 @@ import parsePhoneNumber from 'libphonenumber-js'
 import { FORM } from '../namespaces';
 
 /**
- * Checks if the given string is an valid phone number.
+ * Checks if the given string is a valid phone number.
  */
 export default function constraintValidPhoneNumber(value, options) {
   const { constraintUri, store } = options;

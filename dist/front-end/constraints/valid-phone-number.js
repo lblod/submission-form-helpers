@@ -12,7 +12,7 @@ var _namespaces = require("../namespaces");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Checks if the given string is an valid phone number.
+ * Checks if the given string is a valid phone number.
  */
 function constraintValidPhoneNumber(value, options) {
   const {
