@@ -10,7 +10,6 @@ const engagementEntryPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/
 const existingStaffPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/existingStaff');
 const additionalStaffPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/additionalStaff');
 const volunteersPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/volunteers');
-const estimatedCostPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/estimatedCost');
 
 /*
  * This custom validator has been build to validate a complex component that handles fields which
@@ -36,8 +35,7 @@ export default function constraintValidEngagementTable(table, options) {
         entry,
         [ existingStaffPredicate,
           additionalStaffPredicate,
-          volunteersPredicate,
-          estimatedCostPredicate ],
+          volunteersPredicate ],
         store,
         sourceGraph
     );
@@ -45,27 +43,15 @@ export default function constraintValidEngagementTable(table, options) {
       isValidTable = false;
     } else {
       // Each entry should have a valid and positive ints as numbers
-      const validPositiveInts = hasPositiveInts(
+      const validPositiveInts = hasPositiveNumbers(
         entry,
         [ existingStaffPredicate,
           additionalStaffPredicate,
-          volunteersPredicate,
-          estimatedCostPredicate ],
+          volunteersPredicate ],
         store,
         sourceGraph
       );
       if (!validPositiveInts)
-        isValidTable = false;
-
-      // Estimated cost should have a maximum of 6 numbers
-      const validSizedInts = hasValidSizedInts(
-        entry,
-        [ estimatedCostPredicate ],
-        store,
-        sourceGraph,
-        options
-      );
-      if (!validSizedInts)
         isValidTable = false;
     }
   });
@@ -101,7 +87,7 @@ function hasNotEmptyStrings(entry, predicates, store, sourceGraph) {
   return result;
 }
 
-function hasPositiveInts(entry, predicates, store, sourceGraph) {
+function hasPositiveNumbers(entry, predicates, store, sourceGraph) {
   let result = true;
   predicates.forEach(predicate => {
     const value = store.match(
@@ -110,21 +96,7 @@ function hasPositiveInts(entry, predicates, store, sourceGraph) {
       undefined,
       sourceGraph
     )[0].object; // we expect only one per predicate
-    result = result && constraintValidInteger(value) && constraintPositiveNumber(value);
-  });
-  return result;
-}
-
-function hasValidSizedInts(entry, predicates, store, sourceGraph, options) {
-  let result = true;
-  predicates.forEach(predicate => {
-    const value = store.match(
-      entry,
-      predicate,
-      undefined,
-      sourceGraph
-    )[0].object; // we expect only one per predicate
-    result = result && constraintMaxLength(value, options);
+    result = result && constraintPositiveNumber(value);
   });
   return result;
 }
