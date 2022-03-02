@@ -17,7 +17,7 @@ function constraintMaxLength(value, options) {
   } = options;
   const max = Number(store.any(constraintUri, (0, _namespaces.FORM)("max"), undefined).value) || 100000;
 
-  switch (value.datatype.value) {
+  switch (value && value.value && value.datatype && value.datatype.value) {
     case 'http://www.w3.org/2001/XMLSchema#integer':
       return Number(value.value) <= max;
 
