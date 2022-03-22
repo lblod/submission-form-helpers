@@ -38,6 +38,7 @@ import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-ins
 import maxLength from './constraints/max-length';
 import validEngagementTable from './constraints/valid-engagement-table';
 import hasOneNumberGreaterThanInFields from './constraints/has-one-number-greater-than-in-fields';
+import matchValues from './constraints/match-values';
 
 export default function constraintForUri(uri) {
   switch (String(uri)) {
@@ -85,6 +86,8 @@ export default function constraintForUri(uri) {
       return validEngagementTable;
     case "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields":
       return hasOneNumberGreaterThanInFields;
+  case "http://lblod.data.gift/vocabularies/forms/MatchValues":
+      return matchValues;
     default:
       return false; //TODO: TBD
   }
