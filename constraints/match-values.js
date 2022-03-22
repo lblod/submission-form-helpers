@@ -1,7 +1,7 @@
 import { FORM, SKOS } from '../namespaces';
 
 /**
- * Checks if the supplied values contain the defined custom value.
+ * For an arbitrary list of elements, check whether the provided value matches one element of the list
  */
 
 export default function constraintMatchValues(values, options) {
