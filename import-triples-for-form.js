@@ -3,15 +3,25 @@ import { check, checkTriples } from './constraints';
 import rdflib from "./rdflib-shim.js";
 import { v4 as uuidv4 } from 'uuid';
 
+
 const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 
 function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, metaGraph}) {
   let datasetTriples = [];
   for (let field of fieldsForForm(form, {store, formGraph, sourceGraph, sourceNode, metaGraph})) {
-    let path = store.any(field, SHACL("path"), undefined, formGraph);
-    triplesForPath({path, store, formGraph, sourceNode, sourceGraph})
-      .triples
-      .forEach((item) => datasetTriples.push(item));
+    let scopedSourceNodes = [ sourceNode];
+    const scope = getScope(field, {store, formGraph});
+    if(scope){
+      const scopedDataSet = calculateScopedDataSet(scope, { store, formGraph, sourceNode, sourceGraph });
+      scopedSourceNodes = scopedDataSet.values;
+    }
+
+    for(const sourceNode of scopedSourceNodes){
+      let path = store.any(field, SHACL("path"), undefined, formGraph);
+      triplesForPath({path, store, formGraph, sourceNode, sourceGraph})
+        .triples
+        .forEach((item) => datasetTriples.push(item));
+    }
   }
 
   return datasetTriples;
@@ -88,25 +98,38 @@ function triplesForPath(options, createMissingNodes = false) {
 }
 
 function triplesForSimplePath(options, createMissingNodes = false) {
-  const {store, path, formGraph, sourceNode, sourceGraph} = options;
+  const { store, path, formGraph, sourceNode, sourceGraph, scope } = options;
   let datasetTriples = [];
-
-  if (path) {
-    const triples = store.match(sourceNode, path, undefined, sourceGraph);
-    if (createMissingNodes && triples.length == 0) {
-      triples.push(new rdflib.Statement(
-        sourceNode,
-        path,
-        new rdflib.NamedNode(URI_TEMPLATE + uuidv4()),
-        sourceGraph
-      ));
-    }
-
-    triples.map((item) => {
-      datasetTriples.push(item);
-    });
+  let values = [];
+  let startNodes = [ sourceNode ];
+  if(scope){
+    //TODO: what if none?
+    const scopedDataSet = calculateScopedDataSet(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+    startNodes = scopedDataSet.values;
+    datasetTriples = [ ...datasetTriples, ...scopedDataSet.triples ];
   }
-  return {triples: datasetTriples, values: datasetTriples.map(({object}) => object)};
+
+  //TODO: why if no path? -> this should be an error-state
+  if (path) {
+    for(const sourceNode of startNodes){
+
+      const triples = store.match(sourceNode, path, undefined, sourceGraph);
+
+      if (createMissingNodes && triples.length == 0) {
+        triples.push(new rdflib.Statement(
+          sourceNode,
+          path,
+          new rdflib.NamedNode(URI_TEMPLATE + uuidv4()),
+          sourceGraph
+        ));
+      }
+
+      values = [ ...values, ...triples.map(({object}) => object) ];
+
+      datasetTriples = [ ...datasetTriples, ...triples] ;
+    }
+  }
+  return { triples: datasetTriples, values };
 }
 
 function triplesForComplexPath(options, createMissingNodes = false) {
@@ -128,6 +151,7 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
   // Walk over each part of the path list
   let startingPoints = [sourceNode];
+
   let nextPathElements = pathElements;
   while (startingPoints && nextPathElements.length) {
     // walk one segment of the path list
@@ -186,6 +210,21 @@ function triplesForComplexPath(options, createMissingNodes = false) {
     return {triples: datasetTriples, values: startingPoints};
   else
     return {triples: datasetTriples, values: []};
+}
+
+function getScope(field, options) {
+  const { store, formGraph } = options;
+  const scope = store.any(field, FORM("scope"), undefined, formGraph);
+  return scope;
+}
+
+//Note: scope can match multiple nodes
+function calculateScopedDataSet(scopeUri, options, createMissingNodes = false ) {
+  const { store, formGraph, sourceNode, sourceGraph } = options;
+  let path = store.any(scopeUri, SHACL("path"), undefined, formGraph);
+  const dataset = triplesForPath({ store, store, path, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+  //TODO: extra shape logic matching
+  return dataset;
 }
 
 function validateForm(form, options) {
