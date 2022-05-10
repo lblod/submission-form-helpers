@@ -28,7 +28,30 @@ function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, 
 }
 
 function fieldsForForm(form, options) {
-  let {store, formGraph, sourceGraph, sourceNode, metaGraph} = options;
+  let fields = [];
+  if(isFormModelV3(form, options)) {
+    fields = fieldsForFormModelV3(form, options);
+  } else {
+    fields = fieldsForFormModelV1(form, options);
+  }
+  return fields;
+}
+
+function isFormModelV3(form, options) {
+  let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
+  const isTopLevelForm = store.any(form, RDF('type'), FORM('TopLevelForm'));
+  const isSubForm = store.any(form, RDF('type'), FORM('SubForm'), formGraph);
+  return isTopLevelForm || isSubForm;
+}
+
+function fieldsForFormModelV3(form, options) {
+  let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
+  //TODO: conditionals (also to define in form model)
+  return store.match(form, FORM('formItem'), undefined, formGraph).map( ({ object }) => object);
+}
+
+function fieldsForFormModelV1(form, options) {
+  let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
 
   // get field groups
   let fieldGroups = store.match(form, FORM("hasFieldGroup"), undefined, formGraph);
