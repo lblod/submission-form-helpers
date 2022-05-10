@@ -411,6 +411,7 @@ function addSimpleFormValue(value, options) {
 export default importTriplesForForm;
 export {
   triplesForPath,
+  calculateScopedDataSet,
   fieldsForForm,
   validateForm,
   validateField,
