@@ -102,6 +102,8 @@ function fieldsForFormModelV1(form, options) {
   return allFields;
 }
 
+
+
 function fieldsForFieldGroup(fieldGroup, options) {
   const {store, formGraph} = options;
 
@@ -156,7 +158,7 @@ function triplesForSimplePath(options, createMissingNodes = false) {
 }
 
 function triplesForComplexPath(options, createMissingNodes = false) {
-  const {store, path, formGraph, sourceNode, sourceGraph} = options;
+  const { store, path, formGraph, sourceNode, sourceGraph, scope } = options;
   let datasetTriples = [];
 
   // Convert PATH list to comprehensible objects
@@ -174,6 +176,13 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
   // Walk over each part of the path list
   let startingPoints = [sourceNode];
+
+  if(scope){
+    //TODO: what if none?
+    const scopedDataSet = calculateScopedDataSet(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+    startingPoints = scopedDataSet.values;
+    datasetTriples = [ ...datasetTriples, ...scopedDataSet.triples ];
+  }
 
   let nextPathElements = pathElements;
   while (startingPoints && nextPathElements.length) {
