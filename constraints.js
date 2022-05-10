@@ -2,7 +2,7 @@ import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE } from './namespaces';
 
 import {
   triplesForPath,
-  calculateScopedDataSet,
+  calculateTriplesDataForScope,
   fieldsForForm,
   validateForm,
   validateField,
@@ -138,7 +138,7 @@ function checkTriples(constraintUri, triplesData, options){
 
 export {
   triplesForPath,
-  calculateScopedDataSet,
+  calculateTriplesDataForScope,
   fieldsForForm,
   validateForm,
   validateField,

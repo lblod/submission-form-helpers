@@ -12,7 +12,7 @@ function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, 
     let scopedSourceNodes = [ sourceNode];
     const scope = getScope(field, {store, formGraph});
     if(scope){
-      const scopedDataSet = calculateScopedDataSet(scope, { store, formGraph, sourceNode, sourceGraph });
+      const scopedDataSet = calculateTriplesDataForScope(scope, { store, formGraph, sourceNode, sourceGraph });
       scopedSourceNodes = scopedDataSet.values;
     }
 
@@ -129,7 +129,7 @@ function triplesForSimplePath(options, createMissingNodes = false) {
   let startNodes = [ sourceNode ];
   if(scope){
     //TODO: what if none?
-    const scopedDataSet = calculateScopedDataSet(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+    const scopedDataSet = calculateTriplesDataForScope(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
     startNodes = scopedDataSet.values;
     datasetTriples = [ ...datasetTriples, ...scopedDataSet.triples ];
   }
@@ -179,7 +179,7 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
   if(scope){
     //TODO: what if none?
-    const scopedDataSet = calculateScopedDataSet(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+    const scopedDataSet = calculateTriplesDataForScope(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
     startingPoints = scopedDataSet.values;
     datasetTriples = [ ...datasetTriples, ...scopedDataSet.triples ];
   }
@@ -251,7 +251,7 @@ function getScope(field, options) {
 }
 
 //Note: scope can match multiple nodes
-function calculateScopedDataSet(scopeUri, options, createMissingNodes = false ) {
+function calculateTriplesDataForScope(scopeUri, options, createMissingNodes = false ) {
   const { store, formGraph, sourceNode, sourceGraph } = options;
   let path = store.any(scopeUri, SHACL("path"), undefined, formGraph);
   const dataset = triplesForPath({ store, store, path, formGraph, sourceNode, sourceGraph }, createMissingNodes);
@@ -411,7 +411,7 @@ function addSimpleFormValue(value, options) {
 export default importTriplesForForm;
 export {
   triplesForPath,
-  calculateScopedDataSet,
+  calculateTriplesDataForScope,
   fieldsForForm,
   validateForm,
   validateField,
