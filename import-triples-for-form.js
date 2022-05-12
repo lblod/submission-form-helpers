@@ -37,9 +37,8 @@ function fieldsForForm(form, options) {
   return fields;
 }
 
-function isFormModelV3(form, options) {
-  let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
-  const isTopLevelForm = store.any(form, RDF('type'), FORM('TopLevelForm'));
+function isFormModelV3(form, { store, formGraph }) {
+  const isTopLevelForm = store.any(form, RDF('type'), FORM('TopLevelForm'), formGraph);
   const isSubForm = store.any(form, RDF('type'), FORM('SubForm'), formGraph);
   return isTopLevelForm || isSubForm;
 }
@@ -99,8 +98,6 @@ function fieldsForFormModelV1(form, options) {
     newFieldGroups = [].concat(...newFieldGroups);
     fieldGroups = newFieldGroups;
   }
-
-  // console.log(`Found ${allFields.length} fields`);
 
   return allFields;
 }
@@ -413,6 +410,7 @@ function addSimpleFormValue(value, options) {
 
 export default importTriplesForForm;
 export {
+  isFormModelV3,
   triplesForPath,
   calculateTriplesDataForScope,
   fieldsForForm,
