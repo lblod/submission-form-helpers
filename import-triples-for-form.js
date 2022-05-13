@@ -252,10 +252,36 @@ function getScope(field, options) {
 
 //Note: scope can match multiple nodes
 function calculateTriplesDataForScope(scopeUri, options, createMissingNodes = false ) {
+
+  //TODO: creating missing nodes, is probably something we don't want anymore in v3?
   const { store, formGraph, sourceNode, sourceGraph } = options;
   let path = store.any(scopeUri, SHACL("path"), undefined, formGraph);
   const dataset = triplesForPath({ store, store, path, formGraph, sourceNode, sourceGraph }, createMissingNodes);
-  //TODO: extra shape logic matching
+
+  //TODO: support other types of constraints?
+  let constraints = store.match(scopeUri, FORM('constraint'), undefined, formGraph)
+      .filter(constraint => store.any(constraint.object, RDF('type'), SHACL('NodeShape'), formGraph))
+      .map(constraint => store.match(constraint.object, SHACL('property'), undefined, formGraph))
+      .reduce((acc, properties) => { return [...acc, ...properties ]; }, [])
+      .map(property => {
+                return {
+                  path: store.any(property.object, SHACL('path'), undefined, formGraph),
+                  targetNode: store.any(property.object, SHACL('targetNode'), undefined, formGraph)
+                };
+        });
+
+  //filter out values which don't match shapes
+  const filteredValues = [];
+  for(const value of [ ...dataset.values ]) {
+    for(const constraint of constraints){
+      //TODO: complex path...
+      if(!store.any(value, constraint.path, constraint.targetNode, sourceGraph)) {
+        dataset.values = dataset.values.filter(v => !v.equals(value));
+        dataset.triples = dataset.triples.filter(t => !t.object.equals(value));
+      }
+    }
+  }
+
   return dataset;
 }
 
