@@ -15,7 +15,9 @@ import {
   removeDatasetForSimpleFormValue,
   removeTriples,
   importTriplesForForm,
-  isFormModelV3
+  isFormModelV3,
+  generatorsForNode,
+  triplesForGenerator
 } from './import-triples-for-form';
 
 import required from './constraints/required';
@@ -152,7 +154,9 @@ export {
   removeSimpleFormValue,
   removeDatasetForSimpleFormValue,
   removeTriples,
-  importTriplesForForm
+  importTriplesForForm,
+  generatorsForNode,
+  triplesForGenerator
 }
 
 export { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE }

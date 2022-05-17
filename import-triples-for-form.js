@@ -3,7 +3,6 @@ import { check, checkTriples } from './constraints';
 import rdflib from "./rdflib-shim.js";
 import { v4 as uuidv4 } from 'uuid';
 
-
 const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 
 function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, metaGraph}) {
@@ -101,8 +100,6 @@ function fieldsForFormModelV1(form, options) {
 
   return allFields;
 }
-
-
 
 function fieldsForFieldGroup(fieldGroup, options) {
   const {store, formGraph} = options;
@@ -498,5 +495,7 @@ export {
   removeSimpleFormValue,
   removeDatasetForSimpleFormValue,
   removeTriples,
-  importTriplesForForm
+  importTriplesForForm,
+  generatorsForNode,
+  triplesForGenerator,
 };
