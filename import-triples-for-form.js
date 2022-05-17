@@ -1,4 +1,4 @@
-import { FORM, SHACL, RDF } from './namespaces';
+import { FORM, SHACL, RDF, MU } from './namespaces';
 import { check, checkTriples } from './constraints';
 import rdflib from "./rdflib-shim.js";
 import { v4 as uuidv4 } from 'uuid';
@@ -445,10 +445,13 @@ function triplesForGenerator(generatorUri, options) {
   const prototypeUri = store.any(generatorUri, FORM('prototype'), undefined, formGraph);
   const shapeUri = store.any(prototypeUri, FORM('shape'), undefined, formGraph);
 
-  const dataset = walkAndGenerateShape(shapeUri, options);
+  let dataset = walkAndGenerateShape(shapeUri, options);
 
   //TODO: currently just one source node is generated. Support cardinalities later
-  return { sourceNodes: [ dataset.sourceNode ], triples: dataset.triples };
+  dataset = { sourceNodes: [ dataset.sourceNode ], triples: dataset.triples };
+  dataset = augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph });
+
+  return dataset;
 }
 
 function walkAndGenerateShape(shapeUri, options , dataset = { sourceNode: [], triples: [] }) {
@@ -474,6 +477,24 @@ function walkAndGenerateShape(shapeUri, options , dataset = { sourceNode: [], tr
       dataset.triples.push(
         new rdflib.Statement(nextSubject, shapeElement.predicate, shapeElement.object)
       );
+    }
+  }
+  return dataset;
+}
+
+function augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph }) {
+  const dataGenerators = store.match(generatorUri, FORM('dataGenerator'), undefined, formGraph);
+
+  for(const generator of dataGenerators) {
+    if(generator.object.equals(FORM('addMuUuid'))){
+      const subjectValues = [ ...new Set(dataset.triples.map(triple => triple.subject.value)) ];
+      const extraTriples = subjectValues.map(subjectV => {
+        return new rdflib.Statement(new rdflib.NamedNode(subjectV), MU('uuid'), uuidv4());
+      });
+      dataset.triples = [ ...dataset.triples, ...extraTriples ];
+    }
+    else {
+      console.warn(`Unsupported 'form:dataGenerator' for ${generator.object.value}`);
     }
   }
   return dataset;
