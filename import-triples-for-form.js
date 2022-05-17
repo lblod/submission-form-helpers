@@ -435,6 +435,53 @@ function addSimpleFormValue(value, options) {
   store.addAll(triplesToAdd);
 }
 
+function generatorsForNode(node, options) {
+  const { store, formGraph } = options;
+  const createGenerators = store.match(node, FORM("createGenerator"), undefined, formGraph);
+  const initGenerators = store.match(node, FORM("initGenerator"), undefined, formGraph);
+  const augmentGenerators = store.match(node, FORM("augmentGenerator"), undefined, formGraph);
+  return { createGenerators, initGenerators, augmentGenerators };
+}
+
+function triplesForGenerator(generatorUri, options) {
+  const { store, formGraph } = options;
+  const prototypeUri = store.any(generatorUri, FORM('prototype'), undefined, formGraph);
+  const shapeUri = store.any(prototypeUri, FORM('shape'), undefined, formGraph);
+
+  const dataset = walkAndGenerateShape(shapeUri, options);
+
+  //TODO: currently just one source node is generated. Support cardinalities later
+  return { sourceNodes: [ dataset.sourceNode ], triples: dataset.triples };
+}
+
+function walkAndGenerateShape(shapeUri, options , dataset = { sourceNode: [], triples: [] }) {
+  const { store, formGraph } = options;
+  const shapeElements = store.match(shapeUri, undefined, undefined, formGraph);
+
+  let nextSubject = new rdflib.NamedNode(URI_TEMPLATE + uuidv4());
+
+  dataset.sourceNode = nextSubject;
+
+  for(const shapeElement of shapeElements) {
+
+    if(shapeElement.object.termType == "BlankNode") {
+      const nestedDataset = walkAndGenerateShape(shapeElement.object, options);
+
+        dataset.triples.push(
+          new rdflib.Statement(nextSubject, shapeElement.predicate, nestedDataset.sourceNode)
+        );
+
+      dataset.triples = [ ...dataset.triples, ...nestedDataset.triples];
+    }
+    else {
+      dataset.triples.push(
+        new rdflib.Statement(nextSubject, shapeElement.predicate, shapeElement.object)
+      );
+    }
+  }
+  return dataset;
+}
+
 export default importTriplesForForm;
 export {
   isFormModelV3,
