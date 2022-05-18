@@ -433,9 +433,9 @@ function addSimpleFormValue(value, options) {
 
 function generatorsForNode(node, options) {
   const { store, formGraph } = options;
-  const createGenerators = store.match(node, FORM("createGenerator"), undefined, formGraph);
-  const initGenerators = store.match(node, FORM("initGenerator"), undefined, formGraph);
-  const augmentGenerators = store.match(node, FORM("augmentGenerator"), undefined, formGraph);
+  const createGenerators = store.match(node, FORM("createGenerator"), undefined, formGraph).map(t => t.object);
+  const initGenerators = store.match(node, FORM("initGenerator"), undefined, formGraph).map(t => t.object);
+  const augmentGenerators = store.match(node, FORM("augmentGenerator"), undefined, formGraph).map(t => t.object);
   return { createGenerators, initGenerators, augmentGenerators };
 }
 
