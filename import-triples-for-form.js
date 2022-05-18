@@ -11,7 +11,7 @@ function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, 
     let scopedSourceNodes = [ sourceNode];
     const scope = getScope(field, {store, formGraph});
     if(scope){
-      const scopedDataSet = calculateTriplesDataForScope(scope, { store, formGraph, sourceNode, sourceGraph });
+      const scopedDataSet = triplesForScope(scope, { store, formGraph, sourceNode, sourceGraph });
       scopedSourceNodes = scopedDataSet.values;
     }
 
@@ -126,7 +126,7 @@ function triplesForSimplePath(options, createMissingNodes = false) {
   let startNodes = [ sourceNode ];
   if(scope){
     //TODO: what if none?
-    const scopedDataSet = calculateTriplesDataForScope(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+    const scopedDataSet = triplesForScope(scope, { store, formGraph, sourceNode, sourceGraph });
     startNodes = scopedDataSet.values;
     datasetTriples = [ ...datasetTriples, ...scopedDataSet.triples ];
   }
@@ -176,7 +176,7 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
   if(scope){
     //TODO: what if none?
-    const scopedDataSet = calculateTriplesDataForScope(scope, { store, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+    const scopedDataSet = triplesForScope(scope, { store, formGraph, sourceNode, sourceGraph });
     startingPoints = scopedDataSet.values;
     datasetTriples = [ ...datasetTriples, ...scopedDataSet.triples ];
   }
@@ -248,12 +248,11 @@ function getScope(field, options) {
 }
 
 //Note: scope can match multiple nodes
-function calculateTriplesDataForScope(scopeUri, options, createMissingNodes = false ) {
+function triplesForScope(scopeUri, options) {
 
-  //TODO: creating missing nodes, is probably something we don't want anymore in v3?
   const { store, formGraph, sourceNode, sourceGraph } = options;
   let path = store.any(scopeUri, SHACL("path"), undefined, formGraph);
-  const dataset = triplesForPath({ store, path, formGraph, sourceNode, sourceGraph }, createMissingNodes);
+  const dataset = triplesForPath({ store, path, formGraph, sourceNode, sourceGraph });
 
   //TODO: probably this could be more performant
   //TODO: support other types of constraints?
@@ -504,7 +503,7 @@ export default importTriplesForForm;
 export {
   isFormModelV3,
   triplesForPath,
-  calculateTriplesDataForScope,
+  triplesForScope,
   fieldsForForm,
   validateForm,
   validateField,
