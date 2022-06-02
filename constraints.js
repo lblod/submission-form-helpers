@@ -15,7 +15,7 @@ import {
   removeDatasetForSimpleFormValue,
   removeTriples,
   importTriplesForForm,
-  isFormModelV3,
+  getFormModelVersion,
   generatorsForNode,
   triplesForGenerator
 } from './import-triples-for-form';
@@ -140,7 +140,7 @@ function checkTriples(constraintUri, triplesData, options){
 }
 
 export {
-  isFormModelV3,
+  getFormModelVersion,
   triplesForPath,
   triplesForScope,
   fieldsForForm,

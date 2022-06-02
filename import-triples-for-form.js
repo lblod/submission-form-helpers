@@ -28,25 +28,32 @@ function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, 
 
 function fieldsForForm(form, options) {
   let fields = [];
-  if(isFormModelV3(form, options)) {
-    fields = fieldsForFormModelV3(form, options);
+  if(isFormModelV4(form, options)) {
+    fields = fieldsForFormModelV4(form, options);
   } else {
     fields = fieldsForFormModelV1(form, options);
   }
   return fields;
 }
 
-function isFormModelV3(form, { store, formGraph }) {
+function isFormModelV4(form, { store, formGraph }) {
   const isTopLevelForm = store.any(form, RDF('type'), FORM('TopLevelForm'), formGraph);
   const isSubForm = store.any(form, RDF('type'), FORM('SubForm'), formGraph);
   return isTopLevelForm || isSubForm;
 }
 
-function fieldsForFormModelV3(form, options) {
+function getFormModelVersion(form, { store, formGraph }) {
+  if(isFormModelV4) {
+    return "v4";
+  }
+  else return "v1";
+}
+
+function fieldsForFormModelV4(form, options) {
   let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
   //TODO: conditionals (also to define in form model)
   const formItems = store.match(form, FORM('formItem'), undefined, formGraph).map( ({ object }) => object);
-  //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V3 support
+  //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V4 support
   const conditional = fieldsForFormModelV1(form, options);
   return [...formItems, ...conditional];
 }
@@ -531,7 +538,7 @@ function augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph }) {
 
 export default importTriplesForForm;
 export {
-  isFormModelV3,
+  getFormModelVersion,
   triplesForPath,
   triplesForScope,
   fieldsForForm,
