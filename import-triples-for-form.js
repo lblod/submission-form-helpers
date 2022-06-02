@@ -8,7 +8,7 @@ const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, metaGraph}) {
   let datasetTriples = [];
   for (let field of fieldsForForm(form, {store, formGraph, sourceGraph, sourceNode, metaGraph})) {
-    let scopedSourceNodes = [ sourceNode];
+    let scopedSourceNodes = [ sourceNode ];
     const scope = getScope(field, {store, formGraph});
     if(scope){
       const scopedDataSet = triplesForScope(scope, { store, formGraph, sourceNode, sourceGraph });
@@ -151,7 +151,16 @@ function triplesForSimplePath(options, createMissingNodes = false) {
       datasetTriples = [ ...datasetTriples, ...triples] ;
     }
   }
-  return { triples: datasetTriples, values };
+
+  return { triples: datasetTriples, values,
+           orderedSegmentData: [
+             {
+               pathElement: { path },
+               triples: datasetTriples,
+               values
+             }
+           ]
+         };
 }
 
 function triplesForComplexPath(options, createMissingNodes = false) {
@@ -173,6 +182,7 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
   // Walk over each part of the path list
   let startingPoints = [sourceNode];
+  const orderedSegmentData = [];
 
   if(scope){
     //TODO: what if none?
@@ -185,7 +195,8 @@ function triplesForComplexPath(options, createMissingNodes = false) {
   while (startingPoints && nextPathElements.length) {
     // walk one segment of the path list
     let [currentPathElement, ...restPathElements] = nextPathElements;
-    let nextStartingPoints = [];
+
+    const segmentData = { pathElement: currentPathElement, triples: [], values: [] };
 
     for (let startingPoint of startingPoints) {
       if (currentPathElement.inversePath) {
@@ -204,7 +215,8 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
         triples.map((triple) => {
           datasetTriples.push(triple);
-          nextStartingPoints.push(triple.subject);
+          segmentData.triples.push(triple);
+          segmentData.values.push(triple.subject);
         });
 
       } else {
@@ -223,22 +235,25 @@ function triplesForComplexPath(options, createMissingNodes = false) {
 
         triples.map((triple) => {
           datasetTriples.push(triple);
-          nextStartingPoints.push(triple.object);
+          segmentData.triples.push(triple);
+          segmentData.values.push(triple.object);
         });
       }
     }
 
     // update state for next loop
-    startingPoints = nextStartingPoints;
+    startingPoints = segmentData.values;
     nextPathElements = restPathElements;
+
+    orderedSegmentData.push(segmentData);
   }
 
   // (this is reduntant, if there are no startingPoints values will
   // always be an array, but it's more obvious ;-)
   if (nextPathElements.length == 0)
-    return {triples: datasetTriples, values: startingPoints};
+    return { triples: datasetTriples, values: startingPoints, orderedSegmentData };
   else
-    return {triples: datasetTriples, values: []};
+    return { triples: datasetTriples, values: [], orderedSegmentData };
 }
 
 function getScope(field, options) {
@@ -267,19 +282,34 @@ function triplesForScope(scopeUri, options) {
                 };
         });
 
-  //filter out values which don't match shapes
-  const filteredValues = [];
-  for(const value of [ ...dataset.values ]) {
+  // filter out values which don't match shapes
+  // Note: the filtered data changes  are applied in place
+  const orderedSegmentData = dataset.orderedSegmentData;
+  const lastSegmentData = orderedSegmentData.slice(-1)[0];
+
+  for(const value of [ ...lastSegmentData.values ]) {
     for(const constraint of constraints){
       const objects = triplesForPath({ store, path: constraint.path, formGraph, sourceNode: value, sourceGraph }).values;
+
       if(!objects.find(o => o.equals(constraint.targetNode))) {
-        dataset.values = dataset.values.filter(v => !v.equals(value));
-        dataset.triples = dataset.triples.filter(t => !t.object.equals(value));
+
+        lastSegmentData.values = lastSegmentData.values.filter(v => !v.equals(value));
+
+        if(lastSegmentData.pathElement.inversePath) {
+          lastSegmentData.triples = lastSegmentData.triples.filter(t => !t.subject.equals(value));
+        }
+        else {
+          lastSegmentData.triples = lastSegmentData.triples.filter(t => !t.object.equals(value));
+        }
       }
     }
   }
 
-  return dataset;
+  const filteredTriples = orderedSegmentData.reduce( (acc, segment) => {
+    return [...acc, ...segment.triples];
+  }, []);
+
+  return { triples: filteredTriples, values: lastSegmentData.values, orderedSegmentData };
 }
 
 function validateForm(form, options) {
