@@ -43,7 +43,7 @@ function isFormModelV4(form, { store, formGraph }) {
 }
 
 function getFormModelVersion(form, { store, formGraph }) {
-  if(isFormModelV4) {
+  if(isFormModelV4(form, { store, formGraph })) {
     return "v4";
   }
   else return "v1";
@@ -52,7 +52,7 @@ function getFormModelVersion(form, { store, formGraph }) {
 function fieldsForFormModelV4(form, options) {
   let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
   //TODO: conditionals (also to define in form model)
-  const formItems = store.match(form, FORM('formItem'), undefined, formGraph).map( ({ object }) => object);
+  const formItems = store.match(form, FORM('includes'), undefined, formGraph).map( ({ object }) => object);
   //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V4 support
   const conditional = fieldsForFormModelV1(form, options);
   return [...formItems, ...conditional];
