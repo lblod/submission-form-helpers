@@ -199,7 +199,7 @@ function triplesForComplexPath(options, createMissingNodes = false) {
   }
 
   let nextPathElements = pathElements;
-  while (startingPoints && nextPathElements.length) {
+  while (nextPathElements.length) {
     // walk one segment of the path list
     let [currentPathElement, ...restPathElements] = nextPathElements;
 
