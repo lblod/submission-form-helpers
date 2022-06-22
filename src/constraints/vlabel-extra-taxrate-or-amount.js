@@ -1,4 +1,4 @@
-import rdflib from "./../rdflib-shim.js";
+import rdflib from "../../rdflib-shim.js";
 
 const { namedNode } = rdflib;
 
