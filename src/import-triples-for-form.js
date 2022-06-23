@@ -1,6 +1,6 @@
 import { FORM, SHACL, RDF } from './namespaces';
 import { check, checkTriples } from './constraints';
-import rdflib from "../rdflib-shim.js";
+import rdflib from "rdflib";
 import { v4 as uuidv4 } from 'uuid';
 
 const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
