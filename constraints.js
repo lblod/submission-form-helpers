@@ -16,9 +16,12 @@ import {
   removeTriples,
   importTriplesForForm,
   getFormModelVersion,
+} from './import-triples-for-form';
+
+import {
   generatorsForNode,
   triplesForGenerator
-} from './import-triples-for-form';
+} from './generators';
 
 import required from './constraints/required';
 import codelist from './constraints/codelist';
@@ -90,7 +93,7 @@ export default function constraintForUri(uri) {
       return validEngagementTable;
     case "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields":
       return hasOneNumberGreaterThanInFields;
-  case "http://lblod.data.gift/vocabularies/forms/MatchValues":
+    case "http://lblod.data.gift/vocabularies/forms/MatchValues":
       return matchValues;
     default:
       return false; //TODO: TBD
