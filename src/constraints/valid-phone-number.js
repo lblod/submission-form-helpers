@@ -1,5 +1,5 @@
 import parsePhoneNumber from 'libphonenumber-js'
-import { FORM } from '../namespaces';
+import { FORM } from '../namespaces.js';
 
 /**
  * Checks if the given string is a valid phone number.

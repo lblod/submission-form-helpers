@@ -1,4 +1,4 @@
-import { FORM } from '../namespaces';
+import { FORM } from '../namespaces.js';
 
 /**
  * Checks if there is an exact value supplied

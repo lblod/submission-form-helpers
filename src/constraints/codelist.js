@@ -1,4 +1,4 @@
-import { FORM, SKOS } from '../namespaces';
+import { FORM, SKOS } from '../namespaces.js';
 
 /**
  * Checks if the value comes from the supplied codelist.
