@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { check, checkTriples } from './constraints';
 import { FORM, RDF, SHACL } from './namespaces';
-import rdflib from "./rdflib-shim.js";
+import { NamedNode, Statement } from 'rdflib';
 
 const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 
@@ -145,10 +145,10 @@ function triplesForSimplePath(options, createMissingNodes = false) {
       const triples = store.match(sourceNode, path, undefined, sourceGraph);
 
       if (createMissingNodes && triples.length == 0) {
-        triples.push(new rdflib.Statement(
+        triples.push(new Statement(
           sourceNode,
           path,
-          new rdflib.NamedNode(URI_TEMPLATE + uuidv4()),
+          new NamedNode(URI_TEMPLATE + uuidv4()),
           sourceGraph
         ));
       }
@@ -212,8 +212,8 @@ function triplesForComplexPath(options, createMissingNodes = false) {
         const triples = store.match(undefined, currentPathElement.inversePath, startingPoint, sourceGraph);
 
         if (createMissingNodes && triples.length == 0) {
-          triples.push(new rdflib.Statement(
-            new rdflib.NamedNode(URI_TEMPLATE + uuidv4()),
+          triples.push(new Statement(
+            new NamedNode(URI_TEMPLATE + uuidv4()),
             currentPathElement.inversePath,
             startingPoint,
             sourceGraph
@@ -232,10 +232,10 @@ function triplesForComplexPath(options, createMissingNodes = false) {
         const triples = store.match(startingPoint, currentPathElement.path, undefined, sourceGraph);
 
         if (createMissingNodes && triples.length == 0) {
-          triples.push(new rdflib.Statement(
+          triples.push(new Statement(
             startingPoint,
             currentPathElement.path,
-            new rdflib.NamedNode(URI_TEMPLATE + uuidv4()),
+            new NamedNode(URI_TEMPLATE + uuidv4()),
             sourceGraph
           ));
         }
