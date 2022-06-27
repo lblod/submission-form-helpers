@@ -6,7 +6,7 @@
   "scripts": {
     "test": "babel-node constraints.js",
     "prepare": "npm run build",
-    "build": "babel . --out-dir ./dist/cjs --ignore \"./node_modules\",\"./dist\""
+    "build": "babel ./src --out-dir ./dist/cjs" 
   },
   "author": "redpencil.io",
   "license": "MIT",
