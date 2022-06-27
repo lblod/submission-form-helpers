@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { FORM, MU } from './namespaces';
+import { FORM, MU, RDF } from './namespaces';
 import rdflib from "./rdflib-shim.js";
 
-const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
+const DEFAULT_URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 
 export function generatorsForNode(node, options) {
   const { store, formGraph } = options;
@@ -30,7 +30,7 @@ function walkAndGenerateShape(shapeUri, options , dataset = { sourceNode: [], tr
   const { store, formGraph } = options;
   const shapeElements = store.match(shapeUri, undefined, undefined, formGraph);
 
-  let nextSubject = new rdflib.NamedNode(URI_TEMPLATE + uuidv4());
+  let nextSubject = new rdflib.NamedNode(helpGenerateUri(shapeElements, { store, formGraph }));
 
   dataset.sourceNode = nextSubject;
 
@@ -70,4 +70,35 @@ function augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph }) {
     }
   }
   return dataset;
+}
+
+function helpGenerateUri(shapeElements, { store, formGraph }) {
+  const typeInformation = shapeElements.find(shape => shape.predicate.equals(RDF('type')));
+  if(typeInformation) {
+    return newUriForType(typeInformation.object, { store, formGraph });
+  }
+  else {
+    return DEFAULT_URI_TEMPLATE + uuidv4();
+  }
+}
+
+function newUriForType(type, { store, formGraph }) {
+  const uriGenerator = uriGeneratorForType(type, { store, formGraph });
+  const prefix = store.any(uriGenerator, FORM('prefix'), undefined , formGraph);
+  if(uriGenerator && prefix) {
+    return prefix.value + uuidv4();
+  }
+  else {
+    return DEFAULT_URI_TEMPLATE + uuidv4();
+  }
+}
+
+function uriGeneratorForType(type, { store, formGraph }) {
+  const uriGenerators = store.match(undefined, RDF('type'), FORM('UriGenerator'), formGraph);
+  for(const generator of uriGenerators) {
+    if(store.any(generator.subject, FORM('forType'), type, formGraph)) {
+      return generator.subject;
+    }
+  }
+  return null;
 }
