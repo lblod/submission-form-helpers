@@ -1,4 +1,4 @@
-import { FORM, SKOS } from '../namespaces';
+import { FORM, SKOS } from '../namespaces.mjs';
 
 /**
  * Checks if there is only a single value coming from the supplied codelist

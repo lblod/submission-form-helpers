@@ -1,5 +1,4 @@
-import { FORM, SHACL } from '../namespaces';
-import rdflib from 'rdflib';
+import { FORM, SHACL } from '../namespaces.mjs';
 
 export default function HasOneNumberGreaterThanInFields(field, options) {
   const paths = options.store.match(options.constraintUri, SHACL('path'), undefined, options.formGraph);

@@ -1,6 +1,4 @@
-import rdflib from "rdflib";
-
-const { namedNode } = rdflib;
+import { namedNode } from "rdflib";
 
 export default function validateExtraTaxRateOrAmount(value, options) {
   const { store, sourceNode, sourceGraph } = options;

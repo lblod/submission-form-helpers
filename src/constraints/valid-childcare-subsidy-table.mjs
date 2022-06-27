@@ -1,9 +1,7 @@
-import { FORM, SKOS } from '../namespaces';
-import rdflib from "rdflib";
-import constraintPositiveNumber from './positive-number';
-import constraintValidInteger from './valid-integer';
-
-const { namedNode } = rdflib;
+import { FORM, SKOS } from '../namespaces.mjs';
+import { namedNode } from "rdflib";
+import constraintPositiveNumber from './positive-number.mjs';
+import constraintValidInteger from './valid-integer.mjs';
 
 const childcareSubsidyEntryPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/applicationFormEntry');
 const actorNamePredicate = namedNode('http://mu.semte.ch/vocabularies/ext/actorName');

@@ -1,4 +1,4 @@
-import { FORM } from '../namespaces';
+import { FORM } from '../namespaces.mjs';
 
 /**
  * Checks if the given value is not longer than the given max length.

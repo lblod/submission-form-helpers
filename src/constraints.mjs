@@ -1,4 +1,4 @@
-import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE } from './namespaces';
+import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE } from './namespaces.mjs';
 
 import {
   triplesForPath,
@@ -14,31 +14,31 @@ import {
   removeDatasetForSimpleFormValue,
   removeTriples,
   importTriplesForForm
-} from './import-triples-for-form';
+} from './import-triples-for-form.mjs';
 
-import required from './constraints/required';
-import codelist from './constraints/codelist';
-import singleCodelistValue from './constraints/single-codelist-value';
-import containsCodelistValue from './constraints/contains-codelist-value';
-import exactValue from './constraints/exact-value';
-import validUri from './constraints/valid-uri';
-import validDate from './constraints/valid-date';
-import validDateTime from './constraints/valid-date-time';
-import validInteger from './constraints/valid-integer';
-import positiveNumber from './constraints/positive-number';
-import conceptScheme from './constraints/concept-scheme';
-import validYear from './constraints/valid-year';
-import validEmail from './constraints/valid-email';
-import validIBAN from './constraints/valid-iban';
-import validPhoneNumber from './constraints/valid-phone-number';
-import validateExtraTaxRateOrAmount from './constraints/vlabel-extra-taxrate-or-amount';
-import validBoolean from './constraints/valid-boolean';
-import validChildcareSubsidyTable from './constraints/valid-childcare-subsidy-table';
-import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate';
-import maxLength from './constraints/max-length';
-import validEngagementTable from './constraints/valid-engagement-table';
-import hasOneNumberGreaterThanInFields from './constraints/has-one-number-greater-than-in-fields';
-import matchValues from './constraints/match-values';
+import required from './constraints/required.mjs';
+import codelist from './constraints/codelist.mjs';
+import singleCodelistValue from './constraints/single-codelist-value.mjs';
+import containsCodelistValue from './constraints/contains-codelist-value.mjs';
+import exactValue from './constraints/exact-value.mjs';
+import validUri from './constraints/valid-uri.mjs';
+import validDate from './constraints/valid-date.mjs';
+import validDateTime from './constraints/valid-date-time.mjs';
+import validInteger from './constraints/valid-integer.mjs';
+import positiveNumber from './constraints/positive-number.mjs';
+import conceptScheme from './constraints/concept-scheme.mjs';
+import validYear from './constraints/valid-year.mjs';
+import validEmail from './constraints/valid-email.mjs';
+import validIBAN from './constraints/valid-iban.mjs';
+import validPhoneNumber from './constraints/valid-phone-number.mjs';
+import validateExtraTaxRateOrAmount from './constraints/vlabel-extra-taxrate-or-amount.mjs';
+import validBoolean from './constraints/valid-boolean.mjs';
+import validChildcareSubsidyTable from './constraints/valid-childcare-subsidy-table.mjs';
+import singleInstanceTaxRateOrExtraTaxRate from './constraints/vlabel-single-instance-tax-rate-or-extra-tax-rate.mjs';
+import maxLength from './constraints/max-length.mjs';
+import validEngagementTable from './constraints/valid-engagement-table.mjs';
+import hasOneNumberGreaterThanInFields from './constraints/has-one-number-greater-than-in-fields.mjs';
+import matchValues from './constraints/match-values.mjs';
 
 export default function constraintForUri(uri) {
   switch (String(uri)) {

@@ -1,4 +1,4 @@
-import { FORM, SKOS } from '../namespaces';
+import { FORM, SKOS } from '../namespaces.mjs';
 
 export default function conceptSchemeValidation(values, options){
   if(!values.length) return true;
