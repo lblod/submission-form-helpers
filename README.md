@@ -37,7 +37,7 @@ import { constraintForUri } from "@lblod/submission-form-helpers"
     - `/path/to/code/submission-form-helpers:/app/node_modules/@lblod/submission-form-helpers`
     - Expects the dist folder to be present, and you will have to restart the service
 3. make your changes
-4. run `npm run build` (babel will transpile to the `dist/` folder)
+4. run `npm run prepare` (babel will transpile to the `dist/` folder)
 5. test inside your project
 6. bump the version number in `package.json`
 7. create a git tag
