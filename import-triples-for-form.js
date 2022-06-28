@@ -28,28 +28,28 @@ function importTriplesForForm(form, {store, formGraph, sourceGraph, sourceNode, 
 
 function fieldsForForm(form, options) {
   let fields = [];
-  if(isFormModelV4(form, options)) {
-    fields = fieldsForFormModelV4(form, options);
+  if(isFormModelV2(form, options)) {
+    fields = fieldsForFormModelV2(form, options);
   } else {
     fields = fieldsForFormModelV1(form, options);
   }
   return fields;
 }
 
-function isFormModelV4(form, { store, formGraph }) {
+function isFormModelV2(form, { store, formGraph }) {
   const isTopLevelForm = store.any(form, RDF('type'), FORM('TopLevelForm'), formGraph);
   const isSubForm = store.any(form, RDF('type'), FORM('SubForm'), formGraph);
   return isTopLevelForm || isSubForm;
 }
 
 function getFormModelVersion(form, { store, formGraph }) {
-  if(isFormModelV4(form, { store, formGraph })) {
-    return "v4";
+  if(isFormModelV2(form, { store, formGraph })) {
+    return "v2";
   }
   else return "v1";
 }
 
-function fieldsForFormModelV4(form, options) {
+function fieldsForFormModelV2(form, options) {
   let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
   //TODO: conditionals (also to define in form model)
   const formItems = store.match(form, FORM('includes'), undefined, formGraph).map( ({ object }) => object);
