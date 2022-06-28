@@ -3,19 +3,28 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = constraintForUri;
-exports.check = check;
-exports.checkTriples = checkTriples;
-Object.defineProperty(exports, "RDF", {
+Object.defineProperty(exports, "DCT", {
   enumerable: true,
   get: function () {
-    return _namespaces.RDF;
+    return _namespaces.DCT;
   }
 });
 Object.defineProperty(exports, "FORM", {
   enumerable: true,
   get: function () {
     return _namespaces.FORM;
+  }
+});
+Object.defineProperty(exports, "NIE", {
+  enumerable: true,
+  get: function () {
+    return _namespaces.NIE;
+  }
+});
+Object.defineProperty(exports, "RDF", {
+  enumerable: true,
+  get: function () {
+    return _namespaces.RDF;
   }
 });
 Object.defineProperty(exports, "SHACL", {
@@ -36,16 +45,61 @@ Object.defineProperty(exports, "XSD", {
     return _namespaces.XSD;
   }
 });
-Object.defineProperty(exports, "DCT", {
+Object.defineProperty(exports, "addSimpleFormValue", {
   enumerable: true,
   get: function () {
-    return _namespaces.DCT;
+    return _importTriplesForForm.addSimpleFormValue;
   }
 });
-Object.defineProperty(exports, "NIE", {
+exports.check = check;
+exports.checkTriples = checkTriples;
+exports.default = constraintForUri;
+Object.defineProperty(exports, "fieldsForForm", {
   enumerable: true,
   get: function () {
-    return _namespaces.NIE;
+    return _importTriplesForForm.fieldsForForm;
+  }
+});
+Object.defineProperty(exports, "generatorsForNode", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.generatorsForNode;
+  }
+});
+Object.defineProperty(exports, "getFormModelVersion", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.getFormModelVersion;
+  }
+});
+Object.defineProperty(exports, "importTriplesForForm", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.importTriplesForForm;
+  }
+});
+Object.defineProperty(exports, "removeDatasetForSimpleFormValue", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.removeDatasetForSimpleFormValue;
+  }
+});
+Object.defineProperty(exports, "removeSimpleFormValue", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.removeSimpleFormValue;
+  }
+});
+Object.defineProperty(exports, "removeTriples", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.removeTriples;
+  }
+});
+Object.defineProperty(exports, "triplesForGenerator", {
+  enumerable: true,
+  get: function () {
+    return _importTriplesForForm.triplesForGenerator;
   }
 });
 Object.defineProperty(exports, "triplesForPath", {
@@ -54,16 +108,16 @@ Object.defineProperty(exports, "triplesForPath", {
     return _importTriplesForForm.triplesForPath;
   }
 });
-Object.defineProperty(exports, "fieldsForForm", {
+Object.defineProperty(exports, "triplesForScope", {
   enumerable: true,
   get: function () {
-    return _importTriplesForForm.fieldsForForm;
+    return _importTriplesForForm.triplesForScope;
   }
 });
-Object.defineProperty(exports, "validateForm", {
+Object.defineProperty(exports, "updateSimpleFormValue", {
   enumerable: true,
   get: function () {
-    return _importTriplesForForm.validateForm;
+    return _importTriplesForForm.updateSimpleFormValue;
   }
 });
 Object.defineProperty(exports, "validateField", {
@@ -72,10 +126,10 @@ Object.defineProperty(exports, "validateField", {
     return _importTriplesForForm.validateField;
   }
 });
-Object.defineProperty(exports, "validationTypesForField", {
+Object.defineProperty(exports, "validateForm", {
   enumerable: true,
   get: function () {
-    return _importTriplesForForm.validationTypesForField;
+    return _importTriplesForForm.validateForm;
   }
 });
 Object.defineProperty(exports, "validationResultsForField", {
@@ -90,40 +144,10 @@ Object.defineProperty(exports, "validationResultsForFieldPart", {
     return _importTriplesForForm.validationResultsForFieldPart;
   }
 });
-Object.defineProperty(exports, "updateSimpleFormValue", {
+Object.defineProperty(exports, "validationTypesForField", {
   enumerable: true,
   get: function () {
-    return _importTriplesForForm.updateSimpleFormValue;
-  }
-});
-Object.defineProperty(exports, "addSimpleFormValue", {
-  enumerable: true,
-  get: function () {
-    return _importTriplesForForm.addSimpleFormValue;
-  }
-});
-Object.defineProperty(exports, "removeSimpleFormValue", {
-  enumerable: true,
-  get: function () {
-    return _importTriplesForForm.removeSimpleFormValue;
-  }
-});
-Object.defineProperty(exports, "removeDatasetForSimpleFormValue", {
-  enumerable: true,
-  get: function () {
-    return _importTriplesForForm.removeDatasetForSimpleFormValue;
-  }
-});
-Object.defineProperty(exports, "removeTriples", {
-  enumerable: true,
-  get: function () {
-    return _importTriplesForForm.removeTriples;
-  }
-});
-Object.defineProperty(exports, "importTriplesForForm", {
-  enumerable: true,
-  get: function () {
-    return _importTriplesForForm.importTriplesForForm;
+    return _importTriplesForForm.validationTypesForField;
   }
 });
 
@@ -174,6 +198,8 @@ var _maxLength = _interopRequireDefault(require("./constraints/max-length"));
 var _validEngagementTable = _interopRequireDefault(require("./constraints/valid-engagement-table"));
 
 var _hasOneNumberGreaterThanInFields = _interopRequireDefault(require("./constraints/has-one-number-greater-than-in-fields"));
+
+var _matchValues = _interopRequireDefault(require("./constraints/match-values"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -244,6 +270,9 @@ function constraintForUri(uri) {
 
     case "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields":
       return _hasOneNumberGreaterThanInFields.default;
+
+    case "http://lblod.data.gift/vocabularies/forms/MatchValues":
+      return _matchValues.default;
 
     default:
       return false;
