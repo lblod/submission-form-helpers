@@ -6,7 +6,6 @@ export default function constraintsRequired(values, options) {
     return false;
   }
   //for input with multiple languages
-  debugger;
   const language = options.store.match( options.constraintUri, FORM('language'), undefined)[0]?.object?.value;
   if(language){
     const value=values.find(value=>value.language==language);
