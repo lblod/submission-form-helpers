@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { FORM, MU, RDF } from './namespaces';
-import rdflib from "./rdflib-shim.js";
+import { NamedNode, Statement, } from 'rdflib';
+
 
 const DEFAULT_URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 
@@ -30,7 +31,7 @@ function walkAndGenerateShape(shapeUri, options , dataset = { sourceNode: [], tr
   const { store, formGraph } = options;
   const shapeElements = store.match(shapeUri, undefined, undefined, formGraph);
 
-  let nextSubject = new rdflib.NamedNode(helpGenerateUri(shapeElements, { store, formGraph }));
+  let nextSubject = new NamedNode(helpGenerateUri(shapeElements, { store, formGraph }));
 
   dataset.sourceNode = nextSubject;
 
@@ -40,14 +41,14 @@ function walkAndGenerateShape(shapeUri, options , dataset = { sourceNode: [], tr
       const nestedDataset = walkAndGenerateShape(shapeElement.object, options);
 
         dataset.triples.push(
-          new rdflib.Statement(nextSubject, shapeElement.predicate, nestedDataset.sourceNode)
+          new Statement(nextSubject, shapeElement.predicate, nestedDataset.sourceNode)
         );
 
       dataset.triples = [ ...dataset.triples, ...nestedDataset.triples];
     }
     else {
       dataset.triples.push(
-        new rdflib.Statement(nextSubject, shapeElement.predicate, shapeElement.object)
+        new Statement(nextSubject, shapeElement.predicate, shapeElement.object)
       );
     }
   }
@@ -61,7 +62,7 @@ function augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph }) {
     if(generator.object.equals(FORM('addMuUuid'))){
       const subjectValues = [ ...new Set(dataset.triples.map(triple => triple.subject.value)) ];
       const extraTriples = subjectValues.map(subjectV => {
-        return new rdflib.Statement(new rdflib.NamedNode(subjectV), MU('uuid'), uuidv4());
+        return new Statement(new NamedNode(subjectV), MU('uuid'), uuidv4());
       });
       dataset.triples = [ ...dataset.triples, ...extraTriples ];
     }

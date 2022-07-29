@@ -2,12 +2,11 @@
   "name": "@lblod/submission-form-helpers",
   "version": "1.4.1",
   "description": "",
-  "main": "./dist/back-end/constraints.js",
-  "browser": "./dist/front-end/constraints.js",
+  "main": "./dist/cjs/constraints.js",
   "scripts": {
     "test": "babel-node constraints.js",
     "prepare": "npm run build",
-    "build": "babel . --out-dir ./dist/front-end --ignore \"./node_modules\",\"./rdflib-shim.js\",\"./dist\"; babel . --out-dir ./dist/back-end --ignore \"./node_modules\",\"./rdflib-shim.js\",\"./dist\""
+    "build": "babel . --out-dir ./dist/cjs --ignore \"./node_modules\",\"./dist\""
   },
   "author": "redpencil.io",
   "license": "MIT",
@@ -18,11 +17,10 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
-    "browser-rdflib": "1.1.0",
     "iban": "0.0.14",
     "libphonenumber-js": "^1.9.6",
     "moment": "^2.24.0",
-    "rdflib": "1.1.0",
+    "rdflib": "^2.2.19",
     "uuid": "^7.0.3",
     "validator": "^13.5.2"
   }

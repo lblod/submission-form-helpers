@@ -1,10 +1,8 @@
 import { FORM, SKOS } from '../namespaces';
-import rdflib from "./../rdflib-shim.js";
+import { namedNode } from 'rdflib';
 import constraintPositiveNumber from './positive-number';
 import constraintValidInteger from './valid-integer';
 import constraintMaxLength from './max-length';
-
-const { namedNode } = rdflib;
 
 const engagementEntryPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/engagementEntry');
 const existingStaffPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/existingStaff');
