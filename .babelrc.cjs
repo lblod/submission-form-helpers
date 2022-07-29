@@ -4,13 +4,14 @@ module.exports = function(api){
     "presets": [
       ["@babel/preset-env",{
         "targets": {
-          "node": 12
+          "node": 14
         }
       }]
     ],
     "plugins": [
       ["@babel/plugin-proposal-decorators", { "legacy": true }],
-      ["@babel/plugin-proposal-class-properties", { "loose" : true }]
+      ["@babel/plugin-proposal-class-properties", { "loose" : true }],
+      ["module-extension", { js: "cjs" }] // The built files need to use the .cjs extension to import other relative files
     ]
   }
 }

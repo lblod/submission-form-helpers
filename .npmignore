@@ -1,1 +1,5 @@
-.babelrc.js
+.babelrc.cjs
+.editorconfig
+.eslintcache
+.eslintrc.cjs
+

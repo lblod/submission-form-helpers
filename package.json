@@ -2,26 +2,41 @@
   "name": "@lblod/submission-form-helpers",
   "version": "1.4.1",
   "description": "",
-  "main": "./dist/cjs/constraints.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/constraints.mjs",
+      "require": "./dist/cjs/constraints.js"
+    }
+  },
   "scripts": {
+    "lint": "eslint . --cache",
     "test": "babel-node constraints.js",
     "prepare": "npm run build",
-    "build": "babel . --out-dir ./dist/cjs --ignore \"./node_modules\",\"./dist\""
+    "build": "babel ./src --out-dir ./dist/cjs --out-file-extension .cjs"
   },
   "author": "redpencil.io",
   "license": "MIT",
   "dependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/node": "^7.8.7",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/preset-env": "^7.9.0",
     "iban": "0.0.14",
     "libphonenumber-js": "^1.9.6",
     "moment": "^2.24.0",
     "rdflib": "^2.2.19",
     "uuid": "^7.0.3",
     "validator": "^13.5.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/preset-env": "^7.9.0",
+    "babel-plugin-module-extension": "^0.1.3",
+    "eslint": "^8.18.0",
+    "eslint-plugin-n": "^15.2.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

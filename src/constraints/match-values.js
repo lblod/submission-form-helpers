@@ -1,4 +1,4 @@
-import { FORM } from '../namespaces';
+import { FORM } from '../namespaces.js';
 
 /**
  * For an arbitrary list of elements, check whether the provided value matches one element of the list

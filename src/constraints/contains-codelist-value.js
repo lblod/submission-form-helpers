@@ -1,4 +1,4 @@
-import { FORM, SKOS } from '../namespaces';
+import { FORM, SKOS } from '../namespaces.js';
 
 /**
  * Checks if the supplied values contain the defined custom value.

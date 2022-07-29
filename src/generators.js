@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { FORM, MU, RDF } from './namespaces';
+import { FORM, MU, RDF } from './namespaces.js';
 import { NamedNode, Statement, } from 'rdflib';
 
 
