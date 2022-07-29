@@ -13,7 +13,10 @@ export default function constraintsRequired(values, options) {
       //match the value to the constraint
       //this is wierd since it will fail if there are multiple same language paths
       const value = values.find(value=>value.language === languageConstraint);
-      if(value?.value?.length === 0){
+      if(!value){
+        return false;
+      }
+      else if(value?.value?.length === 0){
         return false;
       }
 
