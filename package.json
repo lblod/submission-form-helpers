@@ -11,7 +11,9 @@
   },
   "scripts": {
     "lint": "eslint . --cache",
-    "test": "babel-node constraints.js",
+    "test": "npm run test:esm && npm run test:cjs",
+    "test:esm": "node ./src/constraints.js",
+    "test:cjs": "node ./dist/cjs/constraints.cjs",
     "prepare": "npm run build",
     "build": "babel ./src --out-dir ./dist/cjs --out-file-extension .cjs"
   },
