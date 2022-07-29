@@ -33,8 +33,8 @@ function validDateTimeString(value) {
   } // Here moment does the job checking it is an valid date (doest it exist), 
   // the next check is solely a syntactic check (to match against the lexical values allowed in xsd)
   else if ((0, _moment.default)(value, _moment.default.ISO_8601, true).isValid() && value.match(xsdDateTimeRegex, 'g')) {
-    return true;
-  } else {
-    return false;
-  }
+      return true;
+    } else {
+      return false;
+    }
 }

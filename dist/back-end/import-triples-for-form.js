@@ -3,32 +3,30 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.addSimpleFormValue = addSimpleFormValue;
-exports.default = void 0;
-exports.fieldsForForm = fieldsForForm;
-exports.generatorsForNode = generatorsForNode;
 exports.getFormModelVersion = getFormModelVersion;
-exports.importTriplesForForm = importTriplesForForm;
-exports.removeDatasetForSimpleFormValue = removeDatasetForSimpleFormValue;
-exports.removeSimpleFormValue = removeSimpleFormValue;
-exports.removeTriples = removeTriples;
-exports.triplesForGenerator = triplesForGenerator;
 exports.triplesForPath = triplesForPath;
 exports.triplesForScope = triplesForScope;
-exports.updateSimpleFormValue = updateSimpleFormValue;
-exports.validateField = validateField;
+exports.fieldsForForm = fieldsForForm;
 exports.validateForm = validateForm;
+exports.validateField = validateField;
+exports.validationTypesForField = validationTypesForField;
 exports.validationResultsForField = validationResultsForField;
 exports.validationResultsForFieldPart = validationResultsForFieldPart;
-exports.validationTypesForField = validationTypesForField;
+exports.updateSimpleFormValue = updateSimpleFormValue;
+exports.addSimpleFormValue = addSimpleFormValue;
+exports.removeSimpleFormValue = removeSimpleFormValue;
+exports.removeDatasetForSimpleFormValue = removeDatasetForSimpleFormValue;
+exports.removeTriples = removeTriples;
+exports.importTriplesForForm = importTriplesForForm;
+exports.default = void 0;
 
-var _namespaces = require("./namespaces");
+var _uuid = require("uuid");
 
 var _constraints = require("./constraints");
 
-var _rdflibShim = _interopRequireDefault(require("./rdflib-shim.js"));
+var _namespaces = require("./namespaces");
 
-var _uuid = require("uuid");
+var _rdflibShim = _interopRequireDefault(require("./rdflib-shim.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -84,8 +82,8 @@ function importTriplesForForm(form, {
 function fieldsForForm(form, options) {
   let fields = [];
 
-  if (isFormModelV4(form, options)) {
-    fields = fieldsForFormModelV4(form, options);
+  if (isFormModelV2(form, options)) {
+    fields = fieldsForFormModelV2(form, options);
   } else {
     fields = fieldsForFormModelV1(form, options);
   }
@@ -93,7 +91,7 @@ function fieldsForForm(form, options) {
   return fields;
 }
 
-function isFormModelV4(form, {
+function isFormModelV2(form, {
   store,
   formGraph
 }) {
@@ -106,15 +104,15 @@ function getFormModelVersion(form, {
   store,
   formGraph
 }) {
-  if (isFormModelV4(form, {
+  if (isFormModelV2(form, {
     store,
     formGraph
   })) {
-    return "v4";
+    return "v2";
   } else return "v1";
 }
 
-function fieldsForFormModelV4(form, options) {
+function fieldsForFormModelV2(form, options) {
   let {
     store,
     formGraph,
@@ -599,87 +597,6 @@ function addSimpleFormValue(value, options) {
   }
 
   store.addAll(triplesToAdd);
-}
-
-function generatorsForNode(node, options) {
-  const {
-    store,
-    formGraph
-  } = options;
-  const createGenerators = store.match(node, (0, _namespaces.FORM)("createGenerator"), undefined, formGraph).map(t => t.object);
-  const initGenerators = store.match(node, (0, _namespaces.FORM)("initGenerator"), undefined, formGraph).map(t => t.object);
-  const augmentGenerators = store.match(node, (0, _namespaces.FORM)("augmentGenerator"), undefined, formGraph).map(t => t.object);
-  return {
-    createGenerators,
-    initGenerators,
-    augmentGenerators
-  };
-}
-
-function triplesForGenerator(generatorUri, options) {
-  const {
-    store,
-    formGraph
-  } = options;
-  const prototypeUri = store.any(generatorUri, (0, _namespaces.FORM)('prototype'), undefined, formGraph);
-  const shapeUri = store.any(prototypeUri, (0, _namespaces.FORM)('shape'), undefined, formGraph);
-  let dataset = walkAndGenerateShape(shapeUri, options); //TODO: currently just one source node is generated. Support cardinalities later
-
-  dataset = {
-    sourceNodes: [dataset.sourceNode],
-    triples: dataset.triples
-  };
-  dataset = augmentGeneratedDataSet(generatorUri, dataset, {
-    store,
-    formGraph
-  });
-  return dataset;
-}
-
-function walkAndGenerateShape(shapeUri, options, dataset = {
-  sourceNode: [],
-  triples: []
-}) {
-  const {
-    store,
-    formGraph
-  } = options;
-  const shapeElements = store.match(shapeUri, undefined, undefined, formGraph);
-  let nextSubject = new _rdflibShim.default.NamedNode(URI_TEMPLATE + (0, _uuid.v4)());
-  dataset.sourceNode = nextSubject;
-
-  for (const shapeElement of shapeElements) {
-    if (shapeElement.object.termType == "BlankNode") {
-      const nestedDataset = walkAndGenerateShape(shapeElement.object, options);
-      dataset.triples.push(new _rdflibShim.default.Statement(nextSubject, shapeElement.predicate, nestedDataset.sourceNode));
-      dataset.triples = [...dataset.triples, ...nestedDataset.triples];
-    } else {
-      dataset.triples.push(new _rdflibShim.default.Statement(nextSubject, shapeElement.predicate, shapeElement.object));
-    }
-  }
-
-  return dataset;
-}
-
-function augmentGeneratedDataSet(generatorUri, dataset, {
-  store,
-  formGraph
-}) {
-  const dataGenerators = store.match(generatorUri, (0, _namespaces.FORM)('dataGenerator'), undefined, formGraph);
-
-  for (const generator of dataGenerators) {
-    if (generator.object.equals((0, _namespaces.FORM)('addMuUuid'))) {
-      const subjectValues = [...new Set(dataset.triples.map(triple => triple.subject.value))];
-      const extraTriples = subjectValues.map(subjectV => {
-        return new _rdflibShim.default.Statement(new _rdflibShim.default.NamedNode(subjectV), (0, _namespaces.MU)('uuid'), (0, _uuid.v4)());
-      });
-      dataset.triples = [...dataset.triples, ...extraTriples];
-    } else {
-      console.warn(`Unsupported 'form:dataGenerator' for ${generator.object.value}`);
-    }
-  }
-
-  return dataset;
 }
 
 var _default = importTriplesForForm;

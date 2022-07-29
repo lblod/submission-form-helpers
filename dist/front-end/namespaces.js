@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.XSD = exports.SKOS = exports.SHACL = exports.RDF = exports.NIE = exports.MU = exports.FORM = exports.DCT = void 0;
+exports.MU = exports.NIE = exports.DCT = exports.XSD = exports.SKOS = exports.SHACL = exports.FORM = exports.RDF = void 0;
 
 var _rdflibShim = _interopRequireDefault(require("./rdflib-shim.js"));
 
