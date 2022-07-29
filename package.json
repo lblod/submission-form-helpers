@@ -3,7 +3,12 @@
   "version": "1.4.1",
   "description": "",
   "type": "module",
-  "main": "./dist/cjs/constraints.cjs",
+  "exports": {
+    ".": {
+      "import": "./src/constraints.mjs",
+      "require": "./dist/cjs/constraints.js"
+    }
+  },
   "scripts": {
     "lint": "eslint . --cache",
     "test": "babel-node constraints.js",
