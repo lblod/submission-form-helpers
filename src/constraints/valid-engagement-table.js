@@ -1,8 +1,5 @@
-import { FORM, SKOS } from '../namespaces.js';
 import { namedNode } from 'rdflib';
 import constraintPositiveNumber from './positive-number.js';
-import constraintValidInteger from './valid-integer.js';
-import constraintMaxLength from './max-length.js';
 
 const engagementEntryPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/engagementEntry');
 const existingStaffPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/existingStaff');
@@ -15,7 +12,7 @@ const volunteersPredicate = namedNode('http://mu.semte.ch/vocabularies/ext/volun
 */
 
 export default function constraintValidEngagementTable(table, options) {
-  const { store, sourceGraph, constraintUri } = options;
+  const { store, sourceGraph } = options;
   const engagementEntries = store.match(
     table,
     engagementEntryPredicate,
@@ -67,20 +64,6 @@ function hasTriples(entry, predicates, store, sourceGraph) {
       sourceGraph
     ); // we expect only one per predicate
     result = result && (value.length > 0);
-  });
-  return result;
-}
-
-function hasNotEmptyStrings(entry, predicates, store, sourceGraph) {
-  let result = true;
-  predicates.forEach(predicate => {
-    const string = store.match(
-      entry,
-      predicate,
-      undefined,
-      sourceGraph
-    )[0].object.value.trim(); // we expect only one per predicate
-    result = result && (string != '');
   });
   return result;
 }

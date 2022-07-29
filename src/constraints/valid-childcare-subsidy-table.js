@@ -1,4 +1,3 @@
-import { FORM, SKOS } from '../namespaces.js';
 import { namedNode } from 'rdflib';
 import constraintPositiveNumber from './positive-number.js';
 import constraintValidInteger from './valid-integer.js';
@@ -15,7 +14,7 @@ const numberChildrenPerInfrastructurePredicate = namedNode('http://mu.semte.ch/v
 */
 
 export default function constraintValidChildcareSubsidyTable(table, options) {
-  const { store, sourceGraph, constraintUri } = options;
+  const { store, sourceGraph } = options;
   const childcareSubsidyEntries = store.match(
     table,
     childcareSubsidyEntryPredicate,

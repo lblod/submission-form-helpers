@@ -4,7 +4,7 @@
  *  - a number
  *  - 4 consecutive numbers between 0 and 9
  */
-export default function constraintValidYear(value, options) {
+export default function constraintValidYear(value) {
   let yearString = value.value;
   if(!/^\d{4}$/.test(yearString))
     return false;
