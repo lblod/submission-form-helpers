@@ -50,7 +50,7 @@ function getFormModelVersion(form, { store, formGraph }) {
 }
 
 function fieldsForFormModelV2(form, options) {
-  let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
+  let { store, formGraph } = options;
   //TODO: conditionals (also to define in form model)
   const formItems = store.match(form, FORM('includes'), undefined, formGraph).map( ({ object }) => object);
   //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V4 support
@@ -117,8 +117,8 @@ function fieldsForFieldGroup(fieldGroup, options) {
 }
 
 function triplesForPath(options, createMissingNodes = false) {
-  const {store, path, formGraph, sourceNode, sourceGraph} = options;
-  let solutions = {};
+  const { path } = options;
+
   if (path && path.termType === "Collection") {
     return triplesForComplexPath(options, createMissingNodes);
   } else {
@@ -320,7 +320,6 @@ function triplesForScope(scopeUri, options) {
 }
 
 function validateForm(form, options) {
-  const {store, formGraph, sourceGraph, sourceNode, metaGraph} = options;
   const fields = fieldsForForm(form, options);
   const fieldValidations = fields.map(field => validateField(field, options));
   return fieldValidations.reduce((acc, value) => acc && value, true);
@@ -447,7 +446,7 @@ function removeSimpleFormValue(value, options) {
 }
 
 function addSimpleFormValue(value, options) {
-  const {store, formGraph, sourceGraph, sourceNode, metaGraph} = options;
+  const {store } = options;
 
   //This returns the complete chain of triples for the path, if there something missing, new nodes are added.
   const dataset = triplesForPath(options, true);

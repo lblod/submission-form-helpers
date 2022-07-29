@@ -1,4 +1,4 @@
-import { FORM } from '../namespaces';
+import { FORM } from '../namespaces.js';
 
 export default function constraintsRequired(values, options) {
   //no values
