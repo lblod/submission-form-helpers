@@ -4,6 +4,8 @@ pipeline:
     commands:
       - npm ci
       - npm run lint
+      - npm run build
+      - npm test
 
     # Pipeline level conditions aren't supported yet:
     # https://github.com/woodpecker-ci/woodpecker/issues/283
