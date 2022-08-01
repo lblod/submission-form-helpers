@@ -5,8 +5,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/constraints.mjs",
-      "require": "./dist/cjs/constraints.js"
+      "import": "./src/constraints.js",
+      "require": "./dist/cjs/constraints.cjs"
     }
   },
   "scripts": {
