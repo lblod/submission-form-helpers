@@ -24,7 +24,7 @@
     "libphonenumber-js": "^1.9.6",
     "moment": "^2.24.0",
     "rdflib": "^2.2.19",
-    "uuid": "^7.0.3",
+    "uuid": "^8.3.2",
     "validator": "^13.5.2"
   },
   "devDependencies": {
