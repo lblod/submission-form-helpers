@@ -52,12 +52,27 @@ function getFormModelVersion(form, { store, formGraph }) {
 function fieldsForFormModelV2(form, options) {
   let { store, formGraph } = options;
   //TODO: conditionals (also to define in form model)
-  const formItems = store.match(form, FORM('includes'), undefined, formGraph).map( ({ object }) => object);
+  const formItems = store.match(form, FORM('includes'), undefined, formGraph).map( ({ object }) => {
+    return object;
+  });
+  const subFormFields=extractSubForms(formItems, options);
   //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V4 support
   const conditional = fieldsForFormModelV1(form, options);
-  return [...formItems, ...conditional];
+  return [...formItems, ...conditional, ...subFormFields];
 }
-
+function extractSubForms(formItems, options){
+  const subFormFields = [];
+  for (const item of formItems) {
+    const firstItemObject = options.store.match(item, undefined, undefined, options.formGraph)[0]?.object;
+    const isListing = firstItemObject?.value === "http://lblod.data.gift/vocabularies/forms/Listing";
+    if(isListing){
+      const subFormTriple = options.store.match(item, FORM('each'), undefined, options.formGraph);
+      const subFormObject = subFormTriple[0]?.object;
+      subFormFields.push(...fieldsForFormModelV2(subFormObject, options));
+    }
+  }
+  return subFormFields;
+}
 function fieldsForFormModelV1(form, options) {
   let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
 
@@ -321,7 +336,9 @@ function triplesForScope(scopeUri, options) {
 
 function validateForm(form, options) {
   const fields = fieldsForForm(form, options);
-  const fieldValidations = fields.map(field => validateField(field, options));
+  const fieldValidations = fields.map((field, index) => {
+    validateField(field, options);
+  });
   return fieldValidations.reduce((acc, value) => acc && value, true);
 }
 
