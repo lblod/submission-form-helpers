@@ -1,4 +1,4 @@
-import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE } from './namespaces.js';
+import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE, MU } from './namespaces.js';
 
 import {
   triplesForPath,
@@ -162,6 +162,6 @@ export {
   triplesForGenerator
 }
 
-export { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE }
+export { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE, MU }
 
 export { check, checkTriples }
