@@ -7,6 +7,7 @@ NPM package containing helpers to inspect and validate submission forms
 ## Usage
 ```
 import {
+  getFormrModelVersion,
   triplesForPath,
   fieldsForForm,
   validateForm,
@@ -19,14 +20,16 @@ import {
   removeSimpleFormValue,
   removeDatasetForSimpleFormValue,
   removeTriples,
-  importTriplesForForm
+  importTriplesForForm,
+  generatorsForNode,
+  triplesForGenerator
 }  from "@lblod/submission-form-helpers"
 
-import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE } from "@lblod/submission-form-helpers"
+import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE, MU } from "@lblod/submission-form-helpers"
 
 import { check, checkTriples } from "@lblod/submission-form-helpers"
 
-import { constraintForUri } from "@lblod/submission-form-helpers"
+import constraintForUri from "@lblod/submission-form-helpers"
 ```
 
 ## Development
