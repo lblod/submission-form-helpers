@@ -5,8 +5,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./src/constraints.js",
-      "require": "./dist/cjs/constraints.cjs"
+      "import": "./src/index.js",
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "scripts": {
@@ -15,8 +15,8 @@
     "prepare": "npm run build",
     "release": "release-it",
     "test": "npm run test:esm && npm run test:cjs",
-    "test:esm": "node ./src/constraints.js",
-    "test:cjs": "node ./dist/cjs/constraints.cjs"
+    "test:esm": "node ./src/index.js",
+    "test:cjs": "node ./dist/cjs/index.cjs"
   },
   "author": "redpencil.io",
   "license": "MIT",

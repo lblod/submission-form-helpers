@@ -1,27 +1,7 @@
-import { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE, MU } from './namespaces.js';
-
+import { RDF, FORM, SHACL } from './namespaces.js';
 import {
   triplesForPath,
-  triplesForScope,
-  fieldsForForm,
-  validateForm,
-  validateField,
-  validationTypesForField,
-  validationResultsForField,
-  validationResultsForFieldPart,
-  updateSimpleFormValue,
-  addSimpleFormValue,
-  removeSimpleFormValue,
-  removeDatasetForSimpleFormValue,
-  removeTriples,
-  importTriplesForForm,
-  getFormModelVersion,
 } from './import-triples-for-form.js';
-
-import {
-  generatorsForNode,
-  triplesForGenerator
-} from './generators.js';
 
 import required from './constraints/required.js';
 import codelist from './constraints/codelist.js';
@@ -100,7 +80,7 @@ export default function constraintForUri(uri) {
   }
 }
 
-function check(constraintUri, options){
+export function check(constraintUri, options){
   const { formGraph, sourceNode, sourceGraph, store } = options;
   let path = store.any( constraintUri, SHACL("path"), undefined, formGraph);
   let triplesData  = triplesForPath({
@@ -109,7 +89,7 @@ function check(constraintUri, options){
   return checkTriples(constraintUri, triplesData, options);
 }
 
-function checkTriples(constraintUri, triplesData, options){
+export function checkTriples(constraintUri, triplesData, options){
   const { formGraph, metaGraph, store, sourceNode, sourceGraph } = options;
 
   let values = triplesData.values;
@@ -141,27 +121,3 @@ function checkTriples(constraintUri, triplesData, options){
   return { validationType: validationType.value, hasValidation: true, valid: validationResult, resultMessage };
 
 }
-
-export {
-  getFormModelVersion,
-  triplesForPath,
-  triplesForScope,
-  fieldsForForm,
-  validateForm,
-  validateField,
-  validationTypesForField,
-  validationResultsForField,
-  validationResultsForFieldPart,
-  updateSimpleFormValue,
-  addSimpleFormValue,
-  removeSimpleFormValue,
-  removeDatasetForSimpleFormValue,
-  removeTriples,
-  importTriplesForForm,
-  generatorsForNode,
-  triplesForGenerator
-}
-
-export { RDF, FORM, SHACL, SKOS, XSD, DCT, NIE, MU }
-
-export { check, checkTriples }
