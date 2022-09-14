@@ -39,6 +39,9 @@ import { constraintForUri } from "@lblod/submission-form-helpers"
 3. make your changes
 4. run `npm run prepare` (babel will transpile to the `dist/` folder)
 5. test inside your project
-6. bump the version number in `package.json`
-7. create a git tag
-8. run `npm publish` (requires npm permissions)
+
+## Releasing
+1. run `npm run release`
+2. follow the release-it prompts
+3. release-it pushes the tag to GitHub
+4. Woodpecker will publish the new version to npm
