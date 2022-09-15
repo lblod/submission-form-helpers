@@ -1,4 +1,4 @@
-import { FORM } from '../namespaces.js';
+import { FORM } from "../namespaces.js";
 
 /**
  * Checks if there is an exact value supplied
@@ -6,6 +6,6 @@ import { FORM } from '../namespaces.js';
 
 export default function constraintExactValue(value, options) {
   const { constraintUri, store } = options;
-  const expected = store.any( constraintUri, FORM("customValue"), undefined );
+  const expected = store.any(constraintUri, FORM("customValue"), undefined);
   return value.value == expected.value;
 }

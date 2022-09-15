@@ -1,4 +1,4 @@
-import { FORM } from '../namespaces.js';
+import { FORM } from "../namespaces.js";
 
 export default function constraintsRequired(values, options) {
   //no values
@@ -8,20 +8,23 @@ export default function constraintsRequired(values, options) {
   //1 or more values/input boxes
   else if (values.length > 0) {
     //check if there is a language constraint
-    const languageConstraint = options.store.match(options.constraintUri, FORM('language'), undefined)[0]?.object?.value;
+    const languageConstraint = options.store.match(
+      options.constraintUri,
+      FORM("language"),
+      undefined
+    )[0]?.object?.value;
     if (languageConstraint) {
       //match the value to the constraint
       //this is wierd since it will fail if there are multiple same language paths
-      const value = values.find(value => value.language === languageConstraint);
+      const value = values.find(
+        (value) => value.language === languageConstraint
+      );
       if (!value) {
         return false;
-      }
-      else if (value?.value?.length === 0) {
+      } else if (value?.value?.length === 0) {
         return false;
       }
-
-    }
-    else {
+    } else {
       //no way to determine which box is validated so we validate all of them
       //this will cause ui bugs
       let allEmpty = true;
