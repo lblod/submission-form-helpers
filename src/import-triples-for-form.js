@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { check, checkTriples } from './constraints.js';
+import { check, checkTriples, triplesForScope } from './constraints.js';
 import { FORM, RDF, SHACL } from './namespaces.js';
 import { NamedNode, Statement } from 'rdflib';
 
@@ -55,24 +55,22 @@ function fieldsForFormModelV2(form, options) {
   const formItems = store.match(form, FORM('includes'), undefined, formGraph).map(({ object }) => {
     return object;
   });
-  const subFormFields = extractSubForms(formItems, options);
   //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V4 support
   const conditional = fieldsForFormModelV1(form, options);
-  return [...formItems, ...conditional, ...subFormFields];
+  return [...formItems, ...conditional];
 }
-function extractSubForms(formItems, options) {
-  const subFormFields = [];
-  for (const item of formItems) {
-    const firstItemObject = options.store.match(item, undefined, undefined, options.formGraph)[0]?.object;
-    const isListing = firstItemObject?.value === "http://lblod.data.gift/vocabularies/forms/Listing";
-    if (isListing) {
-      const subFormTriple = options.store.match(item, FORM('each'), undefined, options.formGraph);
-      const subFormObject = subFormTriple[0]?.object;
-      subFormFields.push(...fieldsForFormModelV2(subFormObject, options));
-    }
+
+function extractSubForms(field, options) {
+  let subFormFields;
+  const type=options.store.any(field, RDF('type'), undefined, options.formGraph);
+  const isListing = type?.value === "http://lblod.data.gift/vocabularies/forms/Listing";
+  if (isListing) {
+    const subForm = options.store.any(field, FORM('each'), undefined, options.formGraph);
+    subFormFields = fieldsForFormModelV2(subForm, options); 
   }
   return subFormFields;
 }
+
 function fieldsForFormModelV1(form, options) {
   let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
 
@@ -330,16 +328,36 @@ function triplesForScope(scopeUri, options) {
   const filteredTriples = orderedSegmentData.reduce( (acc, segment) => {
     return [...acc, ...segment.triples];
   }, []);
-
-  return { triples: filteredTriples, values: lastSegmentData.values, orderedSegmentData };
+  const result={ triples: filteredTriples, values: lastSegmentData.values, orderedSegmentData };
+  return result;
 }
 
 function validateForm(form, options) {
   const fields = fieldsForForm(form, options);
   const fieldValidations = fields.map((field, index) => {
-    validateField(field, options);
+    const scope=getScope(field, options);
+    if(scope){
+      return validateScopedField(field, scope, options); 
+    }
+    else{
+      return validateField(field, options);
+    }
   });
   return fieldValidations.reduce((acc, value) => acc && value, true);
+}
+
+function validateScopedField(field, scope, options){
+  //get scope;
+  //get triples for scope;
+  //match all values like so
+  //?value ?b ?c
+  const subFormFields = extractSubForms(field, options);
+  const scopeTriples = triplesForScope(scope, options);
+  const values=[];
+  for (const value of scopeTriples.values) {
+    values.push(...options.store.match(value, undefined, undefined));
+  }
+  debugger;
 }
 
 function validateField(fieldUri, options) {
