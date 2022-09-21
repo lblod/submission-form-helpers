@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { check, checkTriples, triplesForScope } from './constraints.js';
+import { check, checkTriples } from './constraints.js';
 import { FORM, RDF, SHACL } from './namespaces.js';
 import { NamedNode, Statement } from 'rdflib';
+import validationsCodelist from './constraints/codelist.js';
 
 const URI_TEMPLATE = 'http://data.lblod.info/form-data/nodes/';
 
@@ -347,17 +348,37 @@ function validateForm(form, options) {
 }
 
 function validateScopedField(field, scope, options){
-  //get scope;
-  //get triples for scope;
-  //match all values like so
-  //?value ?b ?c
   const subFormFields = extractSubForms(field, options);
   const scopeTriples = triplesForScope(scope, options);
-  const values=[];
+  const valueTriples=[];
   for (const value of scopeTriples.values) {
-    values.push(...options.store.match(value, undefined, undefined));
+    valueTriples.push(...options.store.match(value, undefined, undefined, options.sourceGraph));
   }
-  debugger;
+
+  const validations=[];
+  for (const field of subFormFields) {
+    const validationUris=options.store.match(field, FORM("validations"), undefined, options.formGraph).map(t => t.object);
+    const result = validationUris.map(validationUri=>{
+      return {
+        path: options.store.any( validationUri, SHACL("path"), undefined, options.formGraph), 
+        validationUri: validationUri
+      };
+    });
+    validations.push(result);
+  }
+  const result=[];
+  for (const validation of validations) {
+    //should probably look up path for every validation not just the first one
+    const valueTriple=valueTriples.find(triple => validation[0]?.path?.value===triple.predicate.value);
+    if(valueTriple){
+      result.push({
+        validations: validation,
+        value: valueTriple.object
+      });
+    }
+  }
+  
+  //validate finally
 }
 
 function validateField(fieldUri, options) {
@@ -374,6 +395,7 @@ function validationResultsForField(fieldUri, options) {
     const validationResult = check(constraintUri, options);
     validationResults.push(validationResult);
   }
+
   return validationResults;
 }
 
