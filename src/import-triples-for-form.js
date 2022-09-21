@@ -366,18 +366,33 @@ function validateScopedField(field, scope, options){
     });
     validations.push(result);
   }
-  const result=[];
+  const collector=[];
   for (const validation of validations) {
-    //should probably look up path for every validation not just the first one
-    const valueTriple=valueTriples.find(triple => validation[0]?.path?.value===triple.predicate.value);
-    if(valueTriple){
-      result.push({
+    const matchedValueTriples=[];
+    for (const triple of valueTriples ) {
+      for (const val of validation) {
+        if(val.path?.value===triple.predicate.value){
+          matchedValueTriples.push(triple);
+        }
+      }
+    }
+    if(matchedValueTriples.length!=0){
+      collector.push({
         validations: validation,
-        value: valueTriple.object
+        values: matchedValueTriples
       });
     }
   }
-  
+  const result=[];
+  for (const item of collector) {
+    for (const validation of item.validations) {
+      let triplesData={};
+      triplesData.values=item.values.map(value=>value.object.value);
+      const constraintUri=validation.validationUri;
+      result.push(checkTriples(constraintUri, triplesData, options));
+    }
+  }
+  debugger;
   //validate finally
 }
 
