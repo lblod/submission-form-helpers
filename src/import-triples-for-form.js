@@ -338,7 +338,7 @@ function validateForm(form, options) {
   const fieldValidations = fields.map((field, index) => {
     const scope=getScope(field, options);
     if(scope){
-      return validateScopedField(field, scope, options); 
+      let test=validateScopedField(field, scope, options);
     }
     else{
       return validateField(field, options);
@@ -356,6 +356,7 @@ function validateScopedField(field, scope, options){
   }
 
   const validations=[];
+  let decendantValidations=[];
   for (const field of subFormFields) {
     const validationUris=options.store.match(field, FORM("validations"), undefined, options.formGraph).map(t => t.object);
     const result = validationUris.map(validationUri=>{
@@ -365,6 +366,11 @@ function validateScopedField(field, scope, options){
       };
     });
     validations.push(result);
+    const scope=getScope(field, options);
+    if(scope){
+      debugger;
+      decendantValidations=validateScopedField(field, scope, options);
+    }
   }
   const collector=[];
   for (const validation of validations) {
@@ -383,16 +389,18 @@ function validateScopedField(field, scope, options){
       });
     }
   }
-  const result=[];
+  let result=[];
   for (const item of collector) {
     for (const validation of item.validations) {
       let triplesData={};
-      triplesData.values=item.values.map(value=>value.object.value);
+      triplesData.values=item.values.map(value=>value.object);
       const constraintUri=validation.validationUri;
       result.push(checkTriples(constraintUri, triplesData, options));
     }
   }
-  debugger;
+
+  result=[...result, ...decendantValidations];
+  return result;
   //validate finally
 }
 
