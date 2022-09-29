@@ -339,6 +339,8 @@ function validateForm(form, options) {
     const scope=getScope(field, options);
     if(scope){
       let test=validateScopedField(field, scope, options);
+      test=test.reduce((acc, value) => acc && value.valid, true);
+      return test;
     }
     else{
       return validateField(field, options);
@@ -348,6 +350,7 @@ function validateForm(form, options) {
 }
 
 function validateScopedField(field, scope, options){
+  debugger;
   const subFormFields = extractSubForms(field, options);
   const scopeTriples = triplesForScope(scope, options);
   const valueTriples=[];
@@ -368,8 +371,8 @@ function validateScopedField(field, scope, options){
     validations.push(result);
     const scope=getScope(field, options);
     if(scope){
-      debugger;
-      decendantValidations=validateScopedField(field, scope, options);
+      let test=validateScopedField(field, scope, options);
+      decendantValidations=[...decendantValidations, ...test];
     }
   }
   const collector=[];
