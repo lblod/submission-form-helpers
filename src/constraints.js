@@ -92,7 +92,6 @@ export function check(constraintUri, options){
 export function checkTriples(constraintUri, triplesData, options){
   const { formGraph, metaGraph, store, sourceNode, sourceGraph } = options;
   let values = triplesData.values;
-  console.log(values);
   const validationType = store.any(constraintUri, RDF('type'), undefined, formGraph);
   const groupingType = store.any(constraintUri, FORM("grouping"), undefined, formGraph).value;
   const resultMessage = (store.any(constraintUri, SHACL("resultMessage"), undefined, formGraph) || "").value;

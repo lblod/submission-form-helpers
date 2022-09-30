@@ -374,11 +374,9 @@ function validateScopedField(field, scope, options){
     validations.push(result);
     const scope=getScope(field, options);
     if(scope){
-      const currentSourceNode=options.sourceNode;
       options.sourceNode=possibleNewScopedNode;
       let test=validateScopedField(field, scope, options);
       decendantValidations=[...decendantValidations, ...test];
-      options.sourceNode=currentSourceNode;
     }
   }
   const collector=[];
@@ -407,7 +405,7 @@ function validateScopedField(field, scope, options){
       result.push(checkTriples(constraintUri, triplesData, options));
     }
   }
-
+  debugger;
   result=[...result, ...decendantValidations];
   return result;
   //validate finally
