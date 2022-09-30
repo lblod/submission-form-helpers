@@ -338,6 +338,8 @@ function validateForm(form, options) {
   const fieldValidations = fields.map((field, index) => {
     const scope=getScope(field, options);
     if(scope){
+      // const scopedDataSet = triplesForScope(scope, { store, formGraph, sourceNode, sourceGraph });
+      // scopedSourceNodes = scopedDataSet.values;
       let test=validateScopedField(field, scope, options);
       test=test.reduce((acc, value) => acc && value.valid, true);
       return test;
@@ -353,8 +355,10 @@ function validateScopedField(field, scope, options){
   const subFormFields = extractSubForms(field, options);
   const scopeTriples = triplesForScope(scope, options);
   const valueTriples=[];
+  let possibleNewScopedNode;
   for (const value of scopeTriples.values) {
     valueTriples.push(...options.store.match(value, undefined, undefined, options.sourceGraph));
+    possibleNewScopedNode=value;
   }
 
   const validations=[];
@@ -370,8 +374,11 @@ function validateScopedField(field, scope, options){
     validations.push(result);
     const scope=getScope(field, options);
     if(scope){
+      const currentSourceNode=options.sourceNode;
+      options.sourceNode=possibleNewScopedNode;
       let test=validateScopedField(field, scope, options);
       decendantValidations=[...decendantValidations, ...test];
+      options.sourceNode=currentSourceNode;
     }
   }
   const collector=[];
@@ -407,7 +414,6 @@ function validateScopedField(field, scope, options){
 }
 
 function validateField(fieldUri, options) {
-  debugger;
   return validationResultsForField(fieldUri, options).reduce((acc, value) => acc && value.valid, true);
 }
 
