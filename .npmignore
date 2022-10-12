@@ -1,5 +1,9 @@
+// Config files
 .babelrc.cjs
 .editorconfig
 .eslintcache
 .eslintrc.cjs
+
+// Test files
+**/*.test.js
 
