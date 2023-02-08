@@ -4,6 +4,8 @@
 .eslintcache
 .eslintrc.cjs
 .prettierignore
+.release-it.json
+.woodpecker/
 
 // Test files
 **/*.test.js
