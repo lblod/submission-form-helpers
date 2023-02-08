@@ -2,6 +2,10 @@
   "name": "@lblod/submission-form-helpers",
   "version": "2.1.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lblod/submission-form-helpers"
+  },
   "type": "module",
   "exports": {
     ".": {
