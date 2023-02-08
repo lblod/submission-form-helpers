@@ -1,15 +1,24 @@
-import { FORM, SHACL } from '../namespaces.js';
+import { FORM, SHACL } from "../namespaces.js";
 
 export default function HasOneNumberGreaterThanInFields(field, options) {
-  const paths = options.store.match(options.constraintUri, SHACL('path'), undefined, options.formGraph);
-  const values = paths.map(path => getValue(path.object, options));
-  const threshold = options.store.any(options.constraintUri, FORM('threshold'), undefined, options.formGraph);
+  const paths = options.store.match(
+    options.constraintUri,
+    SHACL("path"),
+    undefined,
+    options.formGraph
+  );
+  const values = paths.map((path) => getValue(path.object, options));
+  const threshold = options.store.any(
+    options.constraintUri,
+    FORM("threshold"),
+    undefined,
+    options.formGraph
+  );
 
   let isValidGroup = false;
-  values.forEach(value => {
+  values.forEach((value) => {
     const isValidValue = isGreaterThan(value, threshold);
-    if (isValidValue)
-      isValidGroup = true;
+    if (isValidValue) isValidGroup = true;
   });
 
   return isValidGroup;
@@ -17,10 +26,10 @@ export default function HasOneNumberGreaterThanInFields(field, options) {
 
 function getValue(predicate, options) {
   const entry = options.store.any(
-      options.sourceNode,
-      predicate,
-      undefined,
-      options.sourceGraph,
+    options.sourceNode,
+    predicate,
+    undefined,
+    options.sourceGraph
   );
   return entry && entry.value;
 }

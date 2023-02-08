@@ -29,10 +29,7 @@ test('it validates if the provided literal is a valid "xsd:dateTime"', (t) => {
     null,
     "http://www.w3.org/2001/XMLSchema#date"
   );
-  t.false(
-    validDateTime(dateTime),
-    "xsd:date literals aren't considered valid"
-  );
+  t.false(validDateTime(dateTime), "xsd:date literals aren't considered valid");
 });
 
 function dateTimeLiteral(dateTimeString) {

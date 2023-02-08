@@ -6,7 +6,6 @@
  */
 export default function constraintValidYear(value) {
   let yearString = value.value;
-  if(!/^\d{4}$/.test(yearString))
-    return false;
+  if (!/^\d{4}$/.test(yearString)) return false;
   return !isNaN(yearString);
 }

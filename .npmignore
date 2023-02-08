@@ -3,6 +3,7 @@
 .editorconfig
 .eslintcache
 .eslintrc.cjs
+.prettierignore
 
 // Test files
 **/*.test.js
