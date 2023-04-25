@@ -38,6 +38,9 @@
     "uuid": "^9.0.0",
     "validator": "^13.5.2"
   },
+  "peerDependencies": {
+    "forking-store": "^2.0.0"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
@@ -50,6 +53,7 @@
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-n": "^15.2.3",
+    "forking-store": "^2.0.0",
     "prettier": "^2.8.4",
     "release-it": "^15.4.1"
   },
