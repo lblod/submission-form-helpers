@@ -1,5 +1,5 @@
 import { RDF, FORM, SHACL } from "./namespaces.js";
-import { triplesForPath } from "./import-triples-for-form.js";
+import { triplesForPath } from "./triples-for.js";
 
 import required from "./constraints/required.js";
 import codelist from "./constraints/codelist.js";
