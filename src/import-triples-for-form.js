@@ -5,7 +5,7 @@ import { NamedNode, Statement } from "rdflib";
 
 const URI_TEMPLATE = "http://data.lblod.info/form-data/nodes/";
 
-function importTriplesForForm(
+export default function importTriplesForForm(
   form,
   { store, formGraph, sourceGraph, sourceNode, metaGraph }
 ) {
@@ -43,8 +43,9 @@ function importTriplesForForm(
 
   return datasetTriples;
 }
+export { importTriplesForForm };
 
-function fieldsForForm(form, options) {
+export function fieldsForForm(form, options) {
   let fields = [];
   if (isFormModelV2(form, options)) {
     fields = fieldsForFormModelV2(form, options);
@@ -65,7 +66,7 @@ function isFormModelV2(form, { store, formGraph }) {
   return isTopLevelForm || isSubForm;
 }
 
-function getFormModelVersion(form, { store, formGraph }) {
+export function getFormModelVersion(form, { store, formGraph }) {
   if (isFormModelV2(form, { store, formGraph })) {
     return "v2";
   } else return "v1";
@@ -152,7 +153,7 @@ function fieldsForFieldGroup(fieldGroup, options) {
     .map(({ object }) => object);
 }
 
-function triplesForPath(options, createMissingNodes = false) {
+export function triplesForPath(options, createMissingNodes = false) {
   const { path } = options;
 
   if (path && path.termType === "Collection") {
@@ -339,7 +340,7 @@ function getScope(field, options) {
 }
 
 //Note: scope can match multiple nodes
-function triplesForScope(scopeUri, options) {
+export function triplesForScope(scopeUri, options) {
   const { store, formGraph, sourceNode, sourceGraph } = options;
   let path = store.any(scopeUri, SHACL("path"), undefined, formGraph);
   const dataset = triplesForPath({
@@ -419,20 +420,20 @@ function triplesForScope(scopeUri, options) {
   };
 }
 
-function validateForm(form, options) {
+export function validateForm(form, options) {
   const fields = fieldsForForm(form, options);
   const fieldValidations = fields.map((field) => validateField(field, options));
   return fieldValidations.reduce((acc, value) => acc && value, true);
 }
 
-function validateField(fieldUri, options) {
+export function validateField(fieldUri, options) {
   return validationResultsForField(fieldUri, options).reduce(
     (acc, value) => acc && value.valid,
     true
   );
 }
 
-function validationResultsForField(fieldUri, options) {
+export function validationResultsForField(fieldUri, options) {
   const { store, formGraph } = options;
   const validationConstraints = store
     .match(fieldUri, FORM("validations"), undefined, formGraph)
@@ -446,7 +447,7 @@ function validationResultsForField(fieldUri, options) {
   return validationResults;
 }
 
-function validationTypesForField(fieldUri, options) {
+export function validationTypesForField(fieldUri, options) {
   const { store, formGraph } = options;
   const validationConstraints = store
     .match(fieldUri, FORM("validations"), undefined, formGraph)
@@ -461,7 +462,7 @@ function validationTypesForField(fieldUri, options) {
   return validationTypes;
 }
 
-function validationResultsForFieldPart(triplesData, fieldUri, options) {
+export function validationResultsForFieldPart(triplesData, fieldUri, options) {
   const { store, formGraph } = options;
   const validationConstraints = store
     .match(fieldUri, FORM("validations"), undefined, formGraph)
@@ -475,7 +476,11 @@ function validationResultsForFieldPart(triplesData, fieldUri, options) {
   return validationResults;
 }
 
-function updateSimpleFormValue(options, newValue = null, oldValue = null) {
+export function updateSimpleFormValue(
+  options,
+  newValue = null,
+  oldValue = null
+) {
   /* This might be tricky.We need to find a subject and predicate to attach the object to.
    * The path might contain several hops, and some of them don't necessarly exist. Consider:
    *
@@ -507,7 +512,7 @@ function updateSimpleFormValue(options, newValue = null, oldValue = null) {
   if (newValue) addSimpleFormValue(newValue, options);
 }
 
-function removeDatasetForSimpleFormValue(value, options) {
+export function removeDatasetForSimpleFormValue(value, options) {
   const { store } = options;
 
   //This returns the complete chain of triples for the path, if there something missing, new nodes are added.
@@ -520,14 +525,14 @@ function removeDatasetForSimpleFormValue(value, options) {
  * Removes all triples for the given options
  * HARD RESET
  */
-function removeTriples(options) {
+export function removeTriples(options) {
   const { store } = options;
 
   const dataset = triplesForPath(options, true);
   store.removeStatements(dataset.triples);
 }
 
-function removeSimpleFormValue(value, options) {
+export function removeSimpleFormValue(value, options) {
   const { store } = options;
 
   //This returns the complete chain of triples for the path, if there something missing, new nodes are added.
@@ -551,7 +556,7 @@ function removeSimpleFormValue(value, options) {
   store.removeStatements(triplesToRemove);
 }
 
-function addSimpleFormValue(value, options) {
+export function addSimpleFormValue(value, options) {
   const { store } = options;
 
   //This returns the complete chain of triples for the path, if there something missing, new nodes are added.
@@ -574,22 +579,3 @@ function addSimpleFormValue(value, options) {
 
   store.addAll(triplesToAdd);
 }
-
-export default importTriplesForForm;
-export {
-  getFormModelVersion,
-  triplesForPath,
-  triplesForScope,
-  fieldsForForm,
-  validateForm,
-  validateField,
-  validationTypesForField,
-  validationResultsForField,
-  validationResultsForFieldPart,
-  updateSimpleFormValue,
-  addSimpleFormValue,
-  removeSimpleFormValue,
-  removeDatasetForSimpleFormValue,
-  removeTriples,
-  importTriplesForForm,
-};
