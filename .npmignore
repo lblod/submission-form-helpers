@@ -8,5 +8,6 @@
 .woodpecker/
 
 // Test files
+tests/*
 **/*.test.js
 
