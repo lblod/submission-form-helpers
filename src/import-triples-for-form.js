@@ -1,5 +1,6 @@
-import { FORM, SHACL } from "./namespaces.js";
+import { SHACL } from "./namespaces.js";
 import { fieldsForForm } from "./fields-for-form.js";
+import { getScope } from "./get-scope.js";
 import { triplesForPath, triplesForScope } from "./triples-for.js";
 
 export default function importTriplesForForm(
@@ -41,9 +42,3 @@ export default function importTriplesForForm(
   return datasetTriples;
 }
 export { importTriplesForForm };
-
-function getScope(field, options) {
-  const { store, formGraph } = options;
-  const scope = store.any(field, FORM("scope"), undefined, formGraph);
-  return scope;
-}

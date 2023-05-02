@@ -11,6 +11,10 @@ export function fieldsForForm(form, options) {
   return fields;
 }
 
+export function fieldsForSubForm(form, options) {
+  return fieldsForFormModelV2(form, options);
+}
+
 export function getFormModelVersion(form, { store, formGraph }) {
   if (isFormModelV2(form, { store, formGraph })) {
     return "v2";

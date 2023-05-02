@@ -1,0 +1,8 @@
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+
+<http://ember-submission-form-fields/source-node> a ext:form;
+  ext:administrativeUnit <http://administrative-unit/1>;
+  ext:administrativeUnit <http://administrative-unit/2>.
+
+<http://administrative-unit/1> a ext:AdministrativeUnit.
+<http://administrative-unit/2> a ext:AdministrativeUnit.
