@@ -1,6 +1,6 @@
 pipeline:
   install:
-    image: node:14
+    image: node:18
     commands:
       - npm ci
   release:
