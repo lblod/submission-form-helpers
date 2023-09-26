@@ -12,8 +12,6 @@ module.exports = function (api) {
       ],
     ],
     plugins: [
-      ["@babel/plugin-proposal-decorators", { legacy: true }],
-      ["@babel/plugin-proposal-class-properties", { loose: true }],
       ["module-extension", { js: "cjs" }], // The built files need to use the .cjs extension to import other relative files
     ],
     ignore: ["**/*.test.js"],
