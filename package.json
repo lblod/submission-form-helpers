@@ -47,7 +47,6 @@
     "@babel/node": "^7.22.19",
     "@babel/preset-env": "^7.22.20",
     "ava": "^4.3.3",
-    "babel-plugin-module-extension": "^0.1.3",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-n": "^15.2.3",

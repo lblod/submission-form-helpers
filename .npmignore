@@ -7,6 +7,9 @@
 .release-it.json
 .woodpecker/
 
+// Custom babel plugins
+/babel/
+
 // Test files
 tests/*
 **/*.test.js
