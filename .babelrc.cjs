@@ -11,9 +11,7 @@ module.exports = function (api) {
         },
       ],
     ],
-    plugins: [
-      ["module-extension", { js: "cjs" }], // The built files need to use the .cjs extension to import other relative files
-    ],
+    plugins: ["./babel/cjs-extension"],
     ignore: ["**/*.test.js"],
   };
 };
