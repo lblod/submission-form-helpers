@@ -1,4 +1,4 @@
-import { triplesForPath } from "./triples-for.js";
+import { triplesForPath } from "./triples-for/triples-for-path.js";
 
 export function addSimpleFormValue(value, options) {
   const { store } = options;
