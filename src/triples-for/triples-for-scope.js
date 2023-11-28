@@ -1,6 +1,27 @@
 import { FORM, RDF, SHACL } from "../namespaces.js";
 import { triplesForUnscopedPath } from "./triples-for-unscoped-path.js";
 
+function getPathTarget(constraintURI, store, formGraph) {
+  const hasValue = store.any(
+    constraintURI,
+    SHACL("hasValue"),
+    undefined,
+    formGraph
+  );
+  if (hasValue) {
+    return hasValue;
+  }
+  // our spec was wrong in the past, this is the old way of specifying the value of the constraint
+  const targetNode = store.any(
+    constraintURI,
+    SHACL("targetNode"),
+    undefined,
+    formGraph
+  );
+
+  return targetNode;
+}
+
 function parseConstraint(rawConstraints, scopeOptions, negative = false) {
   const { store, formGraph } = scopeOptions;
   return rawConstraints
@@ -19,12 +40,7 @@ function parseConstraint(rawConstraints, scopeOptions, negative = false) {
       return {
         path: store.any(property.object, SHACL("path"), undefined, formGraph),
         negative,
-        targetNode: store.any(
-          property.object,
-          SHACL("targetNode"),
-          undefined,
-          formGraph
-        ),
+        targetNode: getPathTarget(property.object, store, formGraph),
       };
     });
 }
