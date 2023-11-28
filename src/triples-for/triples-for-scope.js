@@ -1,13 +1,13 @@
 import { FORM, RDF, SHACL } from "../namespaces.js";
 import { triplesForUnscopedPath } from "./triples-for-unscoped-path.js";
 
-function toPathConstraints(rawConstraints, scopeOptions, negative = false) {
+function parseConstraint(rawConstraints, scopeOptions, negative = false) {
   const { store, formGraph } = scopeOptions;
   return rawConstraints
     .map((constraint) => {
       return store.match(
         constraint.object,
-        SHACL("property"),
+        SHACL(negative ? "not" : "property"),
         undefined,
         formGraph
       );
@@ -29,11 +29,18 @@ function toPathConstraints(rawConstraints, scopeOptions, negative = false) {
     });
 }
 
-function getNodeShapeConstraints(constraints, scopeOptions) {
+function getPositiveNodeShapeConstraints(constraints, scopeOptions) {
   const { store, formGraph } = scopeOptions;
-  return toPathConstraints(
-    constraints.filter((constraint) =>
-      store.any(constraint.object, RDF("type"), SHACL("NodeShape"), formGraph)
+  return parseConstraint(
+    constraints.filter(
+      (constraint) =>
+        store.any(
+          constraint.object,
+          RDF("type"),
+          SHACL("NodeShape"),
+          formGraph
+        ) &&
+        store.any(constraint.object, SHACL("property"), undefined, formGraph)
     ),
     scopeOptions,
     false
@@ -42,14 +49,15 @@ function getNodeShapeConstraints(constraints, scopeOptions) {
 
 function getNegativeNodeShapeConstraints(constraints, scopeOptions) {
   const { store, formGraph } = scopeOptions;
-  return toPathConstraints(
-    constraints.filter((constraint) =>
-      store.any(
-        constraint.object,
-        RDF("type"),
-        SHACL("NegativeNodeShape"),
-        formGraph
-      )
+  return parseConstraint(
+    constraints.filter(
+      (constraint) =>
+        store.any(
+          constraint.object,
+          RDF("type"),
+          SHACL("NodeShape"),
+          formGraph
+        ) && store.any(constraint.object, SHACL("not"), undefined, formGraph)
     ),
     scopeOptions,
     true
@@ -134,7 +142,7 @@ export function triplesForScope(scopeUri, scopeOptions) {
     formGraph
   );
 
-  const nodeShapeConstraints = getNodeShapeConstraints(
+  const nodeShapeConstraints = getPositiveNodeShapeConstraints(
     allConstraints,
     scopeOptions
   );
