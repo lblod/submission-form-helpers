@@ -1,4 +1,4 @@
-import { triplesForPath } from "./triples-for.js";
+import { triplesForPath } from "./triples-for/triples-for-path.js";
 
 /**
  * Removes all triples for the given options

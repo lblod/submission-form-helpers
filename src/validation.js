@@ -3,7 +3,7 @@ import { FORM, RDF } from "./namespaces.js";
 import { fieldsForForm, fieldsForSubForm } from "./fields-for-form.js";
 import { check, checkTriples } from "./constraints.js";
 import { getScope } from "./get-scope.js";
-import { triplesForScope } from "./triples-for.js";
+import { triplesForScope } from "./triples-for/triples-for-scope.js";
 
 export function validateForm(form, options) {
   const topLevelFields = fieldsForForm(form, options);

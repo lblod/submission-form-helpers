@@ -1,7 +1,8 @@
 import { SHACL } from "./namespaces.js";
 import { fieldsForForm } from "./fields-for-form.js";
 import { getScope } from "./get-scope.js";
-import { triplesForPath, triplesForScope } from "./triples-for.js";
+import { triplesForPath } from "./triples-for/triples-for-path.js";
+import { triplesForScope } from "./triples-for/triples-for-scope.js";
 
 export default function importTriplesForForm(
   form,
