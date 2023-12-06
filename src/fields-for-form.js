@@ -34,13 +34,36 @@ function isFormModelV2(form, { store, formGraph }) {
 
 function fieldsForFormModelV2(form, options) {
   let { store, formGraph } = options;
-  //TODO: conditionals (also to define in form model)
   const formItems = store
     .match(form, FORM("includes"), undefined, formGraph)
     .map(({ object }) => object);
-  //Next line is to get conditional fields. This is currently still supported in th V1 model TODO: migrate to V4 support
-  const conditional = fieldsForFormModelV1(form, options);
-  return [...formItems, ...conditional];
+  const formItemsExceptHiddenConditionals = withoutHiddenConditionalFields(
+    formItems,
+    options
+  );
+  //Next line is to get conditional fields according to the old model
+  const oldModelConditionals = fieldsForFormModelV1(form, options);
+  return [...formItemsExceptHiddenConditionals, ...oldModelConditionals];
+}
+
+function withoutHiddenConditionalFields(
+  formItems,
+  { store, sourceNode, sourceGraph, metaGraph, formGraph }
+) {
+  return formItems.filter((formItem) => {
+    const allConditionsMatch = store
+      .match(formItem, FORM("rendersWhen"), undefined, formGraph)
+      .every(({ object }) => {
+        return check(object, {
+          formGraph,
+          store,
+          sourceGraph,
+          sourceNode,
+          metaGraph,
+        }).valid;
+      });
+    return allConditionsMatch;
+  });
 }
 
 function fieldsForFormModelV1(form, options) {
