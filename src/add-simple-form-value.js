@@ -1,4 +1,6 @@
-import { triplesForPath } from "./triples-for/triples-for-path.js";
+import { Statement } from "rdflib";
+import { FORM, RDF } from "./namespaces.js";
+import { triplesForPath } from "./triples-for.js";
 
 export function addSimpleFormValue(value, options) {
   const { store } = options;
@@ -19,6 +21,24 @@ export function addSimpleFormValue(value, options) {
     const newTriple = dataset.triples.slice(-1)[0];
     newTriple.object = value;
     triplesToAdd.push(newTriple);
+  }
+
+  // Add missing FormDataNode types for subjects without (rdf:type form:FormDataNode)
+  const triplesToAddLength = triplesToAdd.length
+
+  for (let index = 0; index < triplesToAddLength; index++) {
+    const triple = triplesToAdd[index]
+
+    if (triple.subject?.value?.startsWith('http://data.lblod.info/form-data/nodes/')) {
+      triplesToAdd.push(
+        new Statement(
+          triple.subject,
+          RDF("type"),
+          FORM("FormDataNode"),
+          triple.graph
+        )
+      )
+    }
   }
 
   store.addAll(triplesToAdd);
