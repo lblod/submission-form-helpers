@@ -1,4 +1,6 @@
-import { triplesForPath } from "./triples-for/triples-for-path.js";
+import { Statement } from "rdflib";
+import { FORM, RDF } from "./namespaces.js";
+import { triplesForPath } from "./triples-for.js";
 
 export function removeSimpleFormValue(value, options) {
   const { store } = options;
@@ -30,5 +32,27 @@ export function removeDatasetForSimpleFormValue(value, options) {
   //This returns the complete chain of triples for the path, if there something missing, new nodes are added.
   const dataset = triplesForPath(options, true);
   const triplesToRemove = dataset.triples.filter((t) => t.object.equals(value));
+
+  // Remove dangling FormDataNode types (subjects with only rdf:type form:FormDataNode)
+  const triplesToRemoveLength = triplesToRemove.length;
+
+  for (let index = 0; index < triplesToRemoveLength; index++) {
+    const triple = triplesToRemove[index];
+
+    if (!triple.subject?.value?.startsWith('http://data.lblod.info/form-data/nodes/')) return;
+
+    const attachedTriples = store.match(triple.subject, null, null, triple.graph);
+    const currentTriplePlusRdfTypeTriple = 2
+
+    if (attachedTriples.length == currentTriplePlusRdfTypeTriple) {
+      triplesToRemove.push(new Statement(
+        triple.subject,
+        RDF("type"),
+        FORM("FormDataNode"),
+        triple.graph
+      ))
+    }
+  }
+
   store.removeStatements(triplesToRemove);
 }
