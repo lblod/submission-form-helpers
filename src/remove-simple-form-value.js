@@ -39,18 +39,30 @@ export function removeDatasetForSimpleFormValue(value, options) {
   for (let index = 0; index < triplesToRemoveLength; index++) {
     const triple = triplesToRemove[index];
 
-    if (!triple.subject?.value?.startsWith('http://data.lblod.info/form-data/nodes/')) return;
+    if (
+      !triple.subject?.value?.startsWith(
+        "http://data.lblod.info/form-data/nodes/"
+      )
+    )
+      return;
 
-    const attachedTriples = store.match(triple.subject, null, null, triple.graph);
-    const currentTriplePlusRdfTypeTriple = 2
+    const attachedTriples = store.match(
+      triple.subject,
+      null,
+      null,
+      triple.graph
+    );
+    const currentTriplePlusRdfTypeTriple = 2;
 
     if (attachedTriples.length == currentTriplePlusRdfTypeTriple) {
-      triplesToRemove.push(new Statement(
-        triple.subject,
-        RDF("type"),
-        FORM("FormDataNode"),
-        triple.graph
-      ))
+      triplesToRemove.push(
+        new Statement(
+          triple.subject,
+          RDF("type"),
+          FORM("FormDataNode"),
+          triple.graph
+        )
+      );
     }
   }
 

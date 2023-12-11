@@ -24,12 +24,16 @@ export function addSimpleFormValue(value, options) {
   }
 
   // Add missing FormDataNode types for subjects without (rdf:type form:FormDataNode)
-  const triplesToAddLength = triplesToAdd.length
+  const triplesToAddLength = triplesToAdd.length;
 
   for (let index = 0; index < triplesToAddLength; index++) {
-    const triple = triplesToAdd[index]
+    const triple = triplesToAdd[index];
 
-    if (triple.subject?.value?.startsWith('http://data.lblod.info/form-data/nodes/')) {
+    if (
+      triple.subject?.value?.startsWith(
+        "http://data.lblod.info/form-data/nodes/"
+      )
+    ) {
       triplesToAdd.push(
         new Statement(
           triple.subject,
@@ -37,7 +41,7 @@ export function addSimpleFormValue(value, options) {
           FORM("FormDataNode"),
           triple.graph
         )
-      )
+      );
     }
   }
 
