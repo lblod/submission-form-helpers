@@ -1,6 +1,6 @@
 import { Statement } from "rdflib";
 import { FORM, RDF } from "./namespaces.js";
-import { triplesForPath } from "./triples-for.js";
+import { triplesForPath } from "./triples-for/triples-for-path.js";
 
 export function removeSimpleFormValue(value, options) {
   const { store } = options;
