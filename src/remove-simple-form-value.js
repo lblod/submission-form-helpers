@@ -1,6 +1,7 @@
 import { Statement } from "rdflib";
 import { FORM, RDF } from "./namespaces.js";
 import { triplesForPath } from "./triples-for/triples-for-path.js";
+import { URI_TEMPLATE } from "./constants.js";
 
 export function removeSimpleFormValue(value, options) {
   const { store } = options;
@@ -39,12 +40,7 @@ export function removeDatasetForSimpleFormValue(value, options) {
   for (let index = 0; index < triplesToRemoveLength; index++) {
     const triple = triplesToRemove[index];
 
-    if (
-      !triple.subject?.value?.startsWith(
-        "http://data.lblod.info/form-data/nodes/"
-      )
-    )
-      return;
+    if (!triple.subject?.value?.startsWith(URI_TEMPLATE)) return;
 
     const attachedTriples = store.match(
       triple.subject,

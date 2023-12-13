@@ -1,6 +1,7 @@
 import { Statement } from "rdflib";
 import { FORM, RDF } from "./namespaces.js";
 import { triplesForPath } from "./triples-for/triples-for-path.js";
+import { URI_TEMPLATE } from "./constants.js";
 
 export function addSimpleFormValue(value, options) {
   const { store } = options;
@@ -29,11 +30,7 @@ export function addSimpleFormValue(value, options) {
   for (let index = 0; index < triplesToAddLength; index++) {
     const triple = triplesToAdd[index];
 
-    if (
-      triple.subject?.value?.startsWith(
-        "http://data.lblod.info/form-data/nodes/"
-      )
-    ) {
+    if (triple.subject?.value?.startsWith(URI_TEMPLATE)) {
       triplesToAdd.push(
         new Statement(
           triple.subject,
