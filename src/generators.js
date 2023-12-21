@@ -19,7 +19,7 @@ export function generatorsForNode(node, options) {
 }
 
 export function triplesForGenerator(generatorUri, options) {
-  const { store, formGraph } = options;
+  const { store, formGraph, sourceGraph, sourceNode } = options;
   const prototypeUri = store.any(
     generatorUri,
     FORM("prototype"),
@@ -35,6 +35,8 @@ export function triplesForGenerator(generatorUri, options) {
   dataset = augmentGeneratedDataSet(generatorUri, dataset, {
     store,
     formGraph,
+    sourceGraph,
+    sourceNode,
   });
 
   return dataset;
@@ -76,7 +78,35 @@ function walkAndGenerateShape(
   return dataset;
 }
 
-function augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph }) {
+function addExtraUuids(dataset, { store, sourceGraph, sourceNode }) {
+  const subjectValues = [
+    ...new Set(dataset.triples.map((triple) => triple.subject.value)),
+  ];
+  const extraTriples = [];
+  subjectValues.forEach((subjectV) => {
+    // this is because the dataset's source node can be renamed to the original source node of the form
+    const trueSubject =
+      subjectV === dataset.sourceNodes[0].value
+        ? sourceNode
+        : new NamedNode(subjectV);
+    const alreadyHasUuid = store.any(
+      trueSubject,
+      MU("uuid"),
+      undefined,
+      sourceGraph
+    );
+    if (alreadyHasUuid) {
+      return;
+    }
+    extraTriples.push(
+      new Statement(new NamedNode(subjectV), MU("uuid"), uuidv4())
+    );
+  });
+  return extraTriples;
+}
+
+function augmentGeneratedDataSet(generatorUri, dataset, storeOptions) {
+  const { store, formGraph } = storeOptions;
   const dataGenerators = store.match(
     generatorUri,
     FORM("dataGenerator"),
@@ -86,13 +116,10 @@ function augmentGeneratedDataSet(generatorUri, dataset, { store, formGraph }) {
 
   for (const generator of dataGenerators) {
     if (generator.object.equals(FORM("addMuUuid"))) {
-      const subjectValues = [
-        ...new Set(dataset.triples.map((triple) => triple.subject.value)),
+      dataset.triples = [
+        ...dataset.triples,
+        ...addExtraUuids(dataset, storeOptions),
       ];
-      const extraTriples = subjectValues.map((subjectV) => {
-        return new Statement(new NamedNode(subjectV), MU("uuid"), uuidv4());
-      });
-      dataset.triples = [...dataset.triples, ...extraTriples];
     } else {
       console.warn(
         `Unsupported 'form:dataGenerator' for ${generator.object.value}`
