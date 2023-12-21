@@ -9,6 +9,7 @@ export function removeSimpleFormValue(value, options) {
   let triplesToRemove = [];
   // The reason why it is more complicated. If we encounter > 1 values for a path, the I expect this form
   // to be broken. This is a way for ther user to correct and remove both values.
+  // TODO: why would multiple values for a path == broken form?
   if (dataset.values.length > 0) {
     triplesToRemove = dataset.triples.filter(
       (t) => !dataset.values.find((v) => t.object.equals(v))
