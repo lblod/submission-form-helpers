@@ -132,6 +132,9 @@ function triplesForComplexPath(options, pathInfo, createMissingNodes = false) {
           // The last pathElement will match the triple
           // the component works on and should
           // be managed by this.
+          // TODO: what's bothering me
+          //  - it's added immediatly to the store, contradicting the other behaviour
+          //  - maybe the general problem of dangling triples
           if(nextPathElements.length > 1) {
             store.addAll([
              new Statement(
