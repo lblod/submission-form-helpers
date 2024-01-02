@@ -69,6 +69,8 @@ function triplesForComplexPath(options, pathInfo, createMissingNodes = false) {
   const { store, path, formGraph, sourceGraph } = options;
   const { datasetTriples, startNodes } = pathInfo;
 
+  const addedFormDataNodeStatements = [];
+
   // Convert PATH list to comprehensible objects
   const pathElements = path.elements.map((element) => {
     if (element.termType == "NamedNode") {
@@ -136,14 +138,14 @@ function triplesForComplexPath(options, pathInfo, createMissingNodes = false) {
           //  - it's added immediatly to the store, contradicting the other behaviour
           //  - maybe the general problem of dangling triples
           if(nextPathElements.length > 1) {
-            store.addAll([
+            addedFormDataNodeStatements.push(
              new Statement(
                newSubject,
                RDF('type'),
                FORM('FormDataNode'),
                sourceGraph
              )
-            ]);
+            );
           }
         }
 
@@ -185,14 +187,14 @@ function triplesForComplexPath(options, pathInfo, createMissingNodes = false) {
           // the component works on and should
           // be managed by this.
           if(nextPathElements.length > 1) {
-            store.addAll([
+            addedFormDataNodeStatements.push(
              new Statement(
                newSubject,
                RDF('type'),
                FORM('FormDataNode'),
                sourceGraph
              )
-            ]);
+            );
           }
         }
 
@@ -215,7 +217,7 @@ function triplesForComplexPath(options, pathInfo, createMissingNodes = false) {
   // always be an array, but it's more obvious ;-)
   if (nextPathElements.length == 0)
     return {
-      triples: datasetTriples,
+      triples: [ ...datasetTriples, ...addedFormDataNodeStatements ],
       values: startingPoints,
       orderedSegmentData,
     };
