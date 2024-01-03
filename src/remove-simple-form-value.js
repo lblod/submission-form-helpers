@@ -48,6 +48,10 @@ export function removeDatasetForSimpleFormValue(value, options) {
       null,
       triple.graph
     );
+
+    // Current triple to be removed plus the rdf:type triple
+    // <http://subject/node/123>   rdf:type          form:FormDataNode.
+    // <http://subject/node/123>   some:predicate    "value-to-be-removed".
     const currentTriplePlusRdfTypeTriple = 2;
 
     if (attachedTriples.length == currentTriplePlusRdfTypeTriple) {
