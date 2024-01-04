@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { FORM, MU, RDF } from "./namespaces.js";
 import { NamedNode, Statement } from "rdflib";
-
-const DEFAULT_URI_TEMPLATE = "http://data.lblod.info/form-data/nodes/";
+import { URI_TEMPLATE } from "./constants.js";
 
 export function generatorsForNode(node, options) {
   const { store, formGraph } = options;
@@ -109,7 +108,7 @@ function helpGenerateUri(shapeElements, { store, formGraph }) {
   if (typeInformation) {
     return newUriForType(typeInformation.object, { store, formGraph });
   } else {
-    return DEFAULT_URI_TEMPLATE + uuidv4();
+    return URI_TEMPLATE + uuidv4();
   }
 }
 
@@ -119,7 +118,7 @@ function newUriForType(type, { store, formGraph }) {
   if (uriGenerator && prefix) {
     return prefix.value + uuidv4();
   } else {
-    return DEFAULT_URI_TEMPLATE + uuidv4();
+    return URI_TEMPLATE + uuidv4();
   }
 }
 
