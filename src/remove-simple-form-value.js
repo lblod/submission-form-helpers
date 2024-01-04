@@ -38,6 +38,15 @@ export function removeDatasetForSimpleFormValue(value, options) {
   const triplesToRemoveLength = triplesToRemove.length;
 
   for (let index = 0; index < triplesToRemoveLength; index++) {
+    if (URI_TEMPLATE != "http://data.lblod.info/form-data/nodes/") {
+      console.warn(
+        `It seems the URI_TEMPLATE variable in the submission-form-helpers library has changed but the code responsible for REMOVING (rdf:type form:FormDataNode)
+        has not. This can cause unexpected behaviour. REMOVING (rdf:type form:FormDataNode) has been disabled until manually resolved. 
+        `
+      );
+      break;
+    }
+
     const triple = triplesToRemove[index];
 
     if (!triple.subject?.value?.startsWith(URI_TEMPLATE)) return;

@@ -28,6 +28,15 @@ export function addSimpleFormValue(value, options) {
   const triplesToAddLength = triplesToAdd.length;
 
   for (let index = 0; index < triplesToAddLength; index++) {
+    if (URI_TEMPLATE != "http://data.lblod.info/form-data/nodes/") {
+      console.warn(
+        `It seems the URI_TEMPLATE variable in the submission-form-helpers library has changed but the code responsible for
+        ADDING (rdf:type form:FormDataNode) has not. This can cause unexpected behaviour. ADDING (rdf:type form:FormDataNode) has been disabled until manually resolved. 
+        `
+      );
+      break;
+    }
+
     const triple = triplesToAdd[index];
 
     if (triple.subject?.value?.startsWith(URI_TEMPLATE)) {
