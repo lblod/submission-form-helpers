@@ -59,11 +59,24 @@ export function validateField(fieldUri, options) {
   );
 }
 
-export function validationResultsForField(fieldUri, options) {
+function validationsForField(fieldUri, options) {
   const { store, formGraph } = options;
-  const validationConstraints = store
-    .match(fieldUri, FORM("validations"), undefined, formGraph)
-    .map((t) => t.object);
+  const v2Result = store.match(
+    fieldUri,
+    FORM("validatedBy"),
+    undefined,
+    formGraph
+  );
+  if (v2Result.length > 0) {
+    return v2Result;
+  }
+  return store.match(fieldUri, FORM("validations"), undefined, formGraph);
+}
+
+export function validationResultsForField(fieldUri, options) {
+  const validationConstraints = validationsForField(fieldUri, options).map(
+    (t) => t.object
+  );
 
   const validationResults = [];
   for (const constraintUri of validationConstraints) {
@@ -75,9 +88,9 @@ export function validationResultsForField(fieldUri, options) {
 
 export function validationTypesForField(fieldUri, options) {
   const { store, formGraph } = options;
-  const validationConstraints = store
-    .match(fieldUri, FORM("validations"), undefined, formGraph)
-    .map((t) => t.object);
+  const validationConstraints = validationsForField(fieldUri, options).map(
+    (t) => t.object
+  );
 
   const validationTypes = validationConstraints
     .map(
@@ -89,10 +102,9 @@ export function validationTypesForField(fieldUri, options) {
 }
 
 export function validationResultsForFieldPart(triplesData, fieldUri, options) {
-  const { store, formGraph } = options;
-  const validationConstraints = store
-    .match(fieldUri, FORM("validations"), undefined, formGraph)
-    .map((t) => t.object);
+  const validationConstraints = validationsForField(fieldUri, options).map(
+    (t) => t.object
+  );
 
   const validationResults = [];
   for (const constraintUri of validationConstraints) {
