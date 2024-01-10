@@ -1,7 +1,7 @@
 import test from "ava";
 import { NamedNode } from "rdflib";
 import ForkingStore from "forking-store";
-import { readFileSync } from "node:fs";
+import { readFixtureFile } from "./test-helpers.js";
 import { RDF, FORM, fieldsForForm } from "../src/index.js";
 
 const FORM_GRAPHS = {
@@ -13,13 +13,6 @@ const FORM_GRAPHS = {
 const SOURCE_NODE = new NamedNode(
   "http://ember-submission-form-fields/source-node"
 );
-
-function readFixtureFile(filePath) {
-  return readFileSync(
-    new URL(`fixtures/${filePath}`, import.meta.url),
-    "utf-8"
-  );
-}
 
 test("it returns the conditional fields only if the condition is fulfilled (old model)", (t) => {
   const formTtl = readFixtureFile("conditionals-v1/form.ttl");

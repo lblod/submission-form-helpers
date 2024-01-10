@@ -1,8 +1,8 @@
 import test from "ava";
 import { NamedNode } from "rdflib";
 import ForkingStore from "forking-store";
-import { readFileSync } from "node:fs";
-import { RDF, FORM, validateForm } from "../src/index.js";
+import { readFixtureFile } from "../test-helpers.js";
+import { RDF, FORM, validateForm } from "../../src/index.js";
 
 const FORM_GRAPHS = {
   formGraph: new NamedNode("http://data.lblod.info/form"),
@@ -13,13 +13,6 @@ const FORM_GRAPHS = {
 const SOURCE_NODE = new NamedNode(
   "http://ember-submission-form-fields/source-node"
 );
-
-function readFixtureFile(filePath) {
-  return readFileSync(
-    new URL(`fixtures/${filePath}`, import.meta.url),
-    "utf-8"
-  );
-}
 
 test("it validates all the form fields including the ones in sub forms", (t) => {
   const formTtl = readFixtureFile("validate-form/form.ttl");

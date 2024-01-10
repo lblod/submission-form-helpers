@@ -1,6 +1,6 @@
 import test from "ava";
 import { Literal } from "rdflib";
-import validDate from "./valid-date.js";
+import validDate from "../../src/constraints/valid-date.js";
 
 test('it validates if the provided literal is a valid "xsd:date"', (t) => {
   let dateLiteral = new Literal(
