@@ -1,8 +1,8 @@
 import test from "ava";
 import { NamedNode } from "rdflib";
 import ForkingStore from "forking-store";
-import { readFixtureFile } from "./test-helpers.js";
-import { RDF, FORM, validateForm } from "../src/index.js";
+import { readFixtureFile } from "../test-helpers.js";
+import { RDF, FORM, validateForm } from "../../src/index.js";
 
 const FORM_GRAPHS = {
   formGraph: new NamedNode("http://data.lblod.info/form"),
