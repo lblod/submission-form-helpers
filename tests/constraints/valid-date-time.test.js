@@ -1,6 +1,6 @@
 import test from "ava";
 import { Literal } from "rdflib";
-import validDateTime from "./valid-date-time.js";
+import validDateTime from "../../src/constraints/valid-date-time.js";
 
 test('it validates if the provided literal is a valid "xsd:dateTime"', (t) => {
   let dateTime = dateTimeLiteral("2022-10-14T10:40:43Z");
