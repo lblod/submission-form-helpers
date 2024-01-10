@@ -24,7 +24,7 @@
     "prepare": "npm run build",
     "release": "release-it",
     "test": "npm run test:esm && npm run test:cjs && npm run test:unit",
-    "test:unit": "ava",
+    "test:unit": "ava \"tests/**/*.test.js\"",
     "test:esm": "node ./src/index.js",
     "test:cjs": "node ./dist/cjs/index.cjs"
   },
