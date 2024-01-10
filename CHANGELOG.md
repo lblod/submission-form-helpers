@@ -1,3 +1,9 @@
+## v2.6.0 (2024-01-10)
+
+#### :rocket: Enhancement
+
+- [#55](https://github.com/lblod/submission-form-helpers/pull/55) Add support for the `form:validatedBy` predicate ([@Rahien](https://github.com/Rahien))
+
 ## v2.5.1 (2023-12-21)
 
 #### :bug: Bug Fix
