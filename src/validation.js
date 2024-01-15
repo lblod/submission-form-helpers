@@ -92,11 +92,11 @@ export function validationsForFieldWithType(fieldUri, options) {
     (t) => t.object
   );
 
-  const validationsWithType = {};
+  const validationsWithType = [];
   validationConstraints.forEach((constraintS) => {
     const type = store.match(constraintS, RDF("type"), undefined, formGraph)[0]
       .object;
-    validationsWithType[constraintS] = type;
+    validationsWithType.push({constraintUri: constraintS, type});
   });
   return validationsWithType;
 }
