@@ -59,7 +59,7 @@ export function validateField(fieldUri, options) {
   );
 }
 
-function validationsForField(fieldUri, options) {
+export function validationsForField(fieldUri, options) {
   const { store, formGraph } = options;
   const v2Result = store.match(
     fieldUri,
@@ -96,7 +96,7 @@ export function validationsForFieldWithType(fieldUri, options) {
   validationConstraints.forEach((constraintS) => {
     const type = store.match(constraintS, RDF("type"), undefined, formGraph)[0]
       .object;
-    validationsWithType.push({constraintUri: constraintS, type});
+    validationsWithType.push({ constraintUri: constraintS, type });
   });
   return validationsWithType;
 }
