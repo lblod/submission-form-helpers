@@ -59,7 +59,7 @@ export function validateField(fieldUri, options) {
   );
 }
 
-function validationsForField(fieldUri, options) {
+export function validationsForField(fieldUri, options) {
   const { store, formGraph } = options;
   const v2Result = store.match(
     fieldUri,
@@ -86,19 +86,24 @@ export function validationResultsForField(fieldUri, options) {
   return validationResults;
 }
 
-export function validationTypesForField(fieldUri, options) {
+export function validationsForFieldWithType(fieldUri, options) {
   const { store, formGraph } = options;
   const validationConstraints = validationsForField(fieldUri, options).map(
     (t) => t.object
   );
 
-  const validationTypes = validationConstraints
-    .map(
-      (constraintS) =>
-        store.match(constraintS, RDF("type"), undefined, formGraph)[0]
-    ) //There must be a least once
-    .map((triple) => triple.object);
-  return validationTypes;
+  const validationsWithType = [];
+  validationConstraints.forEach((constraintS) => {
+    const type = store.match(constraintS, RDF("type"), undefined, formGraph)[0]
+      .object;
+    validationsWithType.push({ constraintUri: constraintS, type });
+  });
+  return validationsWithType;
+}
+
+export function validationTypesForField(fieldUri, options) {
+  const validationsWithType = validationsForFieldWithType(fieldUri, options);
+  return Object.values(validationsWithType);
 }
 
 export function validationResultsForFieldPart(triplesData, fieldUri, options) {
