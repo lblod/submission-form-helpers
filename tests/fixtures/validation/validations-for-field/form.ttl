@@ -1,0 +1,28 @@
+@prefix form: <http://lblod.data.gift/vocabularies/forms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix displayTypes: <http://lblod.data.gift/display-types/> .
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+ext:mainForm a form:Form, form:TopLevelForm ;
+    form:includes ext:inputField .
+
+ext:mainSection a form:Section ;
+    sh:order 1 .
+
+ext:inputField a form:Field ;
+    sh:name "Inputfield" ;
+    sh:order 1 ;
+    sh:path ext:inputValue;
+    form:displayType displayTypes:defaultInput ;
+    form:validatedBy [
+      a form:RequiredConstraint ;
+      form:grouping form:Bag ;
+      sh:resultMessage "Dit veld is verplicht." ;
+      sh:path ext:inputValue
+    ] ;
+    form:partOf ext:mainSection .
+
+
+
+
