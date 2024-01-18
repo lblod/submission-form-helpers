@@ -20,6 +20,21 @@ ext:inputField a form:Field ;
       form:grouping form:Bag ;
       sh:resultMessage "Dit veld is verplicht." ;
       sh:path ext:inputValue
+    ],
+    # This constraint doesn't exist, but is just here for the sh:Violation test
+    [ a ext:MinLengthConstraint ;
+      form:grouping form:MatchEvery ;
+      form:min 3 ;
+      sh:resultMessage "Value should be at least 3 characters long" ;
+      sh:path ext:inputValue ;
+      sh:severity sh:Violation
+    ] ,
+    [ a form:MaxLength ;
+      form:grouping form:MatchEvery ;
+      form:max 10 ;
+      sh:resultMessage "Please keep the value short and concise" ;
+      sh:path ext:inputValue ;
+      sh:severity sh:Warning
     ] ;
     form:partOf ext:mainSection .
 
