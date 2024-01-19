@@ -24,6 +24,7 @@ import maxLength from "./constraints/max-length.js";
 import validEngagementTable from "./constraints/valid-engagement-table.js";
 import hasOneNumberGreaterThanInFields from "./constraints/has-one-number-greater-than-in-fields.js";
 import matchValues from "./constraints/match-values.js";
+import dateInPast from "./constraints/date-in-past.js";
 
 export default function constraintForUri(uri) {
   switch (String(uri)) {
@@ -73,6 +74,8 @@ export default function constraintForUri(uri) {
       return hasOneNumberGreaterThanInFields;
     case "http://lblod.data.gift/vocabularies/forms/MatchValues":
       return matchValues;
+    case "http://lblod.data.gift/vocabularies/forms/DateInPast":
+      return dateInPast;
     default:
       return false; //TODO: TBD
   }
