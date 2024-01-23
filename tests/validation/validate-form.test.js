@@ -2,7 +2,7 @@ import test from "ava";
 import { NamedNode } from "rdflib";
 import ForkingStore from "forking-store";
 import { readFixtureFile } from "../test-helpers.js";
-import { RDF, FORM, validateForm } from "../../src/index.js";
+import { RDF, FORM, validateForm, SHACL } from "../../src/index.js";
 
 const FORM_GRAPHS = {
   formGraph: new NamedNode("http://data.lblod.info/form"),
@@ -65,4 +65,59 @@ test("it validates all the form fields including the ones in sub forms", (t) => 
     ...FORM_GRAPHS,
   });
   t.true(isValid, "The source data contains valid listing item data");
+});
+
+test("it supports validating specific severity levels", (t) => {
+  const formTtl = readFixtureFile("validation/severity/form.ttl");
+
+  let store = new ForkingStore();
+  store.parse(formTtl, FORM_GRAPHS.formGraph, "text/turtle");
+
+  const form = store.any(
+    undefined,
+    RDF("type"),
+    FORM("Form"),
+    FORM_GRAPHS.formGraph
+  );
+
+  let isValid = validateForm(form, {
+    store,
+    form,
+    sourceNode: SOURCE_NODE,
+    ...FORM_GRAPHS,
+  });
+
+  t.false(isValid);
+
+  const data = `
+    @prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+    ${SOURCE_NODE} ext:inputValue "Something longer than the maxLength value" .
+  `;
+
+  store.parse(data, FORM_GRAPHS.sourceGraph, "text/turtle");
+
+  isValid = validateForm(form, {
+    store,
+    form,
+    sourceNode: SOURCE_NODE,
+    ...FORM_GRAPHS,
+  });
+
+  t.true(
+    isValid,
+    "The form is valid because the warning severity is ignored by default"
+  );
+
+  isValid = validateForm(form, {
+    store,
+    form,
+    sourceNode: SOURCE_NODE,
+    ...FORM_GRAPHS,
+    severity: SHACL("Warning"),
+  });
+
+  t.false(
+    isValid,
+    "The warning severity validations don't pass the validation check"
+  );
 });

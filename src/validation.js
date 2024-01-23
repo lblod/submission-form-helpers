@@ -1,9 +1,14 @@
 import { NamedNode } from "rdflib";
-import { FORM, RDF } from "./namespaces.js";
+import { FORM, RDF, SHACL } from "./namespaces.js";
 import { fieldsForForm, fieldsForSubForm } from "./fields-for-form.js";
 import { check, checkTriples } from "./constraints.js";
 import { getScope } from "./get-scope.js";
 import { triplesForScope } from "./triples-for/triples-for-scope.js";
+
+/**
+ * @typedef {import('forking-store').default} ForkingStore
+ * @typedef {import("rdflib").Statement} Statement
+ */
 
 export function validateForm(form, options) {
   const topLevelFields = fieldsForForm(form, options);
@@ -59,18 +64,50 @@ export function validateField(fieldUri, options) {
   );
 }
 
+/**
+ * Returns a list of Statements for each validation in the form graph that is attached to the given field
+ *
+ * @param {NamedNode} fieldUri
+ * @param {{store: ForkingStore, formGraph: NamedNode, severity?: NamedNode}} options
+ * @returns {Statement[]}
+ */
 export function validationsForField(fieldUri, options) {
-  const { store, formGraph } = options;
-  const v2Result = store.match(
+  const { store, formGraph, severity: targetSeverity } = options;
+
+  /** @type {Statement[]} */
+  let validations = store.match(
     fieldUri,
     FORM("validatedBy"),
     undefined,
     formGraph
   );
-  if (v2Result.length > 0) {
-    return v2Result;
+
+  if (validations.length === 0) {
+    // v1 model fallback, for backwards compatibility
+    validations = store.match(
+      fieldUri,
+      FORM("validations"),
+      undefined,
+      formGraph
+    );
   }
-  return store.match(fieldUri, FORM("validations"), undefined, formGraph);
+
+  validations = validations.filter((statement) => {
+    const constraint = statement.object;
+    const constraintSeverity = store
+      .match(constraint, SHACL("severity"), null, formGraph)
+      .at(0)?.object;
+
+    const SH_VIOLATION = SHACL("Violation");
+    if (targetSeverity && !targetSeverity.equals(SH_VIOLATION)) {
+      return constraintSeverity?.equals(targetSeverity);
+    } else {
+      // sh:Violation is the default case, so the sh:severity predicate is optional
+      return !constraintSeverity || constraintSeverity.equals(SH_VIOLATION);
+    }
+  });
+
+  return validations;
 }
 
 export function validationResultsForField(fieldUri, options) {
