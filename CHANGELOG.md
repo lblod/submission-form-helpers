@@ -1,3 +1,8 @@
+## v2.8.0 (2024-01-24)
+
+#### :rocket: Enhancement
+* [#62](https://github.com/lblod/submission-form-helpers/pull/62) [DL-5621] Support validation constraint "severity" ([@Windvis](https://github.com/Windvis))
+
 ## v2.6.0 (2024-01-10)
 
 #### :rocket: Enhancement
