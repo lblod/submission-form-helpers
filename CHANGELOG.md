@@ -3,6 +3,11 @@
 #### :rocket: Enhancement
 * [#62](https://github.com/lblod/submission-form-helpers/pull/62) [DL-5621] Support validation constraint "severity" ([@Windvis](https://github.com/Windvis))
 
+## v2.7.0 (2024-01-15)
+
+#### :rocket: Enhancement
+* [#61](https://github.com/lblod/submission-form-helpers/pull/61) add exported function to get validations and type together ([@Rahien](https://github.com/Rahien))
+
 ## v2.6.0 (2024-01-10)
 
 #### :rocket: Enhancement
