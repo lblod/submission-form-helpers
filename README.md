@@ -61,9 +61,24 @@ import constraintForUri from "@lblod/submission-form-helpers"
 3. run `npm run build` (babel will transpile to the `dist/` folder)
 4. test inside your project
 
-## Releasing
+## Releasing a new version
+We use [`release-it`](https://github.com/release-it/release-it) to handle our release flow
 
-1. run `npm run release`
-2. follow the release-it prompts
-3. release-it pushes the tag to GitHub
-4. Woodpecker will publish the new version to npm
+### Prerequisites
+- All PRs that need to show up in the changelog need a descriptive title and [correct label].
+
+### Generating the changelog (optional)
+At the moment the changelog is updated manually. To make this a bit easier you can generate a basic changelog based on the merged PRs with [`lerna-changelog`](https://github.com/lerna/lerna-changelog).
+
+> `lerna-changelog` requires a Github [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to work properly.
+
+The following command can  be used to generate the changelog:
+
+`GITHUB_AUTH=your-access-token npx lerna-changelog`
+
+### Creating a new release
+Simply run `npm run release` and follow the prompts.
+
+> If you generated the changelog using lerna-changelog you can add it to the changelog file and add it to the staged changes when release-it asks if you want to commit the changes. This will ensure that the changelog change is part of the release commit.
+
+After the new tag is created and pushed CI will take care of publishing the package to npm.
