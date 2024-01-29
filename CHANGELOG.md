@@ -1,3 +1,8 @@
+## v2.9.0 (2024-01-29)
+
+#### :rocket: Enhancement
+* [#63](https://github.com/lblod/submission-form-helpers/pull/63) [DL-5623] Add a new `DateInPast` constraint ([@Windvis](https://github.com/Windvis))
+
 ## v2.8.0 (2024-01-24)
 
 #### :rocket: Enhancement
