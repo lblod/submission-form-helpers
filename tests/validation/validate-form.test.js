@@ -1,8 +1,14 @@
 import test from "ava";
-import { NamedNode } from "rdflib";
+import { NamedNode, Namespace } from "rdflib";
 import ForkingStore from "forking-store";
 import { readFixtureFile } from "../test-helpers.js";
-import { RDF, FORM, validateForm, SHACL } from "../../src/index.js";
+import {
+  RDF,
+  FORM,
+  validateForm,
+  SHACL,
+  registerCustomValidation,
+} from "../../src/index.js";
 
 const FORM_GRAPHS = {
   formGraph: new NamedNode("http://data.lblod.info/form"),
@@ -119,5 +125,79 @@ test("it supports validating specific severity levels", (t) => {
   t.false(
     isValid,
     "The warning severity validations don't pass the validation check"
+  );
+});
+
+test("it supports custom validation rules as soon as they are registered", (t) => {
+  const EXT = new Namespace("http://mu.semte.ch/vocabularies/ext/");
+  const customValidation = (value, options) => {
+    const { constraintUri, store } = options;
+    const expected = store.any(constraintUri, EXT("exactValue"), undefined);
+    if (expected === undefined) {
+      return false;
+    }
+    return !isNaN(parseInt(value.value, 10)) && value.value == expected.value;
+  };
+
+  registerCustomValidation(
+    "http://mu.semte.ch/vocabularies/ext/ExactNumberConstraint",
+    customValidation
+  );
+
+  const formTtl = readFixtureFile("validate-form/form.ttl");
+
+  let store = new ForkingStore();
+  store.parse(formTtl, FORM_GRAPHS.formGraph, "text/turtle");
+
+  const form = store.any(
+    undefined,
+    RDF("type"),
+    FORM("Form"),
+    FORM_GRAPHS.formGraph
+  );
+
+  let sourceTtl = readFixtureFile(
+    "validate-form/source-with-valid-listing-field-data.ttl"
+  );
+  store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
+  let isValid = validateForm(form, {
+    store,
+    form,
+    sourceNode: SOURCE_NODE,
+    ...FORM_GRAPHS,
+  });
+  t.false(
+    isValid,
+    "The source data contains valid input for all fields but no value for the custom validation, so it fails"
+  );
+
+  sourceTtl = readFixtureFile(
+    "validate-form/source-with-invalid-custom-field.ttl"
+  );
+  store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
+  isValid = validateForm(form, {
+    store,
+    form,
+    sourceNode: SOURCE_NODE,
+    ...FORM_GRAPHS,
+  });
+  t.false(
+    isValid,
+    "The source data now contains a value, but it's not the correct one, so we still fail"
+  );
+
+  sourceTtl = readFixtureFile(
+    "validate-form/source-with-valid-custom-field.ttl"
+  );
+  store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
+  isValid = validateForm(form, {
+    store,
+    form,
+    sourceNode: SOURCE_NODE,
+    ...FORM_GRAPHS,
+  });
+  t.true(
+    isValid,
+    "The source data contains the right value for the custom validation field."
   );
 });

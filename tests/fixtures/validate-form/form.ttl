@@ -56,6 +56,7 @@ ext:administrativeUnitFormItem a form:SubForm;
    form:includes ext:administrativeUnitNameF;
    form:includes ext:administrativeUnitTypeOfInvolvementF;
    form:includes ext:administrativeUnitInvolvementPercentageF;
+   form:includes ext:customValidationF ;
    form:includes ext:administrativeUnitDescriptionF;
    form:hasFieldGroup ext:mainPg.
 
@@ -117,6 +118,21 @@ ext:administrativeUnitDescriptionF a form:Field ;
     sh:path ext:description;
     form:displayType displayTypes:textArea ;
     sh:group ext:mainPg .
+
+ext:customValidationF a form:Field ;
+    sh:name "Custom Validation Numerical inputfield (42)" ;
+    sh:order 5 ;
+    sh:path ext:shouldBe42;
+    form:displayType displayTypes:numericalInput ;
+    form:validatedBy [
+      a ext:ExactNumberConstraint ;
+      form:grouping form:MatchSome ;
+      ext:exactValue 42 ;
+      sh:resultMessage "The value is incorrect, clearly it should be 42" ;
+      sh:path ext:shouldBe42 ;
+    ] ;
+    sh:group ext:mainPg .
+
 
 ##########################################################
 #  Generator: administrativeUnit
