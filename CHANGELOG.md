@@ -1,17 +1,20 @@
 ## v2.9.0 (2024-01-29)
 
 #### :rocket: Enhancement
-* [#63](https://github.com/lblod/submission-form-helpers/pull/63) [DL-5623] Add a new `DateInPast` constraint ([@Windvis](https://github.com/Windvis))
+
+- [#63](https://github.com/lblod/submission-form-helpers/pull/63) [DL-5623] Add a new `DateInPast` constraint ([@Windvis](https://github.com/Windvis))
 
 ## v2.8.0 (2024-01-24)
 
 #### :rocket: Enhancement
-* [#62](https://github.com/lblod/submission-form-helpers/pull/62) [DL-5621] Support validation constraint "severity" ([@Windvis](https://github.com/Windvis))
+
+- [#62](https://github.com/lblod/submission-form-helpers/pull/62) [DL-5621] Support validation constraint "severity" ([@Windvis](https://github.com/Windvis))
 
 ## v2.7.0 (2024-01-15)
 
 #### :rocket: Enhancement
-* [#61](https://github.com/lblod/submission-form-helpers/pull/61) add exported function to get validations and type together ([@Rahien](https://github.com/Rahien))
+
+- [#61](https://github.com/lblod/submission-form-helpers/pull/61) add exported function to get validations and type together ([@Rahien](https://github.com/Rahien))
 
 ## v2.6.0 (2024-01-10)
 
