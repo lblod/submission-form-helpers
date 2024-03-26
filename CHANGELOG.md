@@ -1,3 +1,8 @@
+## v2.10.0 (2024-03-26)
+
+#### :rocket: Enhancement
+* [#65](https://github.com/lblod/submission-form-helpers/pull/65) allow registering custom validators ([@Rahien](https://github.com/Rahien))
+
 ## v2.9.0 (2024-01-29)
 
 #### :rocket: Enhancement
