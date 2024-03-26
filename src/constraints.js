@@ -26,59 +26,121 @@ import hasOneNumberGreaterThanInFields from "./constraints/has-one-number-greate
 import matchValues from "./constraints/match-values.js";
 import dateInPast from "./constraints/date-in-past.js";
 
+const BUILT_IN_VALIDATIONS = new Map();
+const CUSTOM_VALIDATIONS = new Map();
+
+function registerDefaultValidations() {
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/RequiredConstraint",
+    required
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/SingleCodelistValue",
+    singleCodelistValue
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ContainsCodelistValue",
+    containsCodelistValue
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/Codelist",
+    codelist
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ExactValueConstraint",
+    exactValue
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/UriConstraint",
+    validUri
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidDate",
+    validDate
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidDateTime",
+    validDateTime
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidInteger",
+    validInteger
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/PositiveNumber",
+    positiveNumber
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ConceptSchemeConstraint",
+    conceptScheme
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidYear",
+    validYear
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidEmail",
+    validEmail
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidIBAN",
+    validIBAN
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidPhoneNumber",
+    validPhoneNumber
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/VlabelExtraTaxRateOrAmountConstraint",
+    validateExtraTaxRateOrAmount
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidBoolean",
+    validBoolean
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidChildcareSubsidyTable",
+    validChildcareSubsidyTable
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/VlabelSingleInstanceTaxRateOrExtraTaxRate",
+    singleInstanceTaxRateOrExtraTaxRate
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/MaxLength",
+    maxLength
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/ValidEngagementTable",
+    validEngagementTable
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields",
+    hasOneNumberGreaterThanInFields
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/MatchValues",
+    matchValues
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/DateInPast",
+    dateInPast
+  );
+}
+
+registerDefaultValidations();
+
+export function registerCustomValidation(uri, validator) {
+  CUSTOM_VALIDATIONS.set(uri, validator);
+}
+
+export function resetCustomValidations() {
+  CUSTOM_VALIDATIONS.clear();
+}
+
 export default function constraintForUri(uri) {
-  switch (String(uri)) {
-    case "http://lblod.data.gift/vocabularies/forms/RequiredConstraint":
-      return required;
-    case "http://lblod.data.gift/vocabularies/forms/SingleCodelistValue":
-      return singleCodelistValue;
-    case "http://lblod.data.gift/vocabularies/forms/ContainsCodelistValue":
-      return containsCodelistValue;
-    case "http://lblod.data.gift/vocabularies/forms/Codelist":
-      return codelist;
-    case "http://lblod.data.gift/vocabularies/forms/ExactValueConstraint":
-      return exactValue;
-    case "http://lblod.data.gift/vocabularies/forms/UriConstraint":
-      return validUri;
-    case "http://lblod.data.gift/vocabularies/forms/ValidDate":
-      return validDate;
-    case "http://lblod.data.gift/vocabularies/forms/ValidDateTime":
-      return validDateTime;
-    case "http://lblod.data.gift/vocabularies/forms/ValidInteger":
-      return validInteger;
-    case "http://lblod.data.gift/vocabularies/forms/PositiveNumber":
-      return positiveNumber;
-    case "http://lblod.data.gift/vocabularies/forms/ConceptSchemeConstraint":
-      return conceptScheme;
-    case "http://lblod.data.gift/vocabularies/forms/ValidYear":
-      return validYear;
-    case "http://lblod.data.gift/vocabularies/forms/ValidEmail":
-      return validEmail;
-    case "http://lblod.data.gift/vocabularies/forms/ValidIBAN":
-      return validIBAN;
-    case "http://lblod.data.gift/vocabularies/forms/ValidPhoneNumber":
-      return validPhoneNumber;
-    case "http://lblod.data.gift/vocabularies/forms/VlabelExtraTaxRateOrAmountConstraint":
-      return validateExtraTaxRateOrAmount;
-    case "http://lblod.data.gift/vocabularies/forms/ValidBoolean":
-      return validBoolean;
-    case "http://lblod.data.gift/vocabularies/forms/ValidChildcareSubsidyTable":
-      return validChildcareSubsidyTable;
-    case "http://lblod.data.gift/vocabularies/forms/VlabelSingleInstanceTaxRateOrExtraTaxRate":
-      return singleInstanceTaxRateOrExtraTaxRate;
-    case "http://lblod.data.gift/vocabularies/forms/MaxLength":
-      return maxLength;
-    case "http://lblod.data.gift/vocabularies/forms/ValidEngagementTable":
-      return validEngagementTable;
-    case "http://lblod.data.gift/vocabularies/forms/HasOneNumberGreaterThanInFields":
-      return hasOneNumberGreaterThanInFields;
-    case "http://lblod.data.gift/vocabularies/forms/MatchValues":
-      return matchValues;
-    case "http://lblod.data.gift/vocabularies/forms/DateInPast":
-      return dateInPast;
-    default:
-      return false; //TODO: TBD
-  }
+  // TBD: what happens if the constraint isn't found, currently return false, wouldn't it be better to throw an error or return null?
+  return CUSTOM_VALIDATIONS.get(uri) || BUILT_IN_VALIDATIONS.get(uri) || false;
 }
 
 export function check(constraintUri, options) {
