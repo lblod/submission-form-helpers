@@ -12,9 +12,71 @@ export function triplesForUnscopedPath(
 
   if (path && path.termType === "Collection") {
     return triplesForComplexPath(options, pathInfo, createMissingNodes);
+  } else if (isCollection(path, options.store)) {
+    // collections are only created as a proper term type if the ttl contains a collection like (a rdf:List). If it uses blank nodes, it will not be recognized so we need to create it ourselves
+    const convertedOptions = {
+      ...options,
+      path: pathStartToCollection(path, options.store),
+    };
+    return triplesForComplexPath(
+      convertedOptions,
+      pathInfo,
+      createMissingNodes
+    );
   } else {
     return triplesForSimplePath(options, pathInfo, createMissingNodes);
   }
+}
+
+function isCollection(path, store) {
+  return (
+    path &&
+    store.any(
+      path,
+      new NamedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#first"),
+      undefined
+    )
+  );
+}
+
+function pathStartToCollection(path, store) {
+  const elements = [];
+  let currentElement = path;
+
+  while (currentElement) {
+    const first = store.any(
+      currentElement,
+      new NamedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#first"),
+      undefined
+    );
+    const rest = store.any(
+      currentElement,
+      new NamedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"),
+      undefined
+    );
+
+    elements.push(first);
+
+    currentElement = rest;
+  }
+
+  return {
+    termType: "Collection",
+    elements: flattenCollection(elements, store),
+  };
+}
+
+function flattenCollection(elements, store) {
+  const result = [];
+  elements.forEach((element) => {
+    if (isCollection(element, store)) {
+      const nestedList = pathStartToCollection(element, store);
+      result.push(...nestedList.elements);
+    } else {
+      result.push(element);
+    }
+  });
+  return result.filter(Boolean);
 }
 
 function triplesForSimplePath(options, pathInfo, createMissingNodes = false) {
@@ -67,6 +129,8 @@ function triplesForComplexPath(options, pathInfo, createMissingNodes = false) {
     if (element.termType == "NamedNode") {
       return { path: element };
     } else {
+      // WARNING: if not a named node, it must be a blank node (in this case). so using else here means
+      // that we assume that the only operation allowed on a path node is an inverse operation
       const elementInfo = store.any(
         element,
         SHACL("inversePath"),
