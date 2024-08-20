@@ -1,0 +1,33 @@
+@prefix : <#>.
+@prefix org: <http://www.w3.org/ns/org#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix nodes: <http://data.lblod.info/form-data/nodes/>.
+@prefix core: <http://mu.semte.ch/vocabularies/core/>.
+@prefix lidm: <http://data.lblod.info/id/lidmaatschappen/>.
+@prefix fr: <http://data.lblod.info/id/fracties/>.
+@prefix m: <http://data.lblod.info/id/mandatarissen/>.
+@prefix m0: <http://data.vlaanderen.be/ns/mandaat#>.
+@prefix per: <http://data.lblod.info/id/personen/>.
+@prefix M: <http://data.vlaanderen.be/id/concept/MandatarisStatusCode/>.
+@prefix lmb: <http://mu.semte.ch/vocabularies/ext/lmb/>.
+@prefix M0: <http://data.lblod.info/id/concept/MandatarisPublicationStatusCode/>.
+@prefix m1: <http://data.lblod.info/id/mandaten/>.
+
+nodes:cc00bac4-d0cc-47a7-b5d8-e70b6664a751
+a org:Membership; core:uuid "56693b65-42f7-4653-800d-848d9c29ce41".
+lidm:66BF5DCD6AC916361F429AF4
+    a org:Membership;
+    core:uuid "66BF5DCD6AC916361F429AF4";
+    org:organisation fr:66BF5DC96AC916361F429AF1 .
+m:66BF5DCD6AC916361F429AF2
+    a m0:Mandataris;
+    m0:isBestuurlijkeAliasVan
+    per:c9f4b459f55d4cfb91c0ab2570ab884f91cd5ca392b9dfc29630715fa186e038;
+    m0:start "2024-08-16T14:10:17.012Z"^^xsd:dateTime;
+    m0:status M:21063a5b-912c-4241-841c-cc7fb3c73e75;
+    core:uuid "66BF5DCD6AC916361F429AF2";
+    lmb:hasPublicationStatus M0:588ce330-4abb-4448-9776-a17d9305df07;
+    org:hasMembership
+    nodes:cc00bac4-d0cc-47a7-b5d8-e70b6664a751, lidm:66BF5DCD6AC916361F429AF4;
+    org:holds
+    m1:d64ed9d0e099e02b54baf04fbd433e514fbe7d780b06b058bdd4171ab1135d15 .

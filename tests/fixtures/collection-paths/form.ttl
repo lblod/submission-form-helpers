@@ -1,0 +1,113 @@
+<http://mu.semte.ch/vocabularies/ext/persoonF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/personSelector>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Persoon";
+    <http://www.w3.org/ns/shacl#order> 2;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#isBestuurlijkeAliasVan>;
+    <http://lblod.data.gift/vocabularies/forms/validatedBy> _:bc_0_bc_0_n3-189.
+<http://mu.semte.ch/vocabularies/ext/mandatarisPG> a <http://lblod.data.gift/vocabularies/forms/PropertyGroup>;
+    <http://www.w3.org/ns/shacl#name> "";
+    <http://www.w3.org/ns/shacl#order> 1.
+_:bc_0_bc_0_n3-189 a <http://lblod.data.gift/vocabularies/forms/RequiredConstraint>;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#isBestuurlijkeAliasVan>;
+    <http://lblod.data.gift/vocabularies/forms/grouping> <http://lblod.data.gift/vocabularies/forms/Bag>;
+    <http://www.w3.org/ns/shacl#resultMessage> "Persoon is verplicht.".
+<http://mu.semte.ch/vocabularies/ext/mandaatF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/mandatarisMandaatSelector>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Mandaat";
+    <http://www.w3.org/ns/shacl#order> 3;
+    <http://www.w3.org/ns/shacl#path> <http://www.w3.org/ns/org#holds>;
+    <http://lblod.data.gift/vocabularies/forms/validatedBy> _:bc_0_bc_0_n3-190.
+_:bc_0_bc_0_n3-190 a <http://lblod.data.gift/vocabularies/forms/RequiredConstraint>;
+    <http://www.w3.org/ns/shacl#path> <http://www.w3.org/ns/org#holds>;
+    <http://lblod.data.gift/vocabularies/forms/grouping> <http://lblod.data.gift/vocabularies/forms/Bag>;
+    <http://www.w3.org/ns/shacl#resultMessage> "Mandaat is verplicht.".
+<http://mu.semte.ch/vocabularies/ext/mandatarisStatusCodeF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/mandatarisStatusCodeSelector>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Status";
+    <http://www.w3.org/ns/shacl#order> 4;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#status>;
+    <http://lblod.data.gift/vocabularies/forms/validatedBy> _:bc_0_bc_0_n3-191;
+    <http://lblod.data.gift/vocabularies/forms/options> """{\\"conceptScheme\\":\\"http://data.vlaanderen.be/id/conceptscheme/MandatarisStatusCode\\",\\"searchEnabled\\":true}""".
+_:bc_0_bc_0_n3-191 a <http://lblod.data.gift/vocabularies/forms/RequiredConstraint>;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#status>;
+    <http://lblod.data.gift/vocabularies/forms/grouping> <http://lblod.data.gift/vocabularies/forms/Bag>;
+    <http://www.w3.org/ns/shacl#resultMessage> "Status is verplicht.".
+<http://mu.semte.ch/vocabularies/ext/rangordeF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/mandatarisRangorde>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Rangorde";
+    <http://www.w3.org/ns/shacl#order> 6;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#rangorde>;
+    <http://lblod.data.gift/vocabularies/forms/validatedBy> _:bc_0_bc_0_n3-192.
+_:bc_0_bc_0_n3-192 a <http://mu.semte.ch/vocabularies/ext/ValidRangorde>;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#rangorde>;
+    <http://lblod.data.gift/vocabularies/forms/grouping> <http://lblod.data.gift/vocabularies/forms/MatchSome>;
+    <http://www.w3.org/ns/shacl#resultMessage> "Er werd geen geldige rangorde herkend";
+    <http://www.w3.org/ns/shacl#severity> <http://www.w3.org/ns/shacl#Warning>.
+<http://mu.semte.ch/vocabularies/ext/startF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/dateTime>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Start";
+    <http://www.w3.org/ns/shacl#order> 7;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#start>;
+    <http://lblod.data.gift/vocabularies/forms/validatedBy> _:bc_0_bc_0_n3-193.
+_:bc_0_bc_0_n3-193 a <http://lblod.data.gift/vocabularies/forms/RequiredConstraint>;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#start>;
+    <http://lblod.data.gift/vocabularies/forms/grouping> <http://lblod.data.gift/vocabularies/forms/Bag>;
+    <http://www.w3.org/ns/shacl#resultMessage> "Startdatum is verplicht.".
+<http://mu.semte.ch/vocabularies/ext/eindeF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/dateTime>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Einde";
+    <http://www.w3.org/ns/shacl#order> 8;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#einde>.
+<http://mu.semte.ch/vocabularies/ext/fractieF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/mandatarisFractieSelector>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Fractie";
+    <http://www.w3.org/ns/shacl#order> 9;
+    <http://www.w3.org/ns/shacl#path> _:bc_0_bc_0_n3-194;
+    <http://lblod.data.gift/vocabularies/forms/validatedBy> _:bc_0_bc_0_n3-196.
+_:bc_0_bc_0_n3-194 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/ns/org#hasMembership>;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:bc_0_bc_0_n3-195.
+_:bc_0_bc_0_n3-196 a <http://lblod.data.gift/vocabularies/forms/RequiredConstraint>;
+    <http://www.w3.org/ns/shacl#path> _:bc_0_bc_0_n3-197;
+    <http://lblod.data.gift/vocabularies/forms/grouping> <http://lblod.data.gift/vocabularies/forms/Bag>;
+    <http://www.w3.org/ns/shacl#resultMessage> "Dit veld is verplicht.".
+_:bc_0_bc_0_n3-195 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/ns/org#organisation>;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>.
+_:bc_0_bc_0_n3-197 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/ns/org#hasMembership>;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:bc_0_bc_0_n3-198.
+_:bc_0_bc_0_n3-198 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/ns/org#organisation>;
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>.
+<http://mu.semte.ch/vocabularies/ext/hiddenPublicationStatusF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://www.w3.org/ns/shacl#name> "Publication status [hidden input]";
+    <http://www.w3.org/ns/shacl#order> 5001;
+    <http://www.w3.org/ns/shacl#path> <http://mu.semte.ch/vocabularies/ext/lmb/hasPublicationStatus>.
+<http://mu.semte.ch/vocabularies/ext/mandatarisG> a <http://lblod.data.gift/vocabularies/forms/Generator>;
+    <http://lblod.data.gift/vocabularies/forms/prototype> _:bc_0_bc_0_n3-199;
+    <http://lblod.data.gift/vocabularies/forms/dataGenerator> <http://lblod.data.gift/vocabularies/forms/addMuUuid>.
+_:bc_0_bc_0_n3-199 <http://lblod.data.gift/vocabularies/forms/shape> _:bc_0_bc_0_n3-200.
+_:bc_0_bc_0_n3-200 a <http://data.vlaanderen.be/ns/mandaat#Mandataris>;
+    <http://www.w3.org/ns/org#hasMembership> _:bc_0_bc_0_n3-201.
+_:bc_0_bc_0_n3-201 a <http://www.w3.org/ns/org#Membership>.
+<http://mu.semte.ch/vocabularies/ext/beleidsdomeinCodeF> a <http://lblod.data.gift/vocabularies/forms/Field>;
+    <http://lblod.data.gift/vocabularies/forms/displayType> <http://lblod.data.gift/display-types/mandatarisBeleidsdomein>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://www.w3.org/ns/shacl#name> "Beleidsdomein";
+    <http://www.w3.org/ns/shacl#order> 100;
+    <http://www.w3.org/ns/shacl#path> <http://data.vlaanderen.be/ns/mandaat#beleidsdomein>;
+    <http://lblod.data.gift/vocabularies/forms/options> """{\\"conceptScheme\\":\\"http://data.vlaanderen.be/id/conceptscheme/BeleidsdomeinCode\\",\\"searchEnabled\\":true, \\"type\\":\\"beleidsdomein-code\\"}""".
+<http://data.lblod.info/id/lmb/forms/mandataris-ext> a <http://lblod.data.gift/vocabularies/forms/Form>, <http://lblod.data.gift/vocabularies/forms/TopLevelForm>;
+    <http://www.w3.org/ns/shacl#group> <http://mu.semte.ch/vocabularies/ext/mandatarisPG>;
+    <http://lblod.data.gift/vocabularies/forms/includes> <http://mu.semte.ch/vocabularies/ext/persoonF>, <http://mu.semte.ch/vocabularies/ext/mandaatF>, <http://mu.semte.ch/vocabularies/ext/mandatarisStatusCodeF>, <http://mu.semte.ch/vocabularies/ext/rangordeF>, <http://mu.semte.ch/vocabularies/ext/startF>, <http://mu.semte.ch/vocabularies/ext/eindeF>, <http://mu.semte.ch/vocabularies/ext/fractieF>, <http://mu.semte.ch/vocabularies/ext/hiddenPublicationStatusF>, <http://mu.semte.ch/vocabularies/ext/beleidsdomeinCodeF>;
+    <http://lblod.data.gift/vocabularies/forms/initGenerator> <http://mu.semte.ch/vocabularies/ext/mandatarisG>;
+    <http://lblod.data.gift/vocabularies/forms/targetType> <http://data.vlaanderen.be/ns/mandaat#Mandataris>;
+    <http://lblod.data.gift/vocabularies/forms/targetLabel> <http://mu.semte.ch/vocabularies/core/uuid>;
+    <http://mu.semte.ch/vocabularies/core/uuid> "01f671e2-df52-463d-9249-293e31eb7f54";
+    <http://mu.semte.ch/vocabularies/ext/prefix> <http://data.lblod.info/id/mandatarissen/>;
+    <http://mu.semte.ch/vocabularies/ext/withHistory> true, false;
+    <http://mu.semte.ch/vocabularies/ext/extendsForm> <http://data.lblod.info/id/lmb/forms/mandataris-new>.
