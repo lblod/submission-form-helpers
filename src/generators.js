@@ -164,3 +164,102 @@ function uriGeneratorForType(type, { store, formGraph }) {
   }
   return null;
 }
+
+// EXPERIMENTAL: lazy version of the generators that reuses paths in the shape if they exist and generates
+// the missing tails of the path
+export function triplesForLazyGenerator(generatorUri, options) {
+  const { store, formGraph, sourceGraph, sourceNode } = options;
+  const prototypeUri = store.any(
+    generatorUri,
+    FORM("prototype"),
+    undefined,
+    formGraph
+  );
+  const shapeUri = store.any(prototypeUri, FORM("shape"), undefined, formGraph);
+
+  let dataset = walkAndGenerateShapeLazy(shapeUri, options, sourceNode);
+
+  //TODO: currently just one source node is generated. Support cardinalities later
+  dataset = { sourceNodes: [dataset.sourceNode], triples: dataset.triples };
+  dataset = augmentGeneratedDataSet(generatorUri, dataset, {
+    store,
+    formGraph,
+    sourceGraph,
+    sourceNode,
+  });
+
+  return dataset;
+}
+
+function walkAndGenerateShapeLazy(
+  shapeUri,
+  options,
+  sourceNode,
+  dataset = { sourceNode: [], triples: [] }
+) {
+  const { store, formGraph, sourceGraph } = options;
+  const shapeElements = store.match(shapeUri, undefined, undefined, formGraph);
+
+  let nextSubject = new NamedNode(
+    helpGenerateUri(shapeElements, { store, formGraph })
+  );
+
+  dataset.sourceNode = sourceNode || nextSubject;
+
+  for (const shapeElement of shapeElements) {
+    if (shapeElement.object.termType == "BlankNode") {
+      const nextSourceNodes = store.match(
+        sourceNode,
+        shapeElement.predicate,
+        undefined,
+        sourceGraph
+      );
+      // for all triples matching this step in the path, reuse the object uri as source node
+      // and continue generating from there
+      if (nextSourceNodes.length > 0) {
+        nextSourceNodes.forEach((nextSourceNode) => {
+          const nestedDataset = walkAndGenerateShapeLazy(
+            shapeElement.object,
+            options,
+            nextSourceNode.object
+          );
+          dataset.triples.push(
+            new Statement(
+              dataset.sourceNode,
+              shapeElement.predicate,
+              nestedDataset.sourceNode
+            )
+          );
+          dataset.triples = [...dataset.triples, ...nestedDataset.triples];
+        });
+      } else {
+        // here there are no triples matching the path yet. We need to create new instances for them.
+        // so we don't pass in a sourceNode so a new one will be generated for us
+        const nestedDataset = walkAndGenerateShapeLazy(
+          shapeElement.object,
+          options
+        );
+
+        dataset.triples.push(
+          new Statement(
+            dataset.sourceNode,
+            shapeElement.predicate,
+            nestedDataset.sourceNode
+          )
+        );
+
+        dataset.triples = [...dataset.triples, ...nestedDataset.triples];
+      }
+    } else {
+      // not a blank node but rather a direct predicate and object value. Easy: just add to the source node
+      dataset.triples.push(
+        new Statement(
+          dataset.sourceNode,
+          shapeElement.predicate,
+          shapeElement.object
+        )
+      );
+    }
+  }
+  return dataset;
+}
