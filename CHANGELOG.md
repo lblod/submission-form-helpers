@@ -1,3 +1,8 @@
+## v2.10.3 (2025-05-28)
+
+#### :bug: Bug Fix
+* [#69](https://github.com/lblod/submission-form-helpers/pull/69) [LPDC-1425] Fix an issue with the `addMuUuid` generator ([@Windvis](https://github.com/Windvis))
+
 ## v2.10.0 (2024-03-26)
 
 #### :rocket: Enhancement
