@@ -84,19 +84,23 @@ function addExtraUuids(dataset, { store, sourceGraph, sourceNode }) {
   ];
   const extraTriples = [];
   subjectValues.forEach((subjectV) => {
-    // this is because the dataset's source node can be renamed to the original source node of the form
-    const trueSubject =
-      subjectV === dataset.sourceNodes[0].value
-        ? sourceNode
-        : new NamedNode(subjectV);
-    const alreadyHasUuid = store.any(
-      trueSubject,
-      MU("uuid"),
-      undefined,
-      sourceGraph
-    );
-    if (alreadyHasUuid) {
-      return;
+    // sourceNode isn't always defined which leads to incorrect behavior and no added uuids as a result
+    // TODO: find out if this is the best way to fix it. I'm not sure if `sourceNode` is actually the correct thing to use here.
+    if (sourceNode) {
+      // this is because the dataset's source node can be renamed to the original source node of the form
+      const trueSubject =
+        subjectV === dataset.sourceNodes[0].value
+          ? sourceNode
+          : new NamedNode(subjectV);
+      const alreadyHasUuid = store.any(
+        trueSubject,
+        MU("uuid"),
+        undefined,
+        sourceGraph
+      );
+      if (alreadyHasUuid) {
+        return;
+      }
     }
     extraTriples.push(
       new Statement(new NamedNode(subjectV), MU("uuid"), uuidv4())
