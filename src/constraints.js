@@ -139,8 +139,16 @@ export function resetCustomValidations() {
 }
 
 export default function constraintForUri(uri) {
-  // TBD: what happens if the constraint isn't found, currently return false, wouldn't it be better to throw an error or return null?
-  return CUSTOM_VALIDATIONS.get(uri) || BUILT_IN_VALIDATIONS.get(uri) || false;
+  const buildInValidator = BUILT_IN_VALIDATIONS.get(uri);
+  if (buildInValidator) {
+    return buildInValidator;
+  }
+  const customValidator = CUSTOM_VALIDATIONS.get(uri);
+  if (customValidator) {
+    return customValidator;
+  }
+
+  throw new Error(`No validation found for uri: ${uri}`);
 }
 
 export function check(constraintUri, options) {
