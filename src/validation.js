@@ -10,14 +10,15 @@ import { triplesForScope } from "./triples-for/triples-for-scope.js";
  * @typedef {import("rdflib").Statement} Statement
  */
 
-export function validateForm(form, options) {
+export async function validateForm(form, options) {
   const topLevelFields = fieldsForForm(form, options);
 
   return validateFields(topLevelFields, options);
 }
 
-function validateFields(fields, options) {
-  const fieldValidations = fields.map((field) => {
+async function validateFields(fields, options) {
+  const fieldValidations = [];
+  for (const field of fields) {
     if (isListing(field, options)) {
       const listing = field;
       const scope = getScope(listing, options);
@@ -29,19 +30,24 @@ function validateFields(fields, options) {
         const subForm = store.any(listing, FORM("each"), undefined);
         const subformFields = fieldsForSubForm(subForm, options);
 
-        return subFormSourceNodes
-          .map((sourceNode) => {
-            return validateFields(subformFields, { ...options, sourceNode });
+        subFormSourceNodes
+          .map(async (sourceNode) => {
+            const subValidationResults = await validateFields(subformFields, {
+              ...options,
+              sourceNode,
+            });
+            fieldValidations.push(...subValidationResults);
           })
           .every(Boolean);
       } else {
         // TODO: should we validate sh:minCount / sh:maxCount?
-        return true;
+        fieldValidations.push(true);
       }
     } else {
-      return validateField(field, options);
+      fieldValidations.push(await validateField(field, options));
     }
-  });
+  }
+
   return fieldValidations.every(Boolean);
 }
 
@@ -57,11 +63,10 @@ function isListing(field, options) {
   );
 }
 
-export function validateField(fieldUri, options) {
-  return validationResultsForField(fieldUri, options).reduce(
-    (acc, value) => acc && value.valid,
-    true
-  );
+export async function validateField(fieldUri, options) {
+  const validationResults = await validationResultsForField(fieldUri, options);
+
+  return validationResults.reduce((acc, value) => acc && value.valid, true);
 }
 
 /**
@@ -110,14 +115,14 @@ export function validationsForField(fieldUri, options) {
   return validations;
 }
 
-export function validationResultsForField(fieldUri, options) {
+export async function validationResultsForField(fieldUri, options) {
   const validationConstraints = validationsForField(fieldUri, options).map(
     (t) => t.object
   );
 
   const validationResults = [];
   for (const constraintUri of validationConstraints) {
-    const validationResult = check(constraintUri, options);
+    const validationResult = await check(constraintUri, options);
     validationResults.push(validationResult);
   }
   return validationResults;
@@ -143,14 +148,14 @@ export function validationTypesForField(fieldUri, options) {
   return Object.values(validationsWithType);
 }
 
-export function validationResultsForFieldPart(triplesData, fieldUri, options) {
+export async function validationResultsForFieldPart(triplesData, fieldUri, options) {
   const validationConstraints = validationsForField(fieldUri, options).map(
     (t) => t.object
   );
 
   const validationResults = [];
   for (const constraintUri of validationConstraints) {
-    const validationResult = checkTriples(constraintUri, triplesData, options);
+    const validationResult = await checkTriples(constraintUri, triplesData, options);
     validationResults.push(validationResult);
   }
   return validationResults;
