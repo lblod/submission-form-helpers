@@ -120,12 +120,11 @@ export async function validationResultsForField(fieldUri, options) {
     (t) => t.object
   );
 
-  const validationResults = [];
-  for (const constraintUri of validationConstraints) {
-    const validationResult = await check(constraintUri, options);
-    validationResults.push(validationResult);
-  }
-  return validationResults;
+  const validationResultPromises = validationConstraints.map((constraintUri) =>
+    check(constraintUri, options)
+  );
+
+  return Promise.all(validationResultPromises);
 }
 
 export function validationsForFieldWithType(fieldUri, options) {
@@ -148,14 +147,22 @@ export function validationTypesForField(fieldUri, options) {
   return Object.values(validationsWithType);
 }
 
-export async function validationResultsForFieldPart(triplesData, fieldUri, options) {
+export async function validationResultsForFieldPart(
+  triplesData,
+  fieldUri,
+  options
+) {
   const validationConstraints = validationsForField(fieldUri, options).map(
     (t) => t.object
   );
 
   const validationResults = [];
   for (const constraintUri of validationConstraints) {
-    const validationResult = await checkTriples(constraintUri, triplesData, options);
+    const validationResult = await checkTriples(
+      constraintUri,
+      triplesData,
+      options
+    );
     validationResults.push(validationResult);
   }
   return validationResults;
