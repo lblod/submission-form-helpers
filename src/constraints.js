@@ -214,8 +214,9 @@ export async function checkTriples(constraintUri, triplesData, options) {
       values
     );
   } else if (groupingType == FORM("MatchEvery").value) {
-    validationResult = await asyncEvery(async (value) =>
-      validator(value, validationOptions)
+    validationResult = await asyncEvery(
+      async (value) => validator(value, validationOptions),
+      values
     );
   }
 
@@ -229,6 +230,10 @@ export async function checkTriples(constraintUri, triplesData, options) {
 }
 
 async function asyncSome(callBack, values) {
+  if (!values || values.length === 0) {
+    return true;
+  }
+
   for (const value of values) {
     if (await Promise.resolve(callBack(value))) {
       return true;
@@ -238,10 +243,13 @@ async function asyncSome(callBack, values) {
 }
 
 async function asyncEvery(callBack, values) {
-  for (const value of values) {
-    if (!(await Promise.resolve(callBack(value)))) {
-      return false;
-    }
+  if (!values || values.length === 0) {
+    return true;
   }
-  return true;
+
+  const results = await Promise.all(
+    values.map((value) => Promise.resolve(callBack(value)))
+  );
+
+  return results.every((result) => result);
 }
