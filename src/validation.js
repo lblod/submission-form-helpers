@@ -17,7 +17,7 @@ export async function validateForm(form, options) {
 }
 
 async function validateFields(fields, options) {
-  const fieldValidations = [];
+  const fieldValidationPromises = [];
   for (const field of fields) {
     if (isListing(field, options)) {
       const listing = field;
@@ -28,27 +28,27 @@ async function validateFields(fields, options) {
       if (hasSubFormData) {
         const { store } = options;
         const subForm = store.any(listing, FORM("each"), undefined);
-        const subformFields = fieldsForSubForm(subForm, options);
+        const subFormFields = fieldsForSubForm(subForm, options);
 
-        subFormSourceNodes
-          .map(async (sourceNode) => {
-            const subValidationResults = await validateFields(subformFields, {
+        const subFormValidationsPromises = subFormSourceNodes.map(
+          (sourceNode) => {
+            return validateFields(subFormFields, {
               ...options,
               sourceNode,
             });
-            fieldValidations.push(...subValidationResults);
-          })
-          .every(Boolean);
+          }
+        );
+        fieldValidationPromises.push(...subFormValidationsPromises);
       } else {
         // TODO: should we validate sh:minCount / sh:maxCount?
-        fieldValidations.push(true);
       }
     } else {
-      fieldValidations.push(await validateField(field, options));
+      fieldValidationPromises.push(validateField(field, options));
     }
   }
+  const validationResults = await Promise.all(fieldValidationPromises);
 
-  return fieldValidations.every(Boolean);
+  return validationResults.every(Boolean);
 }
 
 function isListing(field, options) {
