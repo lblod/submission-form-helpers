@@ -156,14 +156,9 @@ export async function validationResultsForFieldPart(
     (t) => t.object
   );
 
-  const validationResults = [];
-  for (const constraintUri of validationConstraints) {
-    const validationResult = await checkTriples(
-      constraintUri,
-      triplesData,
-      options
-    );
-    validationResults.push(validationResult);
-  }
-  return validationResults;
+  const validationResultPromises = validationConstraints.map((constraintUri) =>
+    checkTriples(constraintUri, triplesData, options)
+  );
+
+  return Promise.all(validationResultPromises);
 }
