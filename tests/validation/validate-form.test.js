@@ -20,7 +20,7 @@ const SOURCE_NODE = new NamedNode(
   "http://ember-submission-form-fields/source-node"
 );
 
-test("it validates all the form fields including the ones in sub forms", (t) => {
+test("it validates all the form fields including the ones in sub forms", async (t) => {
   const formTtl = readFixtureFile("validate-form/form.ttl");
 
   let store = new ForkingStore();
@@ -33,7 +33,7 @@ test("it validates all the form fields including the ones in sub forms", (t) => 
     FORM_GRAPHS.formGraph
   );
 
-  let isValid = validateForm(form, {
+  let isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -49,7 +49,7 @@ test("it validates all the form fields including the ones in sub forms", (t) => 
     "validate-form/source-without-listing-field-data.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
-  isValid = validateForm(form, {
+  isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -64,7 +64,7 @@ test("it validates all the form fields including the ones in sub forms", (t) => 
     "validate-form/source-with-valid-listing-field-data.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
-  isValid = validateForm(form, {
+  isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -73,7 +73,7 @@ test("it validates all the form fields including the ones in sub forms", (t) => 
   t.true(isValid, "The source data contains valid listing item data");
 });
 
-test("it supports validating specific severity levels", (t) => {
+test("it supports validating specific severity levels", async (t) => {
   const formTtl = readFixtureFile("validation/severity/form.ttl");
 
   let store = new ForkingStore();
@@ -86,7 +86,7 @@ test("it supports validating specific severity levels", (t) => {
     FORM_GRAPHS.formGraph
   );
 
-  let isValid = validateForm(form, {
+  let isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -102,7 +102,7 @@ test("it supports validating specific severity levels", (t) => {
 
   store.parse(data, FORM_GRAPHS.sourceGraph, "text/turtle");
 
-  isValid = validateForm(form, {
+  isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -114,7 +114,7 @@ test("it supports validating specific severity levels", (t) => {
     "The form is valid because the warning severity is ignored by default"
   );
 
-  isValid = validateForm(form, {
+  isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -128,7 +128,7 @@ test("it supports validating specific severity levels", (t) => {
   );
 });
 
-test("it supports custom validation rules as soon as they are registered", (t) => {
+test("it supports custom validation rules as soon as they are registered", async (t) => {
   const EXT = new Namespace("http://mu.semte.ch/vocabularies/ext/");
   const customValidation = (value, options) => {
     const { constraintUri, store } = options;
@@ -160,7 +160,7 @@ test("it supports custom validation rules as soon as they are registered", (t) =
     "validate-form/source-with-valid-listing-field-data.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
-  let isValid = validateForm(form, {
+  let isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -175,7 +175,7 @@ test("it supports custom validation rules as soon as they are registered", (t) =
     "validate-form/source-with-invalid-custom-field.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
-  isValid = validateForm(form, {
+  isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,
@@ -190,7 +190,7 @@ test("it supports custom validation rules as soon as they are registered", (t) =
     "validate-form/source-with-valid-custom-field.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
-  isValid = validateForm(form, {
+  isValid = await validateForm(form, {
     store,
     form,
     sourceNode: SOURCE_NODE,

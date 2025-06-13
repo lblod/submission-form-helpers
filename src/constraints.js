@@ -139,11 +139,19 @@ export function resetCustomValidations() {
 }
 
 export default function constraintForUri(uri) {
-  // TBD: what happens if the constraint isn't found, currently return false, wouldn't it be better to throw an error or return null?
-  return CUSTOM_VALIDATIONS.get(uri) || BUILT_IN_VALIDATIONS.get(uri) || false;
+  const buildInValidator = BUILT_IN_VALIDATIONS.get(uri);
+  if (buildInValidator) {
+    return buildInValidator;
+  }
+  const customValidator = CUSTOM_VALIDATIONS.get(uri);
+  if (customValidator) {
+    return customValidator;
+  }
+
+  throw new Error(`No validation found for uri: ${uri}`);
 }
 
-export function check(constraintUri, options) {
+export async function check(constraintUri, options) {
   const { formGraph, sourceNode, sourceGraph, store } = options;
   let path = store.any(constraintUri, SHACL("path"), undefined, formGraph);
   let triplesData = triplesForPath({
@@ -156,7 +164,7 @@ export function check(constraintUri, options) {
   return checkTriples(constraintUri, triplesData, options);
 }
 
-export function checkTriples(constraintUri, triplesData, options) {
+export async function checkTriples(constraintUri, triplesData, options) {
   const { formGraph, metaGraph, store, sourceNode, sourceGraph } = options;
 
   let values = triplesData.values;
@@ -166,6 +174,7 @@ export function checkTriples(constraintUri, triplesData, options) {
     undefined,
     formGraph
   );
+  // We assume this is always available?
   const groupingType = store.any(
     constraintUri,
     FORM("grouping"),
@@ -196,14 +205,18 @@ export function checkTriples(constraintUri, triplesData, options) {
    * - MatchEvery: validator can only process one value BUT all values that get passed to the validator have to adhere
    */
   if (groupingType == FORM("Bag").value) {
-    validationResult = validator(values, validationOptions);
+    validationResult = await Promise.resolve(
+      validator(values, validationOptions)
+    );
   } else if (groupingType == FORM("MatchSome").value) {
-    validationResult = values.some((value) =>
-      validator(value, validationOptions)
+    validationResult = await asyncSome(
+      async (value) => validator(value, validationOptions),
+      values
     );
   } else if (groupingType == FORM("MatchEvery").value) {
-    validationResult = values.every((value) =>
-      validator(value, validationOptions)
+    validationResult = await asyncEvery(
+      async (value) => validator(value, validationOptions),
+      values
     );
   }
 
@@ -214,4 +227,29 @@ export function checkTriples(constraintUri, triplesData, options) {
     valid: validationResult,
     resultMessage,
   };
+}
+
+async function asyncSome(callBack, values) {
+  if (!values || values.length === 0) {
+    return true;
+  }
+
+  for (const value of values) {
+    if (await Promise.resolve(callBack(value))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+async function asyncEvery(callBack, values) {
+  if (!values || values.length === 0) {
+    return true;
+  }
+
+  const results = await Promise.all(
+    values.map((value) => Promise.resolve(callBack(value)))
+  );
+
+  return results.every((result) => result);
 }
