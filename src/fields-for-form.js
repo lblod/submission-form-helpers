@@ -1,17 +1,15 @@
-import { check } from "./constraints.js";
+import { asyncEvery, check } from "./constraints.js";
 import { FORM, RDF } from "./namespaces.js";
 
-export function fieldsForForm(form, options) {
-  let fields = [];
+export async function fieldsForForm(form, options) {
   if (isFormModelV2(form, options)) {
-    fields = fieldsForFormModelV2(form, options);
-  } else {
-    fields = fieldsForFormModelV1(form, options);
+    return fieldsForFormModelV2(form, options);
   }
-  return fields;
+
+  return fieldsForFormModelV1(form, options);
 }
 
-export function fieldsForSubForm(form, options) {
+export async function fieldsForSubForm(form, options) {
   return fieldsForFormModelV2(form, options);
 }
 
@@ -32,41 +30,52 @@ function isFormModelV2(form, { store, formGraph }) {
   return isTopLevelForm || isSubForm;
 }
 
-function fieldsForFormModelV2(form, options) {
+async function fieldsForFormModelV2(form, options) {
   let { store, formGraph } = options;
   const formItems = store
     .match(form, FORM("includes"), undefined, formGraph)
     .map(({ object }) => object);
-  const formItemsExceptHiddenConditionals = withoutHiddenConditionalFields(
-    formItems,
-    options
-  );
+  const formItemsExceptHiddenConditionals =
+    await withoutHiddenConditionalFields(formItems, options);
+
+  return formItemsExceptHiddenConditionals;
   //Next line is to get conditional fields according to the old model
-  const oldModelConditionals = fieldsForFormModelV1(form, options);
-  return [...formItemsExceptHiddenConditionals, ...oldModelConditionals];
+  // TODO: uncomment when the v2 fields work
+  // const oldModelConditionals = fieldsForFormModelV1(form, options);
+  // return [...formItemsExceptHiddenConditionals, ...oldModelConditionals];
 }
 
-function withoutHiddenConditionalFields(
+async function withoutHiddenConditionalFields(
   formItems,
   { store, sourceNode, sourceGraph, metaGraph, formGraph }
 ) {
-  return formItems.filter((formItem) => {
-    const allConditionsMatch = store
+  const fields = [];
+  for (const formItem of formItems) {
+    const conditions = store
       .match(formItem, FORM("rendersWhen"), undefined, formGraph)
-      .every(({ object }) => {
-        return check(object, {
-          formGraph,
-          store,
-          sourceGraph,
-          sourceNode,
-          metaGraph,
-        }).valid;
+      .map(({ object }) => object);
+
+    const isValid = await asyncEvery(async (_value) => {
+      const validationResult = await check(_value, {
+        formGraph,
+        store,
+        sourceGraph,
+        sourceNode,
+        metaGraph,
       });
-    return allConditionsMatch;
-  });
+
+      return validationResult.valid;
+    }, conditions);
+
+    if (isValid) {
+      fields.push(formItem);
+    }
+  }
+
+  return fields;
 }
 
-function fieldsForFormModelV1(form, options) {
+async function fieldsForFormModelV1(form, options) {
   let { store, formGraph, sourceGraph, sourceNode, metaGraph } = options;
 
   // get field groups
@@ -107,6 +116,7 @@ function fieldsForFormModelV1(form, options) {
           .match(group, FORM("conditions"), undefined, formGraph)
           .every(
             ({ object }) =>
+              // TODO: check is an async functions
               check(object, {
                 formGraph,
                 sourceNode,

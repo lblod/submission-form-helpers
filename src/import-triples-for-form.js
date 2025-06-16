@@ -4,18 +4,19 @@ import { getScope } from "./get-scope.js";
 import { triplesForPath } from "./triples-for/triples-for-path.js";
 import { triplesForScope } from "./triples-for/triples-for-scope.js";
 
-export default function importTriplesForForm(
+export default async function importTriplesForForm(
   form,
   { store, formGraph, sourceGraph, sourceNode, metaGraph }
 ) {
   let datasetTriples = [];
-  for (let field of fieldsForForm(form, {
+  const fields = await fieldsForForm(form, {
     store,
     formGraph,
     sourceGraph,
     sourceNode,
     metaGraph,
-  })) {
+  });
+  for (let field of fields) {
     let scopedSourceNodes = [sourceNode];
     const scope = getScope(field, { store, formGraph });
     if (scope) {

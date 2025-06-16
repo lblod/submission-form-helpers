@@ -11,7 +11,7 @@ import { triplesForScope } from "./triples-for/triples-for-scope.js";
  */
 
 export async function validateForm(form, options) {
-  const topLevelFields = fieldsForForm(form, options);
+  const topLevelFields = await fieldsForForm(form, options);
 
   return validateFields(topLevelFields, options);
 }
@@ -28,7 +28,7 @@ async function validateFields(fields, options) {
       if (hasSubFormData) {
         const { store } = options;
         const subForm = store.any(listing, FORM("each"), undefined);
-        const subFormFields = fieldsForSubForm(subForm, options);
+        const subFormFields = await fieldsForSubForm(subForm, options);
 
         const subFormValidationsPromises = subFormSourceNodes.map(
           (sourceNode) => {

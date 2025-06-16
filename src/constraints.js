@@ -242,7 +242,7 @@ async function asyncSome(callBack, values) {
   return false;
 }
 
-async function asyncEvery(callBack, values) {
+export async function asyncEvery(callBack, values) {
   if (!values || values.length === 0) {
     return true;
   }
