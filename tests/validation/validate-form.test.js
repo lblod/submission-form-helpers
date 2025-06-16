@@ -159,7 +159,7 @@ test("it supports custom validation rules as soon as they are registered", async
   );
 
   let sourceTtl = readFixtureFile(
-    "validate-form/source-with-valid-listing-field-data.ttl"
+    "validate-form/source-with-missing-listing-field-data.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
   let isValid = await validateForm(form, {
