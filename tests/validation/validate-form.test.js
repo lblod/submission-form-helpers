@@ -20,6 +20,23 @@ const SOURCE_NODE = new NamedNode(
   "http://ember-submission-form-fields/source-node"
 );
 
+test.before("register custom validation", () => {
+  const EXT = new Namespace("http://mu.semte.ch/vocabularies/ext/");
+  const customValidation = (value, options) => {
+    const { constraintUri, store } = options;
+    const expected = store.any(constraintUri, EXT("exactValue"), undefined);
+    if (expected === undefined) {
+      return false;
+    }
+    return !isNaN(parseInt(value.value, 10)) && value.value == expected.value;
+  };
+
+  registerCustomValidation(
+    "http://mu.semte.ch/vocabularies/ext/ExactNumberConstraint",
+    customValidation
+  );
+});
+
 test("it validates all the form fields including the ones in sub forms", async (t) => {
   const formTtl = readFixtureFile("validate-form/form.ttl");
 
@@ -61,7 +78,7 @@ test("it validates all the form fields including the ones in sub forms", async (
   );
 
   sourceTtl = readFixtureFile(
-    "validate-form/source-with-valid-listing-field-data.ttl"
+    "validate-form/source-with-valid-custom-field.ttl"
   );
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
   isValid = await validateForm(form, {
@@ -129,21 +146,6 @@ test("it supports validating specific severity levels", async (t) => {
 });
 
 test("it supports custom validation rules as soon as they are registered", async (t) => {
-  const EXT = new Namespace("http://mu.semte.ch/vocabularies/ext/");
-  const customValidation = (value, options) => {
-    const { constraintUri, store } = options;
-    const expected = store.any(constraintUri, EXT("exactValue"), undefined);
-    if (expected === undefined) {
-      return false;
-    }
-    return !isNaN(parseInt(value.value, 10)) && value.value == expected.value;
-  };
-
-  registerCustomValidation(
-    "http://mu.semte.ch/vocabularies/ext/ExactNumberConstraint",
-    customValidation
-  );
-
   const formTtl = readFixtureFile("validate-form/form.ttl");
 
   let store = new ForkingStore();

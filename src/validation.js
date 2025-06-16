@@ -30,17 +30,17 @@ async function validateFields(fields, options) {
         const subForm = store.any(listing, FORM("each"), undefined);
         const subFormFields = await fieldsForSubForm(subForm, options);
 
-        const subFormValidationsPromises = subFormSourceNodes.map(
-          (sourceNode) => {
-            return validateFields(subFormFields, {
+        fieldValidationPromises.push(
+          ...subFormSourceNodes.map(async (sourceNode) =>
+            validateFields(subFormFields, {
               ...options,
               sourceNode,
-            });
-          }
+            })
+          )
         );
-        fieldValidationPromises.push(...subFormValidationsPromises);
       } else {
         // TODO: should we validate sh:minCount / sh:maxCount?
+        fieldValidationPromises.push(async () => true);
       }
     } else {
       fieldValidationPromises.push(validateField(field, options));

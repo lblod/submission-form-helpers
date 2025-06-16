@@ -187,7 +187,13 @@ export async function checkTriples(constraintUri, triplesData, options) {
   ).value;
 
   let validator = constraintForUri(validationType && validationType.value);
-  if (!validator) return { hasValidation: false, valid: true, resultMessage };
+  if (!validator) {
+    return {
+      hasValidation: false,
+      valid: true,
+      resultMessage,
+    };
+  }
 
   const validationOptions = {
     store,
@@ -232,11 +238,11 @@ export async function checkTriples(constraintUri, triplesData, options) {
 
 async function asyncSome(callBack, values) {
   if (!values || values.length === 0) {
-    return true;
+    return false;
   }
 
   for (const value of values) {
-    if (await Promise.resolve(callBack(value))) {
+    if (await callBack(value)) {
       return true;
     }
   }
@@ -248,9 +254,7 @@ export async function asyncEvery(callBack, values) {
     return true;
   }
 
-  const results = await Promise.all(
-    values.map((value) => Promise.resolve(callBack(value)))
-  );
+  const results = await Promise.all(values.map((value) => callBack(value)));
 
   return results.every((result) => result);
 }
