@@ -109,28 +109,34 @@ async function fieldsForFormModelV1(form, options) {
     });
     conditionalFieldGroups = [].concat(...conditionalFieldGroups);
 
+    const groupsToAdd = [];
+    for (const group of conditionalFieldGroups) {
+      const conditions = store
+        .match(group, FORM("conditions"), undefined, formGraph)
+        .map(({ object }) => object);
+
+      const isValid = await asyncEvery(async (_value) => {
+        const validationResult = await check(_value, {
+          formGraph,
+          sourceNode,
+          sourceGraph,
+          metaGraph,
+          store,
+        });
+
+        return validationResult.valid;
+      }, conditions);
+
+      if (isValid) {
+        groupsToAdd.push(group);
+      }
+    }
     // add matching conditional field groups
-    let newFieldGroups = conditionalFieldGroups
-      .filter((group) => {
-        return store
-          .match(group, FORM("conditions"), undefined, formGraph)
-          .every(
-            ({ object }) =>
-              // TODO: check is an async functions
-              check(object, {
-                formGraph,
-                sourceNode,
-                sourceGraph,
-                metaGraph,
-                store,
-              }).valid
-          );
-      })
-      .map((group) => {
-        return store
-          .match(group, FORM("hasFieldGroup"), undefined, formGraph)
-          .map(({ object }) => object);
-      });
+    let newFieldGroups = groupsToAdd.map((group) => {
+      return store
+        .match(group, FORM("hasFieldGroup"), undefined, formGraph)
+        .map(({ object }) => object);
+    });
     newFieldGroups = [].concat(...newFieldGroups);
     fieldGroups = newFieldGroups;
   }
