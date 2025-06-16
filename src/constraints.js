@@ -148,7 +148,8 @@ export default function constraintForUri(uri) {
     return customValidator;
   }
 
-  throw new Error(`No validation found for uri: ${uri}`);
+  console.error(`No validation found for uri: ${uri}`);
+  return false;
 }
 
 export async function check(constraintUri, options) {
