@@ -38,11 +38,9 @@ async function fieldsForFormModelV2(form, options) {
   const formItemsExceptHiddenConditionals =
     await withoutHiddenConditionalFields(formItems, options);
 
-  return formItemsExceptHiddenConditionals;
   //Next line is to get conditional fields according to the old model
-  // TODO: uncomment when the v2 fields work
-  // const oldModelConditionals = fieldsForFormModelV1(form, options);
-  // return [...formItemsExceptHiddenConditionals, ...oldModelConditionals];
+  const oldModelConditionals = await fieldsForFormModelV1(form, options);
+  return [...formItemsExceptHiddenConditionals, ...oldModelConditionals];
 }
 
 async function withoutHiddenConditionalFields(
