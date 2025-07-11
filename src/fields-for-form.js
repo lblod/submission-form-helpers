@@ -1,5 +1,6 @@
-import { asyncEvery, check } from "./constraints.js";
+import { check } from "./constraints.js";
 import { FORM, RDF } from "./namespaces.js";
+import { asyncEvery } from './private/async-array-methods.js';
 
 export async function fieldsForForm(form, options) {
   if (isFormModelV2(form, options)) {

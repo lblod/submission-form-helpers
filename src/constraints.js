@@ -1,5 +1,6 @@
 import { RDF, FORM, SHACL } from "./namespaces.js";
 import { triplesForPath } from "./triples-for/triples-for-path.js";
+import { asyncEvery, asyncSome } from './private/async-array-methods.js';
 
 import required from "./constraints/required.js";
 import codelist from "./constraints/codelist.js";
@@ -234,27 +235,4 @@ export async function checkTriples(constraintUri, triplesData, options) {
     valid: validationResult,
     resultMessage,
   };
-}
-
-async function asyncSome(callBack, values) {
-  if (!values || values.length === 0) {
-    return false;
-  }
-
-  for (const value of values) {
-    if (await callBack(value)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-export async function asyncEvery(callBack, values) {
-  if (!values || values.length === 0) {
-    return true;
-  }
-
-  const results = await Promise.all(values.map((value) => callBack(value)));
-
-  return results.every((result) => result);
 }
