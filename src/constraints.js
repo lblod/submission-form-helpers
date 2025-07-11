@@ -139,13 +139,13 @@ export function resetCustomValidations() {
 }
 
 export default function constraintForUri(uri) {
-  const buildInValidator = BUILT_IN_VALIDATIONS.get(uri);
-  if (buildInValidator) {
-    return buildInValidator;
-  }
   const customValidator = CUSTOM_VALIDATIONS.get(uri);
   if (customValidator) {
     return customValidator;
+  }
+  const builtInValidator = BUILT_IN_VALIDATIONS.get(uri);
+  if (builtInValidator) {
+    return builtInValidator;
   }
 
   console.error(`No validation found for uri: ${uri}`);
