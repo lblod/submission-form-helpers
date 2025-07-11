@@ -38,10 +38,7 @@ async function validateFields(fields, options) {
             })
           )
         );
-      } else {
-        // TODO: should we validate sh:minCount / sh:maxCount?
-        fieldValidationPromises.push(async () => true);
-      }
+      } // TODO: should we validate sh:minCount / sh:maxCount in an else statement
     } else {
       fieldValidationPromises.push(validateField(field, options));
     }
