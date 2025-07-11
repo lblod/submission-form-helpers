@@ -149,7 +149,7 @@ export default function constraintForUri(uri) {
   }
 
   console.error(`No validation found for uri: ${uri}`);
-  return false;
+  return null;
 }
 
 export async function check(constraintUri, options) {
