@@ -31,9 +31,22 @@ test.before("register custom validation", () => {
     return !isNaN(parseInt(value.value, 10)) && value.value == expected.value;
   };
 
+  const wait = async () => {
+    return new Promise((resolve) => setTimeout(resolve, 2000));
+  };
+  const asyncCustomValidation = async (value, options) => {
+    await wait();
+
+    return customValidation(value, options);
+  };
+
   registerCustomValidation(
     "http://mu.semte.ch/vocabularies/ext/ExactNumberConstraint",
     customValidation
+  );
+  registerCustomValidation(
+    "http://mu.semte.ch/vocabularies/ext/AsyncExactNumberConstraint",
+    asyncCustomValidation
   );
 });
 
