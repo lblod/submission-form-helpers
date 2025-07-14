@@ -20,7 +20,7 @@ const SOURCE_NODE = new NamedNode(
   "http://ember-submission-form-fields/source-node"
 );
 
-test.before("register custom validation", () => {
+async function registerCustomAsyncAndSyncValidation() {
   const EXT = new Namespace("http://mu.semte.ch/vocabularies/ext/");
   const customValidation = (value, options) => {
     const { constraintUri, store } = options;
@@ -48,10 +48,11 @@ test.before("register custom validation", () => {
     "http://mu.semte.ch/vocabularies/ext/AsyncExactNumberConstraint",
     asyncCustomValidation
   );
-});
+}
 
 test("it validates all the form fields including the ones in sub forms", async (t) => {
   const formTtl = readFixtureFile("validate-form/form.ttl");
+  await registerCustomAsyncAndSyncValidation();
 
   let store = new ForkingStore();
   store.parse(formTtl, FORM_GRAPHS.formGraph, "text/turtle");
@@ -160,6 +161,7 @@ test("it supports validating specific severity levels", async (t) => {
 
 test("it supports custom validation rules as soon as they are registered", async (t) => {
   const formTtl = readFixtureFile("validate-form/form.ttl");
+  await registerCustomAsyncAndSyncValidation();
 
   let store = new ForkingStore();
   store.parse(formTtl, FORM_GRAPHS.formGraph, "text/turtle");
