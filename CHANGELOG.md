@@ -1,3 +1,8 @@
+## v3.0.0 (2025-07-14)
+
+#### :boom: Breaking Change
+* [#71](https://github.com/lblod/submission-form-helpers/pull/71) LMB-1513 | Async custom validations ([@JonasVanHoof](https://github.com/JonasVanHoof))
+
 ## v2.10.3 (2025-05-28)
 
 #### :bug: Bug Fix
