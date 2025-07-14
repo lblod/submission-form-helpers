@@ -57,6 +57,7 @@ ext:administrativeUnitFormItem a form:SubForm;
    form:includes ext:administrativeUnitTypeOfInvolvementF;
    form:includes ext:administrativeUnitInvolvementPercentageF;
    form:includes ext:customValidationF ;
+   form:includes ext:asyncCustomValidationF ;
    form:includes ext:administrativeUnitDescriptionF;
    form:hasFieldGroup ext:mainPg.
 
@@ -130,6 +131,20 @@ ext:customValidationF a form:Field ;
       ext:exactValue 42 ;
       sh:resultMessage "The value is incorrect, clearly it should be 42" ;
       sh:path ext:shouldBe42 ;
+    ] ;
+    sh:group ext:mainPg .
+
+ext:asyncCustomValidationF a form:Field ;
+    sh:name "Async Custom Validation Numerical inputfield (99)" ;
+    sh:order 6 ;
+    sh:path ext:shouldBe99;
+    form:displayType displayTypes:numericalInput ;
+    form:validatedBy [
+      a ext:AsyncExactNumberConstraint ;
+      form:grouping form:MatchSome ;
+      ext:exactValue 99 ;
+      sh:resultMessage "The value is incorrect, clearly it should be 99" ;
+      sh:path ext:shouldBe99 ;
     ] ;
     sh:group ext:mainPg .
 

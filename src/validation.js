@@ -10,14 +10,15 @@ import { triplesForScope } from "./triples-for/triples-for-scope.js";
  * @typedef {import("rdflib").Statement} Statement
  */
 
-export function validateForm(form, options) {
-  const topLevelFields = fieldsForForm(form, options);
+export async function validateForm(form, options) {
+  const topLevelFields = await fieldsForForm(form, options);
 
-  return validateFields(topLevelFields, options);
+  return await validateFields(topLevelFields, options);
 }
 
-function validateFields(fields, options) {
-  const fieldValidations = fields.map((field) => {
+async function validateFields(fields, options) {
+  const fieldValidationPromises = [];
+  for (const field of fields) {
     if (isListing(field, options)) {
       const listing = field;
       const scope = getScope(listing, options);
@@ -27,22 +28,24 @@ function validateFields(fields, options) {
       if (hasSubFormData) {
         const { store } = options;
         const subForm = store.any(listing, FORM("each"), undefined);
-        const subformFields = fieldsForSubForm(subForm, options);
+        const subFormFields = await fieldsForSubForm(subForm, options);
 
-        return subFormSourceNodes
-          .map((sourceNode) => {
-            return validateFields(subformFields, { ...options, sourceNode });
-          })
-          .every(Boolean);
-      } else {
-        // TODO: should we validate sh:minCount / sh:maxCount?
-        return true;
-      }
+        fieldValidationPromises.push(
+          ...subFormSourceNodes.map(async (sourceNode) =>
+            validateFields(subFormFields, {
+              ...options,
+              sourceNode,
+            })
+          )
+        );
+      } // TODO: should we validate sh:minCount / sh:maxCount in an else statement
     } else {
-      return validateField(field, options);
+      fieldValidationPromises.push(validateField(field, options));
     }
-  });
-  return fieldValidations.every(Boolean);
+  }
+  const validationResults = await Promise.all(fieldValidationPromises);
+
+  return validationResults.every(Boolean);
 }
 
 function isListing(field, options) {
@@ -57,11 +60,10 @@ function isListing(field, options) {
   );
 }
 
-export function validateField(fieldUri, options) {
-  return validationResultsForField(fieldUri, options).reduce(
-    (acc, value) => acc && value.valid,
-    true
-  );
+export async function validateField(fieldUri, options) {
+  const validationResults = await validationResultsForField(fieldUri, options);
+
+  return validationResults.reduce((acc, value) => acc && value.valid, true);
 }
 
 /**
@@ -110,17 +112,16 @@ export function validationsForField(fieldUri, options) {
   return validations;
 }
 
-export function validationResultsForField(fieldUri, options) {
+export async function validationResultsForField(fieldUri, options) {
   const validationConstraints = validationsForField(fieldUri, options).map(
     (t) => t.object
   );
 
-  const validationResults = [];
-  for (const constraintUri of validationConstraints) {
-    const validationResult = check(constraintUri, options);
-    validationResults.push(validationResult);
-  }
-  return validationResults;
+  const validationResultPromises = validationConstraints.map((constraintUri) =>
+    check(constraintUri, options)
+  );
+
+  return await Promise.all(validationResultPromises);
 }
 
 export function validationsForFieldWithType(fieldUri, options) {
@@ -143,15 +144,18 @@ export function validationTypesForField(fieldUri, options) {
   return Object.values(validationsWithType);
 }
 
-export function validationResultsForFieldPart(triplesData, fieldUri, options) {
+export async function validationResultsForFieldPart(
+  triplesData,
+  fieldUri,
+  options
+) {
   const validationConstraints = validationsForField(fieldUri, options).map(
     (t) => t.object
   );
 
-  const validationResults = [];
-  for (const constraintUri of validationConstraints) {
-    const validationResult = checkTriples(constraintUri, triplesData, options);
-    validationResults.push(validationResult);
-  }
-  return validationResults;
+  const validationResultPromises = validationConstraints.map((constraintUri) =>
+    checkTriples(constraintUri, triplesData, options)
+  );
+
+  return await Promise.all(validationResultPromises);
 }

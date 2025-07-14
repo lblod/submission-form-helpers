@@ -14,7 +14,7 @@ const SOURCE_NODE = new NamedNode(
   "http://ember-submission-form-fields/source-node"
 );
 
-test("it returns the conditional fields only if the condition is fulfilled (old model)", (t) => {
+test("it returns the conditional fields only if the condition is fulfilled (old model)", async (t) => {
   const formTtl = readFixtureFile("conditionals-v1/form.ttl");
   const metaTtl = readFixtureFile("conditionals-v1/meta.ttl");
 
@@ -32,7 +32,7 @@ test("it returns the conditional fields only if the condition is fulfilled (old 
   let sourceTtl = readFixtureFile("conditionals-v1/source.ttl");
   store.parse(sourceTtl, FORM_GRAPHS.sourceGraph, "text/turtle");
 
-  const fields = fieldsForForm(form, {
+  const fields = await fieldsForForm(form, {
     store,
     sourceNode: SOURCE_NODE,
     ...FORM_GRAPHS,
