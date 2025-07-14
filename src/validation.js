@@ -13,7 +13,7 @@ import { triplesForScope } from "./triples-for/triples-for-scope.js";
 export async function validateForm(form, options) {
   const topLevelFields = await fieldsForForm(form, options);
 
-  return validateFields(topLevelFields, options);
+  return await validateFields(topLevelFields, options);
 }
 
 async function validateFields(fields, options) {
@@ -121,7 +121,7 @@ export async function validationResultsForField(fieldUri, options) {
     check(constraintUri, options)
   );
 
-  return Promise.all(validationResultPromises);
+  return await Promise.all(validationResultPromises);
 }
 
 export function validationsForFieldWithType(fieldUri, options) {
@@ -157,5 +157,5 @@ export async function validationResultsForFieldPart(
     checkTriples(constraintUri, triplesData, options)
   );
 
-  return Promise.all(validationResultPromises);
+  return await Promise.all(validationResultPromises);
 }

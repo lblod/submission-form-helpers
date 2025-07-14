@@ -1,6 +1,6 @@
 import { RDF, FORM, SHACL } from "./namespaces.js";
 import { triplesForPath } from "./triples-for/triples-for-path.js";
-import { asyncEvery, asyncSome } from './private/async-array-methods.js';
+import { asyncEvery, asyncSome } from "./private/async-array-methods.js";
 
 import required from "./constraints/required.js";
 import codelist from "./constraints/codelist.js";
@@ -163,7 +163,7 @@ export async function check(constraintUri, options) {
     sourceNode: sourceNode,
     sourceGraph: sourceGraph,
   });
-  return checkTriples(constraintUri, triplesData, options);
+  return await checkTriples(constraintUri, triplesData, options);
 }
 
 export async function checkTriples(constraintUri, triplesData, options) {
@@ -213,9 +213,7 @@ export async function checkTriples(constraintUri, triplesData, options) {
    * - MatchEvery: validator can only process one value BUT all values that get passed to the validator have to adhere
    */
   if (groupingType == FORM("Bag").value) {
-    validationResult = await Promise.resolve(
-      validator(values, validationOptions)
-    );
+    validationResult = await validator(values, validationOptions);
   } else if (groupingType == FORM("MatchSome").value) {
     validationResult = await asyncSome(
       async (value) => validator(value, validationOptions),

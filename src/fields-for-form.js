@@ -1,17 +1,17 @@
 import { check } from "./constraints.js";
 import { FORM, RDF } from "./namespaces.js";
-import { asyncEvery } from './private/async-array-methods.js';
+import { asyncEvery } from "./private/async-array-methods.js";
 
 export async function fieldsForForm(form, options) {
   if (isFormModelV2(form, options)) {
-    return fieldsForFormModelV2(form, options);
+    return await fieldsForFormModelV2(form, options);
   }
 
-  return fieldsForFormModelV1(form, options);
+  return await fieldsForFormModelV1(form, options);
 }
 
 export async function fieldsForSubForm(form, options) {
-  return fieldsForFormModelV2(form, options);
+  return await fieldsForFormModelV2(form, options);
 }
 
 export function getFormModelVersion(form, { store, formGraph }) {
