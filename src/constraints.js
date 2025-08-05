@@ -8,6 +8,7 @@ import singleCodelistValue from "./constraints/single-codelist-value.js";
 import containsCodelistValue from "./constraints/contains-codelist-value.js";
 import exactValue from "./constraints/exact-value.js";
 import validUri from "./constraints/valid-uri.js";
+import validWebUri from "./constraints/valid-web-uri.js";
 import validDate from "./constraints/valid-date.js";
 import validDateTime from "./constraints/valid-date-time.js";
 import validInteger from "./constraints/valid-integer.js";
@@ -54,6 +55,10 @@ function registerDefaultValidations() {
   BUILT_IN_VALIDATIONS.set(
     "http://lblod.data.gift/vocabularies/forms/UriConstraint",
     validUri
+  );
+  BUILT_IN_VALIDATIONS.set(
+    "http://lblod.data.gift/vocabularies/forms/WebUriConstraint",
+    validWebUri
   );
   BUILT_IN_VALIDATIONS.set(
     "http://lblod.data.gift/vocabularies/forms/ValidDate",
