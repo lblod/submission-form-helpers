@@ -15,7 +15,7 @@ export function addSimpleFormValue(value, options) {
     );
   }
 
-  if (value) {
+  if (value && value?.value) {
     const newTriple = dataset.triples.slice(-1)[0];
     newTriple.object = value;
     triplesToAdd.push(newTriple);
