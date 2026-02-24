@@ -216,21 +216,43 @@ export async function checkTriples(constraintUri, triplesData, options) {
     validationResult = await validator(values, validationOptions);
   } else if (groupingType == FORM("MatchSome").value) {
     validationResult = await asyncSome(
-      async (value) => validator(value, validationOptions),
+      async (value) => {
+        const res = await validator(value, validationOptions);
+        if (typeof res === 'object') {
+          return res.valid;
+        } else {
+          return res;
+        }
+      },
       values
     );
   } else if (groupingType == FORM("MatchEvery").value) {
     validationResult = await asyncEvery(
-      async (value) => validator(value, validationOptions),
+      async (value) => {
+        const res = await validator(value, validationOptions);
+        if (typeof res === 'object') {
+          return res.valid;
+        } else {
+          return res;
+        }
+      },
       values
     );
   }
 
-  // console.log(`Validation ${validationType} [${groupingType}] with values ${values.join(',')} is ${validationResult}`);
-  return {
-    validationType: validationType.value,
-    hasValidation: true,
-    valid: validationResult,
-    resultMessage,
-  };
+  if (typeof validationResult === 'object') {
+    return {
+      validationType: validationType.value,
+      hasValidation: true,
+      valid: validationResult.valid,
+      resultMessage: validationResult.resultMessage,
+    }
+  } else {
+    return {
+      validationType: validationType.value,
+      hasValidation: true,
+      valid: validationResult,
+      resultMessage,
+    };
+  }
 }
