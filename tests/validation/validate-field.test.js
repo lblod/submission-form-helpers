@@ -23,20 +23,29 @@ const SOURCE_NODE = new NamedNode(
 
 async function registerCustomValidatorReturningBoolean() {
   const customValidation = (values, options) => {
-    return constraintsRequired(values, options)
-  }
+    return constraintsRequired(values, options);
+  };
   const EXT = new Namespace("http://mu.semte.ch/vocabularies/ext/");
-  registerCustomValidation(EXT('RequiredConstraintWithCustomValidatorReturningBoolean').value, customValidation);
+  registerCustomValidation(
+    EXT("RequiredConstraintWithCustomValidatorReturningBoolean").value,
+    customValidation
+  );
 }
 
 async function registerCustomValidatorReturningBooleanAndResultMessage() {
   const customValidation = (values, options) => {
     return {
       valid: constraintsRequired(values, options),
-      resultMessage: 'This field is required. This is a custom result message returned by the validation function.'
-    }
-  }
-  registerCustomValidation(EXT('RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage').value, customValidation);
+      resultMessage:
+        "This field is required. This is a custom result message returned by the validation function.",
+    };
+  };
+  registerCustomValidation(
+    EXT(
+      "RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage"
+    ).value,
+    customValidation
+  );
 }
 
 let STORE;
@@ -46,11 +55,10 @@ test.beforeEach(async () => {
   await registerCustomValidatorReturningBoolean();
   await registerCustomValidatorReturningBooleanAndResultMessage();
   STORE = new ForkingStore();
-  STORE.parse(fieldTtl, FORM_GRAPHS.formGraph, 'text/turtle');
-})
+  STORE.parse(fieldTtl, FORM_GRAPHS.formGraph, "text/turtle");
+});
 
 test("validation fails when field is not filled in", async (t) => {
-
   const sourceTtl = readFixtureFile(
     "validate-field/source-without-field-data.ttl"
   );
@@ -63,34 +71,38 @@ test("validation fails when field is not filled in", async (t) => {
     FORM_GRAPHS.formGraph
   );
 
-
-
   const validationResults = await validationResultsForField(field, {
-    store: STORE, ...FORM_GRAPHS, sourceNode: SOURCE_NODE,
-  })
+    store: STORE,
+    ...FORM_GRAPHS,
+    sourceNode: SOURCE_NODE,
+  });
   t.deepEqual(validationResults, [
     {
       hasValidation: true,
       valid: false,
-      resultMessage: 'This field is required. (Built-in validator)',
-      validationType: FORM('RequiredConstraint').value,
+      resultMessage: "This field is required. (Built-in validator)",
+      validationType: FORM("RequiredConstraint").value,
     },
     {
       hasValidation: true,
       valid: false,
-      resultMessage: 'This field is required. (Custom validator returning boolean)',
-      validationType: EXT('RequiredConstraintWithCustomValidatorReturningBoolean').value,
+      resultMessage:
+        "This field is required. (Custom validator returning boolean)",
+      validationType: EXT(
+        "RequiredConstraintWithCustomValidatorReturningBoolean"
+      ).value,
     },
     {
       hasValidation: true,
       valid: false,
-      resultMessage: 'This field is required. This is a custom result message returned by the validation function.',
-      validationType: EXT('RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage').value,
-    }
+      resultMessage:
+        "This field is required. This is a custom result message returned by the validation function.",
+      validationType: EXT(
+        "RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage"
+      ).value,
+    },
   ]);
-
-
-})
+});
 test("validation succeeds when field is filled in", async (t) => {
   const sourceTtl = readFixtureFile(
     "validate-field/source-with-field-data.ttl"
@@ -104,26 +116,34 @@ test("validation succeeds when field is filled in", async (t) => {
   );
 
   const validationResults = await validationResultsForField(field, {
-    store: STORE, ...FORM_GRAPHS, sourceNode: SOURCE_NODE,
-  })
+    store: STORE,
+    ...FORM_GRAPHS,
+    sourceNode: SOURCE_NODE,
+  });
   t.deepEqual(validationResults, [
     {
       hasValidation: true,
       valid: true,
-      resultMessage: 'This field is required. (Built-in validator)',
-      validationType: FORM('RequiredConstraint').value,
+      resultMessage: "This field is required. (Built-in validator)",
+      validationType: FORM("RequiredConstraint").value,
     },
     {
       hasValidation: true,
       valid: true,
-      resultMessage: 'This field is required. (Custom validator returning boolean)',
-      validationType: EXT('RequiredConstraintWithCustomValidatorReturningBoolean').value,
+      resultMessage:
+        "This field is required. (Custom validator returning boolean)",
+      validationType: EXT(
+        "RequiredConstraintWithCustomValidatorReturningBoolean"
+      ).value,
     },
     {
       hasValidation: true,
       valid: true,
-      resultMessage: 'This field is required. This is a custom result message returned by the validation function.',
-      validationType: EXT('RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage').value,
-    }
+      resultMessage:
+        "This field is required. This is a custom result message returned by the validation function.",
+      validationType: EXT(
+        "RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage"
+      ).value,
+    },
   ]);
-})
+});
