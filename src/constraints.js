@@ -183,7 +183,7 @@ export async function checkTriples(constraintUri, triplesData, options) {
     undefined,
     formGraph
   ).value;
-  const resultMessage = (
+  const defaultResultMessage = (
     store.any(constraintUri, SHACL("resultMessage"), undefined, formGraph) || ""
   ).value;
 
@@ -192,7 +192,7 @@ export async function checkTriples(constraintUri, triplesData, options) {
     return {
       hasValidation: false,
       valid: true,
-      resultMessage,
+      resultMessage: defaultResultMessage,
     };
   }
 
@@ -245,14 +245,14 @@ export async function checkTriples(constraintUri, triplesData, options) {
       validationType: validationType.value,
       hasValidation: true,
       valid: validationResult.valid,
-      resultMessage: validationResult.resultMessage,
+      resultMessage: validationResult.resultMessage ?? defaultResultMessage,
     }
   } else {
     return {
       validationType: validationType.value,
       hasValidation: true,
       valid: validationResult,
-      resultMessage,
+      resultMessage: defaultResultMessage,
     };
   }
 }
