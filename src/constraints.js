@@ -214,6 +214,9 @@ export async function checkTriples(constraintUri, triplesData, options) {
    */
   if (groupingType == FORM("Bag").value) {
     validationResult = await validator(values, validationOptions);
+    if (typeof validationResult === 'object' && Object.hasOwn(validationResult, 'resultMessage') && defaultResultMessage) {
+      console.warn(`The default result message "${defaultResultMessage}" for validation ${validationType.value} will be overriden by the result message "${validationResult.resultMessage}" provided by its custom validation function`)
+    }
   } else if (groupingType == FORM("MatchSome").value) {
     validationResult = await asyncSome(
       async (value) => {
