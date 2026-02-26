@@ -41,7 +41,7 @@ async function registerCustomValidatorReturningBooleanAndResultMessage() {
 
 let STORE;
 
-test.beforeEach(async (t) => {
+test.beforeEach(async () => {
   const fieldTtl = readFixtureFile("validate-field/field.ttl");
   await registerCustomValidatorReturningBoolean();
   await registerCustomValidatorReturningBooleanAndResultMessage();
