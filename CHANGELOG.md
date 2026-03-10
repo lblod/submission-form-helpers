@@ -1,3 +1,12 @@
+
+## v3.1.0 (2026-03-10)
+
+#### :rocket: Enhancement
+* [#74](https://github.com/lblod/submission-form-helpers/pull/74) Add support for returning a custom `resultMessage` property in a validation function ([@elpoelma](https://github.com/elpoelma))
+
+#### Committers: 1
+- Elena Poelman ([@elpoelma](https://github.com/elpoelma))
+
 ## v3.0.0 (2025-07-14)
 
 #### :boom: Breaking Change
