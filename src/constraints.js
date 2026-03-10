@@ -183,7 +183,7 @@ export async function checkTriples(constraintUri, triplesData, options) {
     undefined,
     formGraph
   ).value;
-  const resultMessage = (
+  const defaultResultMessage = (
     store.any(constraintUri, SHACL("resultMessage"), undefined, formGraph) || ""
   ).value;
 
@@ -192,7 +192,7 @@ export async function checkTriples(constraintUri, triplesData, options) {
     return {
       hasValidation: false,
       valid: true,
-      resultMessage,
+      resultMessage: defaultResultMessage,
     };
   }
 
@@ -214,23 +214,48 @@ export async function checkTriples(constraintUri, triplesData, options) {
    */
   if (groupingType == FORM("Bag").value) {
     validationResult = await validator(values, validationOptions);
+    if (
+      typeof validationResult === "object" &&
+      Object.hasOwn(validationResult, "resultMessage") &&
+      defaultResultMessage
+    ) {
+      console.warn(
+        `The default result message "${defaultResultMessage}" for validation ${validationType.value} will be overriden by the result message "${validationResult.resultMessage}" provided by its custom validation function`
+      );
+    }
   } else if (groupingType == FORM("MatchSome").value) {
-    validationResult = await asyncSome(
-      async (value) => validator(value, validationOptions),
-      values
-    );
+    validationResult = await asyncSome(async (value) => {
+      const res = await validator(value, validationOptions);
+      if (typeof res === "object") {
+        return res.valid;
+      } else {
+        return res;
+      }
+    }, values);
   } else if (groupingType == FORM("MatchEvery").value) {
-    validationResult = await asyncEvery(
-      async (value) => validator(value, validationOptions),
-      values
-    );
+    validationResult = await asyncEvery(async (value) => {
+      const res = await validator(value, validationOptions);
+      if (typeof res === "object") {
+        return res.valid;
+      } else {
+        return res;
+      }
+    }, values);
   }
 
-  // console.log(`Validation ${validationType} [${groupingType}] with values ${values.join(',')} is ${validationResult}`);
-  return {
-    validationType: validationType.value,
-    hasValidation: true,
-    valid: validationResult,
-    resultMessage,
-  };
+  if (typeof validationResult === "object") {
+    return {
+      validationType: validationType.value,
+      hasValidation: true,
+      valid: validationResult.valid,
+      resultMessage: validationResult.resultMessage ?? defaultResultMessage,
+    };
+  } else {
+    return {
+      validationType: validationType.value,
+      hasValidation: true,
+      valid: validationResult,
+      resultMessage: defaultResultMessage,
+    };
+  }
 }

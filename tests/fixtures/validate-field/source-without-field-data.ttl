@@ -1,0 +1,3 @@
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+
+<http://ember-submission-form-fields/source-node> a ext:form.

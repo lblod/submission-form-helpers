@@ -1,0 +1,37 @@
+@prefix form: <http://lblod.data.gift/vocabularies/forms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix mu: <http://mu.semte.ch/vocabularies/core/> .
+@prefix displayTypes: <http://lblod.data.gift/display-types/> .
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+@prefix schema: <http://schema.org/>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix nie: <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#>.
+
+##########################################################
+# Field with 'required' constraint
+##########################################################
+ext:Title a form:Field ;
+    sh:name "Title" ;
+    sh:order 1 ;
+    sh:path ext:title ;
+    form:displayType displayTypes:defaultInput ;
+    form:validations
+      [ 
+        a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "This field is required. (Built-in validator)"@en;
+        sh:path ext:title
+      ],
+      [ 
+        a ext:RequiredConstraintWithCustomValidatorReturningBoolean ;
+        form:grouping form:Bag ;
+        sh:resultMessage "This field is required. (Custom validator returning boolean)"@en;
+        sh:path ext:title
+      ],
+      [ 
+        a ext:RequiredConstraintWithCustomValidatorReturningBooleanAndCustomResultMessage ;
+        form:grouping form:Bag ;
+        sh:resultMessage "This message should not be returned."@en;
+        sh:path ext:title
+      ].
+
